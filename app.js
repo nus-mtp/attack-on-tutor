@@ -19,7 +19,7 @@ var router = require ('./source/router');
 
 // view engine setup
 app.set ('env', 'development');
-app.set ('views', path.join (__dirname, './source/views'));
+app.set ('views', path.join (__dirname, './source/view'));
 app.set ('view engine', 'ejs');
 
 // File Limitation
