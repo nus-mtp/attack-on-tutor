@@ -12,15 +12,6 @@ if (!usehttps) {
 	protocol = 'http';
 }
 
-/*
-var get = function (req, res, next) {
-	var auth = req.body.auth;
-	if (auth.success) {
-		res.redirect('/');
-	}
-	else res.redirect ('https://ivle.nus.edu.sg/api/login/?apikey=dQ52oB9BDUvIKSsyntdtW&url=http://google.com');
-}
-*/
 var get = function (req, res, next) {
 	res.redirect('https://ivle.nus.edu.sg/api/login/?apikey=' + app.get('api-key') + '&url=' + protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/login/callback');
 }
@@ -54,9 +45,10 @@ var callback = function (req, res, next) {
 						gender: result.Gender,
 						token: result.Token,
 					}).then(function(user){
-						var authToken = auth.setAuth (result.UserID, result.Name);
+						//var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
-						return res.render ('login/callback_success', {token: authToken});
+						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
+						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'));
 					}).catch(function(err){
 						//logger.error(result.UserID + ' create user failed');
 						return res.json({success:false, at:'Create user', message:err});
@@ -69,11 +61,14 @@ var callback = function (req, res, next) {
 							id:result.UserID
 						}
 					}).then(function(user){
-						var authToken = auth.setAuth (result.UserID, result.Name);
+						// TODO: integrate auth
+						// var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
-						return res.render ('login/callback_success', {token: authToken});
+						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
+						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'));
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
+						console.log(err.stack);
 						return res.json({success:false, at:'Update user information', message:err});
 					});
 				}
