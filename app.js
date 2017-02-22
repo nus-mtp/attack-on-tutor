@@ -5,6 +5,7 @@ var path = require ('path');
 app.set ('rootPath', __dirname);
 
 var router = require ('./source/router');
+var lobby = require ('./source/model/lobby.js');
 
 // view engine setup
 app.set ('views', path.join (__dirname, './source/view'));
@@ -15,17 +16,6 @@ app.set ('MAX_FILE_SIZE', 30000000); // In Bytes, equals to 30Mb
 
 //use router to handle different url request
 app.use (router);
-
-//error handling
-app.use
-(
-	function (req, res, next)
-	{
-		var err = new Error ('Not Found');
-		err.status = 404;
-		next (err);
-	}
-);
 
 var server = app.listen
 (
@@ -38,3 +28,4 @@ var server = app.listen
 		console.log("App listening at http://%s:%s", host, port)
 	}	
 )
+lobby.listen (server);
