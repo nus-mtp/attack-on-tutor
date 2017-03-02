@@ -12,16 +12,25 @@ function LobbyList () {
 }
 
 LobbyList.prototype.addLobby = function (roomData) {
-    if (!this.lobbies[roomData.tutorialId]) {
-        this.lobbies[roomData.tutorialId] = new Lobby();
-        this.lobbies[roomData.tutorialId].tutorialId = roomData.tutorialId;
-        this.lobbies[roomData.tutorialId].moduleId = roomData.moduleId;
-        this.lobbyCount++;
-    }
+	if (!this.lobbies[roomData.moduleId]) {
+		this.lobbies[roomData.moduleId] = {};
+		if (!this.lobbies[roomData.moduleId][roomData.tutorialId]) {
+			this.lobbies[roomData.moduleId][roomData.tutorialId] = new Lobby();
+			this.lobbies[roomData.moduleId][roomData.tutorialId].tutorialId = roomData.tutorialId;
+			this.lobbies[roomData.moduleId][roomData.tutorialId].moduleId = roomData.moduleId;
+			this.lobbies[roomData.moduleId][roomData.tutorialId].roomName = roomData.moduleId + roomData.tutorialId;
+			this.lobbyCount++;
+		}
+	}
+	return this.lobbies[roomData.moduleId][roomData.tutorialId];
 }
 
-LobbyList.prototype.getLobby = function (tutorialId) {
-    return this.lobbies[tutorialId];
+LobbyList.prototype.getLobby = function (moduleId, tutorialId) {
+    return this.lobbies[moduleId][tutorialId];
+}
+
+LobbyList.prototype.getUsersInRoom = function (roomName) {
+	return io.sockets.clients ( roomName );
 }
 
 var lobbyList =  new LobbyList();
@@ -29,6 +38,7 @@ var lobbyList =  new LobbyList();
 function Lobby () {
     this.tutorialId = '';
     this.moduleId = '';
+	this.roomName = '';
     
 	this.locked = false;
 	this.tutors = {};
@@ -43,7 +53,7 @@ function Lobby () {
 }
 
 Lobby.prototype.emit = function (key, value) {
-    io.sockets.in ( this.tutorialId ).emit (key, value);
+    io.sockets.in ( this.roomName ).emit (key, value);
 }
 
 //On connection of each new client socket.
@@ -53,19 +63,42 @@ io.on ('connection', function (socket) {
     //Listen for new connections and create a lobby if one does not exist yet.
     socket.on ('new connection', function (data) {
         //Add a lobby to the lobbyList.
-        lobbyList.addLobby ({
+        var newLobby = lobbyList.addLobby ({
             'tutorialId' : data.tutorialId,
             'moduleId' : data.moduleId
         });
         socket.tutorialGroup = data.tutorialId;
-        socket.join ( data.tutorialId );
+		socket.moduleGroup = data.moduleId;
+		socket.roomName = newLobby.roomName;
+        socket.join ( newLobby.roomName );
         socket.userId = data.userId;
+		
+		if (addedUser) {
+            return;
+        }
+        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+		
+        //Store the username in the socket session for this client.
+        socket.username = data.userId;
+        lobby.numUsers++;
+        addedUser = true;
+        
+        //Update the client that login is successful.
+        socket.emit ('login', {
+            numUsers: lobby.numUsers
+        });
+        
+        //Update all clients whenever a user successfully joins the lobby.
+        socket.broadcast.to(socket.roomName).emit ('user joined', {
+            username: socket.username,
+            numUsers: lobby.numUsers
+        });
     });
 
     //Listen and execute broadcast of message on receiving 'new message' emission from the client.
     socket.on ('new message', function (data) {
         // we tell the client to execute 'new message'
-        socket.broadcast.to(socket.tutorialGroup).emit ('new message', {
+        socket.broadcast.to(socket.roomName).emit ('new message', {
             username: socket.username,
             message: data
         });
@@ -76,7 +109,7 @@ io.on ('connection', function (socket) {
         if (addedUser) {
             return;
         }
-        var lobby = lobbyList.getLobby(socket.tutorialGroup);
+        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
         //Store the username in the socket session for this client.
         socket.username = username;
         lobby.numUsers++;
@@ -88,7 +121,7 @@ io.on ('connection', function (socket) {
         });
         
         //Update all clients whenever a user successfully joins the lobby.
-        socket.broadcast.to(socket.tutorialGroup).emit ('user joined', {
+        socket.broadcast.to(socket.roomName).emit ('user joined', {
             username: socket.username,
             numUsers: lobby.numUsers
         });
@@ -96,14 +129,14 @@ io.on ('connection', function (socket) {
 
     //Broadcast that the client is typing a message to other clients connected.
     socket.on ('typing', function () {
-        socket.broadcast.to(socket.tutorialGroup).emit ('typing', {
+        socket.broadcast.to(socket.roomName).emit ('typing', {
             username: socket.username
         });
     });
 
     //Broadcast when the client stops typing a message to other clients connected.
     socket.on ('stop typing', function () {
-        socket.broadcast.to(socket.tutorialGroup).emit ('stop typing', {
+        socket.broadcast.to(socket.roomName).emit ('stop typing', {
             username: socket.username
         });
     });
@@ -111,11 +144,11 @@ io.on ('connection', function (socket) {
     //Listen to when the client disconnects and execute.
     socket.on ('disconnect', function () {
         if (addedUser) {
-            var lobby = lobbyList.getLobby(socket.tutorialGroup);
+            var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
             --lobby.numUsers;
 
             //Broadcast to other clients that this client has disconnected
-            socket.broadcast.to(socket.tutorialGroup).emit ('user left', {
+            socket.broadcast.to(socket.roomName).emit ('user left', {
                 username: socket.username,
                 numUsers: lobby.numUsers
             });
@@ -133,7 +166,7 @@ io.on ('connection', function (socket) {
         gameCollection.gameList.gameId.open = true;
         gameCollection.totalGameCount ++;
 
-        socket.broadcast.to(socket.tutorialGroup).emit ('battle created', {
+        socket.broadcast.to(socket.roomName).emit ('battle created', {
             username: socket.username,
             gameId: gameId
         });

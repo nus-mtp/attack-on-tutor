@@ -2,38 +2,49 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Socket.IO Gameserver Example</title>
-        <link rel="stylesheet" href="style.css">
+        <title>E-Tutorial Lobby</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
 
     <body>
-        <ul class="pages">
-            <li class="chat page">
-                <div class='GameButtons'>
-                    <!--     <button class='joinGame' placeholder="Join Game"/>Join Game</button>
-                    <br> -->
-                    <button class='createGame' placeholder="Create Game"/>Create Game</button>
-                </div>
-                <div class="chatArea">
-                    <ul class="messages"></ul>
-                </div>
-                <input class="inputMessage" placeholder="Type here..."/>
-            </li>
-            <li class="usersList">
-                <div class="usersList">
-                    <ul class="Users"></ul>
-                </div>
-            </li>
-            <li class="login page">
-                <div class="form">
-                    <h3 class="title">What's your nickname?</h3>
-                    <input class="usernameInput" type="text" maxlength="14" />
-                </div>
-            </li>
-        </ul>
+		<div class="container" id="header-bar">
+			<div class="row">
+				<div class="text-center col-md-12">
+					<h1>Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row" id="lobby-container">
+				<div class="col-md-8 col-sm-6 col-xs-6" id="chat-container">
+					<div class="row">
+						<h2> Messages </h2>
+					</div>
+					<div class="row">
+						<div class="chat-area" style="width:100%; max-height:300px; overflow:auto;">
+							<ul class="messages"></ul>
+						</div>
+					</div>
+					<div class="row">
+						<input class="inputMessage" style="width:100%;" placeholder="Type here..."/>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container">
+					<div class="text-center row">
+						<h2> Active Users </h2>
+					</div>
+					<div class="row">
+						<div class="usersList">
+							<ul class="Users"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
         <script>
             $(function() {
                 var FADE_TIME = 150; // ms
@@ -46,7 +57,6 @@
 
                 //Initialize variables
                 var $window = $(window);
-                var $usernameInput = $('.usernameInput'); //Input for username
                 var $messages = $('.messages'); //Messages area
                 var $inputMessage = $('.inputMessage'); //Input message input box
 
@@ -56,11 +66,11 @@
                 var $joinGame = $('.joinGame'); 
 
                 //Prompt for setting a username
-                var username;
+                var username = "<%= userId %>";
                 var connected = false;
                 var typing = false;
                 var lastTypingTime;
-                var $currentInput = $usernameInput.focus();
+                var $currentInput = $inputMessage.focus();
 
                 var socket = io();
 
@@ -72,22 +82,6 @@
                         message += "There are " + data.numUsers + " players in the Lobby";
                     }
                     log(message);
-                }
-
-                // Sets the client's username
-                function setUsername () {
-                    username = cleanInput ($usernameInput.val().trim());
-
-                    //If the username is valid
-                    if (username) {
-                        $loginPage.fadeOut();
-                        $chatPage.show();
-                        $loginPage.off('click');
-                        $currentInput = $inputMessage.focus();
-
-                        //Tell the server your username
-                        socket.emit ('add user', username);
-                    }
                 }
 
                 //Sends a chat message
@@ -110,7 +104,7 @@
                         socket.emit ('new message', message);
                     }
                 }
-
+				
                 //Log a message
                 function log (message, options) {
                     var $el = $('<li>').addClass('log').text(message);
@@ -247,8 +241,6 @@
                             sendMessage();
                             socket.emit('stop typing');
                             typing = false;
-                        } else {
-                            setUsername();
                         }
                     }
                 });
@@ -258,11 +250,6 @@
                 });
 
                 // Click events
-
-                //Focus input when clicking anywhere on login page
-                $loginPage.click (function () {
-                    $currentInput.focus();
-                });
 
                 //Focus input when clicking on the message input's border
                 $inputMessage.click (function () {
