@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reindeer - Dashboard</title>
+</head>
+<body>
+
+<div class="user-profile-container" >
+    <div class="user-profile-inner-container">
+        <h1><%= user.name %></h1>
+        <h1 id="id"><%= user.id %></h1>
+    </div>
+    <img class="my-tutorials-tab" src="/images/UIElements/my-tutorials-tab.png">
+</div>
+
+<div id="tutorial-list-container" class="tutorial-list-container">
+    <tutorial-view v-for="tutorialObject in state.tutorialObjects"
+                   :tutorial-object="tutorialObject"></tutorial-view>
+</div>
+
+<script>
+
+    window.dashboard.init();
+
+    var logoutConfirmation = "Are you sure you want to log out?";
+    
+    $("#logout").on("click", function(event){
+        if (confirm(logoutConfirmation) == true){
+         Cookies.remove('token');
+         location.assign("/");
+         }
+    });
+
+
+</script>
+
+</body>
+</html>
+
+<style>
+
+</style>
