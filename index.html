@@ -1,11 +1,12 @@
 <html>
 
 <head>
-	<title>Install jQuery</title>
+	<title>Battle System</title>
 </head>
 
 <style>
 	div#test { border: #000 1px solid; padding:10px 40px 40px 40px; }
+	div#player { border: #000 1px solid; padding:10px 40px 40px 40px; }
 </style>
 
 <script src="js/jquery-3.1.1.min.js"></script>
@@ -32,12 +33,35 @@
 		["1 / 1?", "1", "2", "3", "A"]
 	];
 	
+	var weapons = [
+		"Daggers", "Halberd", "Sword", "Greatsword", "Javelin", "Pistol"
+	];
+	
+	function Player(name, weapon, health) {
+		this.name = name;
+		this.weapon = weapon;
+		this.health = health;
+		this.greeting = function() {
+		alert('Hi! I\'m ' + this.name + '.');
+		};
+	}
+	
+	function Boss(name, weapon, health) {
+		this.name = name;
+		this.weapon = weapon;
+		this.health = health;
+	}
+	
+	var player;
+	var Silfer = new Player("Silfer", "Daggers", 100);
+	
 	function name(x) { // Returns the Name of the Document
 		return document.getElementById(x);
 	}
 	
 	function renderQuestion() { // Prints Question
 		test = name("test");
+		player = name("player");
 		
 		if(qnNoIndex >= questionArray.length) {
 			test.innerHTML = "<h2>You answered " +correctAnswers+ " of " +questionArray.length+ " questions correctly.</h2>";
@@ -79,6 +103,11 @@
 			correctAnswers++;
 		}
 		
+		else {
+			Silfer.health -= 20;
+		}
+		
+		player.innerHTML = Silfer.name+ " has " +Silfer.health+ " health left.";
 		qnNoIndex++;
 		renderQuestion(); // Move on to the Next Question
 	}
@@ -89,6 +118,7 @@
 <body>
 	<h2 id="testStatus"></h2>
 	<div id="test"></div>
+	<div id="player"></div>
 </body>
 
 </html>
