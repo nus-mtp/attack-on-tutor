@@ -12,13 +12,22 @@
  */
 var get = function (req, res, next)
 {
-	var user = "Test";
+	var auth = req.body.auth;
+	var user;
+	if (auth.success) {
+		console.log(auth);
+		console.log('');
+		console.log(auth.decoded);
+		user = auth.decoded;
+	}
 	res.render
 	(
 		'index',
 		{
 			title: 'E-Tutorial - Login',
-			user: user
+			user: user,
+			ip: req.app.get('server-ip'),
+			port: req.app.get('server-port')
 		}
 	);
 }

@@ -7,12 +7,15 @@ var usehttps = app.get('use-https');
 
 var ivleToken;
 
-
 if (!usehttps) {
 	protocol = 'http';
 }
 
 var get = function (req, res, next) {
+	var auth = req.body.auth;
+	if (auth.success) {
+		res.redirect('/');
+	}
 	res.redirect('https://ivle.nus.edu.sg/api/login/?apikey=' + app.get('api-key') + '&url=' + protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/login/callback');
 }
 
@@ -31,7 +34,6 @@ var callback = function (req, res, next) {
 		if (result != undefined) {
 			result.Token = ivleToken;
 
-
 			User.findOne({
 				where:{
 					id: result.UserID
@@ -45,10 +47,10 @@ var callback = function (req, res, next) {
 						gender: result.Gender,
 						token: result.Token,
 					}).then(function(user){
-						//var authToken = auth.setAuth (result.UserID, result.Name);
+						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
 						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
-						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'));
+						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'), {token: authToken});
 					}).catch(function(err){
 						//logger.error(result.UserID + ' create user failed');
 						return res.json({success:false, at:'Create user', message:err});
@@ -62,10 +64,9 @@ var callback = function (req, res, next) {
 						}
 					}).then(function(user){
 						// TODO: integrate auth
-						// var authToken = auth.setAuth (result.UserID, result.Name);
+						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
-						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
-						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'));
+						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'), {token: authToken});
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
 						console.log(err.stack);

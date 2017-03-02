@@ -12,6 +12,11 @@ var verify = function (token, callback) {
 	})
 }
 
+var protectCSRF = function (req, res, next) {
+	req.cookies.token = null;
+	return next();
+}
+
 // ensureAuth is a middleware that ensures the JSON web token has been verified.
 
 var ensureAuth = function (req, res, next) {
@@ -44,6 +49,19 @@ var ensureAuth = function (req, res, next) {
 
 }
 
+var setAuth = function (id, name) {
+	var tmpuser = {};
+	tmpuser.id = id;
+	tmpuser.name = name
+
+	//set token
+	var token = jwt.sign (tmpuser, app.get ('jwt-secret'), {
+		expiresIn: '30d'
+	});
+	return token;
+}
+
 
 module.exports.verify = verify;
 module.exports.ensureAuth = ensureAuth;
+module.exports.setAuth = setAuth;
