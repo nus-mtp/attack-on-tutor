@@ -1,0 +1,94 @@
+<html>
+
+<head>
+	<title>Install jQuery</title>
+</head>
+
+<style>
+	div#test { border: #000 1px solid; padding:10px 40px 40px 40px; }
+</style>
+
+<script src="js/jquery-3.1.1.min.js"></script>
+<!--<script src="js/script.js"></script>-->
+	
+<script type="text/javascript"> // Will Edit Inline Javascript
+	/*$(function() {
+		alert("My first Jquery test");
+	});*/
+	
+	var qnNoIndex = 0;
+	
+	var test, testStatus;			// Test Title & Test Box
+	var question;					// Particular Question
+	var choice, choiceArray;		// Answer & Array of Answers
+	
+	var optionA, optionB, optionC; 	// Answer Options
+	var correctAnswers = 0;
+	
+	var questionArray = [
+		["1 + 1?", "1", "2", "3", "B"],
+		["1 - 1?", "1", "0", "-1", "B"],
+		["1 * 1?", "1", "2", "3", "A"],
+		["1 / 1?", "1", "2", "3", "A"]
+	];
+	
+	function name(x) { // Returns the Name of the Document
+		return document.getElementById(x);
+	}
+	
+	function renderQuestion() { // Prints Question
+		test = name("test");
+		
+		if(qnNoIndex >= questionArray.length) {
+			test.innerHTML = "<h2>You answered " +correctAnswers+ " of " +questionArray.length+ " questions correctly.</h2>";
+			name("testStatus").innerHTML = "Test Finished";
+			
+			qnNoIndex = 0;
+			correctAnswers = 0;
+			
+			return false;
+		}
+		
+		name("testStatus").innerHTML = "Question " +(qnNoIndex+1)+" of "+ questionArray.length;
+		
+		question = questionArray[qnNoIndex][0];
+		optionA = questionArray[qnNoIndex][1];
+		optionB = questionArray[qnNoIndex][2];
+		optionC = questionArray[qnNoIndex][3];
+		
+		// Prints Question
+		test.innerHTML = "<h3>" +question+ "</h3>";
+			
+		test.innerHTML += "<input type='radio' name='choiceArray' value='A'> "+optionA+"<br>";
+		test.innerHTML += "<input type='radio' name='choiceArray' value='B'> "+optionB+"<br>";
+		test.innerHTML += "<input type='radio' name='choiceArray' value='C'> "+optionC+"<br><br>";
+		test.innerHTML += "<button onclick='checkAnswer()'>Submit Answer</button>";
+	}
+	
+	function checkAnswer() {
+		choiceArray = document.getElementsByName("choiceArray");
+		
+		for(var i=0; i<choiceArray.length; i++) {
+			if(choiceArray[i].checked) {
+				choice = choiceArray[i].value;
+			}
+		}
+		
+		if(choice == questionArray[qnNoIndex][4]) {
+			//test.innerHTML = "<h2>You are right!</h2>"
+			correctAnswers++;
+		}
+		
+		qnNoIndex++;
+		renderQuestion(); // Move on to the Next Question
+	}
+	
+	window.addEventListener("load", renderQuestion, false);
+</script>
+	
+<body>
+	<h2 id="testStatus"></h2>
+	<div id="test"></div>
+</body>
+
+</html>
