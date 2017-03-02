@@ -3,6 +3,7 @@ var app = module.exports = express ();
 var fs = require ('fs');
 var path = require ('path');
 
+
 app.set ('rootPath', __dirname);
 
 // parse config file
@@ -27,10 +28,16 @@ app.set ('view engine', 'ejs');
 // File Limitation
 app.set ('MAX_FILE_SIZE', 30000000); // In Bytes, equals to 30Mb
 
+var cookieParser = require ('cookie-parser');
+var bodyParser = require ('body-parser');
+
+app.use (bodyParser.json ());
+app.use (bodyParser.urlencoded ({extended: false}));
+app.use (cookieParser ());
+
+
 //use router to handle different url request
 app.use (router);
-
-
 
 //error handling
 app.use
@@ -55,4 +62,5 @@ var server = app.listen
 		console.log("App listening at http://%s:%s", host, port)
 	}	
 )
+
 
