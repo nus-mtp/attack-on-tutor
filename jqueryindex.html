@@ -1,0 +1,155 @@
+<html>
+
+<head>
+	<title>Battle System</title>
+</head>
+
+<style>
+	div.border { border: #000 1px solid; padding: 10px 10px 10px 10px; }
+</style>
+
+<script src="js/jquery-3.1.1.min.js"></script>
+	
+<script type="text/javascript"> // Will Edit Inline Javascript
+	
+	// Views
+	var testStatus, test, player, playerStats;
+
+	var qnNoIndex = 0;
+	
+	var question;					// Particular Question
+	var choice, choiceArray;		// Answer & Array of Answers
+	
+	var optionA, optionB, optionC; 	// Answer Options
+	var correctAnswers = 0;
+	
+	var questionArray = [
+		["1 + 1?", "1", "2", "3", "B"],
+		["1 - 1?", "1", "0", "-1", "B"],
+		["1 * 1?", "1", "2", "3", "A"],
+		["1 / 1?", "1", "2", "3", "A"]
+	];
+	
+	/*var weapons = [
+		"Daggers", "Halberd", "Sword", "Greatsword", "Javelin", "Pistol"
+	];*/
+	
+	function Player(name, weapon, health) {
+		this.name = name;
+		this.weapon = weapon;
+		this.health = health;
+		this.greeting = function() {
+		alert('Hi! I\'m ' + this.name + '.');
+		};
+	}
+	
+	function Boss(name, weapon, health) {
+		this.name = name;
+		this.weapon = weapon;
+		this.health = health;
+	}
+	
+	var Silfer = new Player("Silfer", "Daggers", 100);
+	var Tutor = new Boss("Tutor", "Polearm", 500);
+
+	function name(x) { // Returns the Name of the Document
+		return document.getElementById(x);
+	}
+	
+	function renderQuestion() { // Prints Question
+		testStatus = name("testStatus");
+		test = name("test");
+		player = name("player");
+		playerStats = name("playerStats");
+		bossStats = name("bossStats");
+
+		characterData();
+		bossData();
+
+		if(qnNoIndex >= questionArray.length) {
+			testStatus.innerHTML = "Test Finished";
+
+			test.innerHTML = "<h2>You answered " +correctAnswers+ " of " +questionArray.length+ " questions correctly.</h2>";		
+			test.innerHTML += "<button onclick='resetQuestions()'>Reset</button>";
+
+			qnNoIndex = 0;
+			correctAnswers = 0;
+			
+			return false;
+		}
+		
+		testStatus.innerHTML = "Test Status: Question " +(qnNoIndex+1)+" of "+ questionArray.length;
+
+		question = questionArray[qnNoIndex][0];
+		optionA = questionArray[qnNoIndex][1];
+		optionB = questionArray[qnNoIndex][2];
+		optionC = questionArray[qnNoIndex][3];
+
+		// Prints Question
+		test.innerHTML = "<h3>Test: " +question+ "</h3>";
+			
+		test.innerHTML += "<input type='radio' name='choiceArray' value='A'> "+optionA+"<br>";
+		test.innerHTML += "<input type='radio' name='choiceArray' value='B'> "+optionB+"<br>";
+		test.innerHTML += "<input type='radio' name='choiceArray' value='C'> "+optionC+"<br><br>";
+		test.innerHTML += "<button onclick='checkAnswer()'>Submit Answer</button>";
+		test.innerHTML += "<button onclick='resetQuestions()'>Reset</button>";
+
+		combatLog.innerHTML = "<b> Combat Log: </b>";
+	}
+	
+	function resetQuestions() {
+		//console.log(qnNoIndex);
+		qnNoIndex = 0;
+		Silfer.health = 100;
+		renderQuestion();
+	}
+
+	function characterData() {
+		playerStats.innerHTML = "Player: " + Silfer.name + "<br />" + 
+								"Weapon: " + Silfer.weapon + "<br />" + 
+								"Health: " + Silfer.health;
+	}
+
+	function bossData() {
+		bossStats.innerHTML = "Player: " + Tutor.name + "<br />" + 
+								"Weapon: " + Tutor.weapon + "<br />" + 
+								"Health: " + Tutor.health;
+	}
+	
+	function checkAnswer() {
+		choiceArray = document.getElementsByName("choiceArray");
+		
+		for(var i=0; i<choiceArray.length; i++) {
+			if(choiceArray[i].checked) {
+				choice = choiceArray[i].value;
+			}
+		}
+
+		if(choice == questionArray[qnNoIndex][4]) {
+			player.innerHTML = Silfer.name+ " took 0 damage.";
+			correctAnswers++;
+		}
+		
+		else {
+			Silfer.health -= 20;
+			player.innerHTML = Silfer.name+ " took 20 damage.";
+		}
+	
+		qnNoIndex++;
+		renderQuestion(); // Move on to the Next Question
+		characterData();
+	}
+	
+	window.addEventListener("load", renderQuestion, false);
+</script>
+	
+<body>
+	<h2 id="testStatus"></h2>
+	<div id="test" class="border"></div>
+	<div id="combatLog" class="border"></div>
+	<div id="player" class="border"></div>
+	<div id="playerStats" class="border"></div>
+	<div id="bossStats" class="border"></div>
+</body>
+
+</html>
