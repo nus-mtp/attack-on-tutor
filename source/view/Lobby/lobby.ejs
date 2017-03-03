@@ -15,6 +15,37 @@
 			</div>
 		</div>
 		<div class="container">
+			<div class="row" id="battle-container">
+				<div class="col-md-6 col-sm-6 col-xs-6" id="question-list-container">
+					<div class="row">
+						<h2> Attack Composer </h2>
+					</div>
+					<div class="row">
+						<div class="attack-area" style="width:100%; max-height:300px; overflow:auto;">
+							<textarea class="inputQuestion" style="width:100%;" placeholder="Type question..."></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="attack-area" style="width:100%; max-height:300px; overflow:auto;">
+							<ul class="attacks-composed-list"></ul>
+						</div>
+					</div>
+					<div class="row">
+						<button class="btn btn-info add-answer-option">Add Option</button>
+						<button class="btn btn-success send-attack" style="float:right;">Attack!</button>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container">
+					<div class="text-center row">
+						<h2> Combat Log </h2>
+					</div>
+					<div class="row">
+						<div class="combat-area" style="width:100%; max-height:300px; overflow:auto;">
+							<ul class="attacks-received-list"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="row" id="lobby-container">
 				<div class="col-md-8 col-sm-6 col-xs-6" id="chat-container">
 					<div class="row">
@@ -59,7 +90,7 @@
                 var $window = $(window);
                 var $messages = $('.messages'); //Messages area
                 var $inputMessage = $('.inputMessage'); //Input message input box
-
+				
                 var $loginPage = $('.login.page'); //The login page
                 var $chatPage = $('.chat.page'); //The chatroom page
                 var $createGame = $('.createGame'); 
@@ -70,7 +101,6 @@
                 var connected = false;
                 var typing = false;
                 var lastTypingTime;
-                var $currentInput = $inputMessage.focus();
 
                 var socket = io();
 
@@ -90,7 +120,7 @@
                     
                     //Prevent markup from being injected into the message
                     message = cleanInput(message);
-                    
+                
                     //If there is a non-empty message and a socket connection
                     if (message && connected) {
                         $inputMessage.val('');
@@ -104,6 +134,18 @@
                         socket.emit ('new message', message);
                     }
                 }
+				
+				//Adds an option to the MCQ attack composer.
+				function addOption () {
+					var $optionInputDiv = $('<input class="question-option-input" placeholder="Type option description...">');
+                    
+                    var $correctAnswerDiv = $('<input type="radio" class="question-option-correct">');
+
+                    var $questionOption = $('<li class="question-option"/>')
+                        .append($optionInputDiv, $correctAnswerDiv);
+						
+					$('.attacks-composed-list').append ( $questionOption );
+				}
 				
                 //Log a message
                 function log (message, options) {
@@ -230,11 +272,6 @@
                 //Keyboard events
 
                 $window.keydown (function (event) {
-                    //Auto-focus the current input when a key is typed
-                    if (!(event.ctrlKey || event.metaKey || event.altKey)) {
-                        $currentInput.focus();
-                    }
-                    
                     //When the client hits ENTER on their keyboard
                     if (event.which === 13) {
                         if (username) {
@@ -244,6 +281,44 @@
                         }
                     }
                 });
+				
+				$('.add-answer-option').on ( 'click', function () {
+					addOption();
+				});
+				
+				$('.send-attack').on ( 'click', function () {
+					var attack = {};
+					var attackOptions = [];
+					
+					$('.attacks-composed-list').children('li').each ( function (index) {
+						attackOptions.push ({
+							'description' : $(this).find('.question-option-input').val(),
+							'correct' : $(this).find('.question-option-correct').prop('checked')
+						});
+					});
+					attack = {
+						'description' : $(".inputQuestion").val(),
+						'options' : attackOptions
+					};
+					socket.emit ('new attack', attack);
+					$('.attacks-composed-list').html ( '' );
+				});
+				
+				$(document).on ( 'click', '.submit-answer', function () {
+					var hasWrongAnswer = false;
+					$('.answer-option-list').children('input').each ( function (index) {
+						if ($(this).data ("correct")) {
+							if (!$(this).prop ('checked')) {
+								hasWrongAnswer = true;
+							}
+						}
+					});
+					if (hasWrongAnswer) {
+						$('.answer-option-list').parent().append ('Wrong!');
+					}
+					$('.answer-option-list').parent().append ('Correct!');
+					$(this).hide();
+				});
 
                 $inputMessage.on ('input', function() {
                     updateTyping();
@@ -292,6 +367,22 @@
                 //Whenever the server emits 'new message', update the chat body
                 socket.on ('new message', function (data) {
                     addChatMessage (data);
+                });
+				
+				// Whenever the server emits 'user joined', log it in the chat body
+                socket.on ('add attack', function (data) {
+					var $optionInputDiv = $('<h3>').text(data.description);
+                    var $submitButton = $('<button class="btn btn-success submit-answer" style="float:right;"></button>').text ( 'Submit!' );
+					
+					var $optionsList = $('<ul>');
+					$.each (data.options, function (index, value) {
+						var $answerInfoDiv = $('<div>').text(value.description);
+						var $correctAnswerDiv = $('<input type="radio" data-correct="' + value.correct + '">');
+						
+						$optionsList.append ( $('<li class="answer-option-list" />').append ( $answerInfoDiv, $correctAnswerDiv ) );
+					});
+                    
+					$('.attacks-received-list').append ( $optionInputDiv, $optionsList, $submitButton );
                 });
 
                 // Whenever the server emits 'user joined', log it in the chat body

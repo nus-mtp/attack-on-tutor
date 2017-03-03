@@ -14,13 +14,13 @@ function LobbyList () {
 LobbyList.prototype.addLobby = function (roomData) {
 	if (!this.lobbies[roomData.moduleId]) {
 		this.lobbies[roomData.moduleId] = {};
-		if (!this.lobbies[roomData.moduleId][roomData.tutorialId]) {
-			this.lobbies[roomData.moduleId][roomData.tutorialId] = new Lobby();
-			this.lobbies[roomData.moduleId][roomData.tutorialId].tutorialId = roomData.tutorialId;
-			this.lobbies[roomData.moduleId][roomData.tutorialId].moduleId = roomData.moduleId;
-			this.lobbies[roomData.moduleId][roomData.tutorialId].roomName = roomData.moduleId + roomData.tutorialId;
-			this.lobbyCount++;
-		}
+	}
+	if (!this.lobbies[roomData.moduleId][roomData.tutorialId]) {
+		this.lobbies[roomData.moduleId][roomData.tutorialId] = new Lobby();
+		this.lobbies[roomData.moduleId][roomData.tutorialId].tutorialId = roomData.tutorialId;
+		this.lobbies[roomData.moduleId][roomData.tutorialId].moduleId = roomData.moduleId;
+		this.lobbies[roomData.moduleId][roomData.tutorialId].roomName = roomData.moduleId + "" + roomData.tutorialId;
+		this.lobbyCount++;
 	}
 	return this.lobbies[roomData.moduleId][roomData.tutorialId];
 }
@@ -67,6 +67,7 @@ io.on ('connection', function (socket) {
             'tutorialId' : data.tutorialId,
             'moduleId' : data.moduleId
         });
+
         socket.tutorialGroup = data.tutorialId;
 		socket.moduleGroup = data.moduleId;
 		socket.roomName = newLobby.roomName;
@@ -170,6 +171,12 @@ io.on ('connection', function (socket) {
             username: socket.username,
             gameId: gameId
         });
+    });
+	
+	//Listen and execute broadcast of message on receiving 'new message' emission from the client.
+    socket.on ('new attack', function (data) {
+        // we tell the client to execute 'new message'
+        socket.broadcast.to(socket.roomName).emit ('add attack', data);
     });
 });
 
