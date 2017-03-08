@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
 
-    <body>
+    <body ng-app="lobbyApp">
 		<div class="container" id="header-bar">
 			<div class="row">
 				<div class="text-center col-md-12">
@@ -47,17 +47,29 @@
 				</div>
 			</div>
 			<div class="row" id="lobby-container">
-				<div class="col-md-8 col-sm-6 col-xs-6" id="chat-container">
+				<div ng-controller="chatCtrl" class="col-md-8 col-sm-6 col-xs-6" id="chat-container">
 					<div class="row">
 						<h2> Messages </h2>
 					</div>
 					<div class="row">
 						<div class="chat-area" style="width:100%; max-height:300px; overflow:auto;">
-							<ul class="messages"></ul>
+							<ul class="messages">
+								<li ng-repeat="message in messages"
+									ng-class="{'log' : message.type=='log', 'typing' : message.type=='typing', 'message' : message.type=='message' || message.type=='typing'}"
+									data-username="{{message.user}}">
+									<div ng-if="message.type == 'chat'">
+										<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span>
+										<span class="messageBody" ng-bind="message.message"></span>
+									</div>
+									<div ng-if="message.type == 'log'">
+										{{ message.message }}
+									</div>
+								</li>
+							</ul>
 						</div>
 					</div>
 					<div class="row">
-						<input class="inputMessage" style="width:100%;" placeholder="Type here..."/>
+						<input class="inputMessage" style="width:100%;" ng-model="chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type here..."/>
 					</div>
 				</div>
 				<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container">
@@ -76,130 +88,203 @@
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script>
-            $(function() {
-                var FADE_TIME = 150; // ms
-                var TYPING_TIMER_LENGTH = 400; // ms
-                var COLORS = [
-                '#e21400', '#91580f', '#f8a700', '#f78b00',
-                '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-                '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-                ];
+		
+			var lobbyApp = angular.module('lobbyApp', []);
+			
+			lobbyApp.factory('socket', function ($rootScope) {
+				var socket = io.connect();
+				return {
+					on: function (eventName, callback) {
+						socket.on (eventName, function () {  
+							var args = arguments;
+							$rootScope.$apply (function () {
+								callback.apply (socket, args);
+							});
+						});
+					},
+					emit: function (eventName, data, callback) {
+						socket.emit(eventName, data, function () {
+							var args = arguments;
+							$rootScope.$apply (function () {
+								if (callback) {
+									callback.apply (socket, args);
+								}
+							});
+						})
+					}
+				};	
+			});
+			
+			lobbyApp.directive ('ngEnter', function () {
+				return function (scope, element, attrs) {
+					element.bind("keydown keypress", function (event) {
+						if (event.which === 13) {
+							scope.$apply(function (){
+								scope.$eval(attrs.ngEnter);
+							});
+							event.preventDefault();
+						}
+					});
+				};
+			});
+			
+			lobbyApp.controller ('questionAndAnswerCtrl', function($scope, socket) {
+				$scope.firstName= "John";
+				$scope.lastName= "Doe";
+			});
+			
+			lobbyApp.controller ('chatCtrl', function ($scope, $window, socket) {
 
-                //Initialize variables
-                var $window = $(window);
-                var $messages = $('.messages'); //Messages area
-                var $inputMessage = $('.inputMessage'); //Input message input box
+				//Send this event to notify server of a new connection.
+                socket.on ('connect', function() {
+                    var userId = "<%=userId %>";
+                    var moduleId = "<%=moduleId %>";
+                    var tutorialId = "<%=tutorialId %>";
+                    
+                    var data = {
+                        'userId' : userId,
+                        'moduleId' : moduleId,
+                        'tutorialId' : tutorialId
+                    };
+                    
+                    socket.emit ('new connection', data);
+                });
+                
+                //Whenever the server emits 'login', log the login message
+                socket.on ('login', function (data) {
+                    connected = true;
+                    //Display the welcome message
+                    var message = "Welcome to the Lobby ";
+                    logMessage ({
+						'type' : 'log',
+						'message': message
+					}, {
+                        prepend: true
+                    });
+                    addParticipantsMessage (data);
+                });
+
+                //Whenever the server emits 'new message', update the chat body
+                socket.on ('new message', function (data) {
+                    addChatMessage (data);
+                });
 				
-                var $loginPage = $('.login.page'); //The login page
-                var $chatPage = $('.chat.page'); //The chatroom page
-                var $createGame = $('.createGame'); 
-                var $joinGame = $('.joinGame'); 
+				// Whenever the server emits 'user joined', log it in the chat body
+                socket.on ('user joined', function (data) {
+                    logMessage ({
+						'type' : 'log',
+						'message' : data.username + ' joined'
+					});
+                    addParticipantsMessage (data);
+                });
 
-                //Prompt for setting a username
-                var username = "<%= userId %>";
-                var connected = false;
-                var typing = false;
-                var lastTypingTime;
+                //Whenever the server emits 'user left', log it in the chat body
+                socket.on ('user left', function (data) {
+                    logMessage ({
+						'type' : 'log',
+						'message' : data.username + ' left'
+					});
+                    addParticipantsMessage (data);
+                    removeChatTyping (data);
+                });
 
-                var socket = io();
+                //Whenever the server emits 'typing', show the typing message
+                socket.on ('typing', function (data) {
+                    addChatTyping(data);
+                });
 
-                function addParticipantsMessage (data) {
-                    var message = '';
-                    if (data.numUsers === 1) {
-                        message += "It's just you and me, honey bee.";
-                    } else {
-                        message += "There are " + data.numUsers + " players in the Lobby";
-                    }
-                    log(message);
-                }
-
-                //Sends a chat message
-                function sendMessage () {
-                    var message = $inputMessage.val();
+                //Whenever the server emits 'stop typing', kill the typing message
+                socket.on ('stop typing', function (data) {
+                    removeChatTyping(data);
+                });
+				
+				$scope.chatMessage = "";
+				$scope.messages = [];
+				
+				//Sends a chat message
+                $scope.sendMessage = function () {
+                    var message = $scope.chatMessage;
                     
                     //Prevent markup from being injected into the message
                     message = cleanInput(message);
                 
                     //If there is a non-empty message and a socket connection
                     if (message && connected) {
-                        $inputMessage.val('');
+                        $scope.chatMessage="";
                         
                         addChatMessage({
-                            username: username,
-                            message: message
+                            'username': username,
+                            'message': message
                         });
                         
                         //Tell server to execute 'new message' and send along one parameter
                         socket.emit ('new message', message);
                     }
+					
+					socket.emit('stop typing');
+					typing = false;
                 }
 				
-				//Adds an option to the MCQ attack composer.
-				function addOption () {
-					var $optionInputDiv = $('<input class="question-option-input" placeholder="Type option description...">');
-                    
-                    var $correctAnswerDiv = $('<input type="radio" class="question-option-correct">');
-
-                    var $questionOption = $('<li class="question-option"/>')
-                        .append($optionInputDiv, $correctAnswerDiv);
-						
-					$('.attacks-composed-list').append ( $questionOption );
-				}
-				
-                //Log a message
-                function log (message, options) {
-                    var $el = $('<li>').addClass('log').text(message);
-                    addMessageElement ($el, options);
-                }
-
-                //Adds the visual chat message to the message list
-                function addChatMessage (data, options) {
-                    //Don't fade the message in if there is an 'X was typing'
-                    var $typingMessages = getTypingMessages(data);
-                    options = options || {};
-                    if ($typingMessages.length !== 0) {
-                        options.fade = false;
-                        $typingMessages.remove();
+				//Gets the color of a username through our hash function
+                $scope.getUsernameColor = function (username) {
+                    //Compute hash code
+                    var hash = 7;
+                    for (var i = 0; i < username.length; i++) {
+                        hash = username.charCodeAt(i) + (hash << 5) - hash;
                     }
-
-                    var $usernameDiv = $('<span class="username"/>')
-                        .text (data.username)
-                        .css('color', getUsernameColor(data.username));
                     
-                    var $messageBodyDiv = $('<span class="messageBody">')
-                        .text(data.message);
-
-                    var typingClass = data.typing ? 'typing' : '';
-                    var $messageDiv = $('<li class="message"/>')
-                        .data('username', data.username)
-                        .addClass(typingClass)
-                        .append($usernameDiv, $messageBodyDiv);
-
-                    addMessageElement($messageDiv, options);
+                    //Calculate color
+                    var index = Math.abs(hash % COLORS.length);
+                    return COLORS[index];
                 }
-
-                // Adds the visual chat typing message
-                function addChatTyping (data) {
-                    data.typing = true;
-                    data.message = 'is typing';
-                    addChatMessage (data);
+				
+				// Updates the typing event
+                $scope.updateTyping = function () {
+                    if (connected) {
+                        if (!typing) {
+                            typing = true;
+                            socket.emit ('typing');
+                        }
+                        
+                        lastTypingTime = (new Date()).getTime();
+                        setTimeout(function () {
+                            var typingTimer = (new Date()).getTime();
+                            var timeDiff = typingTimer - lastTypingTime;
+                            if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
+                                socket.emit ('stop typing');
+                                typing = false;
+                            }
+                        }, TYPING_TIMER_LENGTH);
+                    }
                 }
-
-                //Removes the visual chat typing message
-                function removeChatTyping (data) {
-                    getTypingMessages(data).fadeOut (function () {
-                        $(this).remove();
-                    });
+				
+				var FADE_TIME = 150; // ms
+                var TYPING_TIMER_LENGTH = 400; // ms
+                var COLORS = [
+					'#e21400', '#91580f', '#f8a700', '#f78b00',
+					'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+					'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+                ];
+				var lastTypingTime;
+				
+				var connected = false;
+                var typing = false;
+				
+				var username = "<%= userId %>";
+				
+				var $el_messages = $('.messages'); //Messages area
+				
+				//Prevents input from having injected markup
+                var cleanInput = function (input) {
+                    return $('<div/>').text(input).text();
                 }
-
-                //Adds a message element to the messages and scrolls to the bottom
-                //el                The element to add as a message
-                //options.fade      If the element should fade-in (default = true)
+				
+				//Adds a message element to the messages and scrolls to the bottom
+                //message          	The message to add to chat { user: '', message:'', type:'log || chat' }
                 //options.prepend   If the element should prepend all other messages (default = false)
-                function addMessageElement (el, options) {
-                    var $el = $(el);
-
+                var logMessage = function (message, options) {
                     //Setup default options
                     if (!options) {
                         options = {};
@@ -211,76 +296,96 @@
                         options.prepend = false;
                     }
 
-                    //Apply options
-                    if (options.fade) {
-                        $el.hide().fadeIn(FADE_TIME);
-                    }
                     if (options.prepend) {
-                        $messages.prepend($el);
+                        $scope.messages.unshift(message);
                     } else {
-                        $messages.append($el);
+                        $scope.messages.push(message);
                     }
                     
-                    $messages[0].scrollTop = $messages[0].scrollHeight;
+                    $el_messages[0].scrollTop = $el_messages[0].scrollHeight;
                 }
-
-                //Prevents input from having injected markup
-                function cleanInput (input) {
-                    return $('<div/>').text(input).text();
-                }
-
-                // Updates the typing event
-                function updateTyping () {
-                    if (connected) {
-                        if (!typing) {
-                            typing = true;
-                            socket.emit('typing');
-                        }
-                        
-                        lastTypingTime = (new Date()).getTime();
-                        setTimeout(function () {
-                            var typingTimer = (new Date()).getTime();
-                            var timeDiff = typingTimer - lastTypingTime;
-                            if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-                                socket.emit('stop typing');
-                                typing = false;
-                            }
-                        }, TYPING_TIMER_LENGTH);
+				
+				var addParticipantsMessage = function (data) {
+                    var message = '';
+                    if (data.numUsers === 1) {
+                        message += "It's just you and me, honey bee.";
+                    } else {
+                        message += "There are " + data.numUsers + " players in the Lobby";
                     }
+                    logMessage ({
+						'type' : 'log',
+						'message' : message
+					});
+                }
+				
+				//Adds the visual chat message to the message list
+                var addChatMessage = function (data, options) {
+                    //Don't fade the message in if there is an 'X was typing'
+                    var $typingMessages = getTypingMessages(data);
+                    options = options || {};
+                    if ($typingMessages.length !== 0) {
+                        options.fade = false;
+                        $typingMessages.remove();
+                    }
+					
+                    logMessage ({
+						'user' : data.username,
+						'type' : data.typing ? 'typing' : 'chat',
+						'message' : data.message
+					}, options);
+                }
+				
+				// Adds the visual chat typing message
+                var addChatTyping = function (data) {
+                    data.typing = true;
+                    data.message = 'is typing';
+                    addChatMessage (data);
+                }
+
+                //Removes the visual chat typing message
+                var removeChatTyping = function (data) {
+                    getTypingMessages(data).fadeOut (function () {
+                        $(this).remove();
+                    });
                 }
 
                 //Gets the 'X is typing' messages of a user
-                function getTypingMessages (data) {
+                var getTypingMessages = function (data) {
                     return $('.typing.message').filter (function (i) {
                         return $(this).data('username') === data.username;
                     });
                 }
+			});
+			
+            $(function() {
+                //Initialize variables
+                var $window = $(window);
+                var $inputMessage = $('.inputMessage'); //Input message input box
+				
+                var $loginPage = $('.login.page'); //The login page
+                var $chatPage = $('.chat.page'); //The chatroom page
+                var $createGame = $('.createGame'); 
+                var $joinGame = $('.joinGame'); 
 
-                //Gets the color of a username through our hash function
-                function getUsernameColor (username) {
-                    //Compute hash code
-                    var hash = 7;
-                    for (var i = 0; i < username.length; i++) {
-                        hash = username.charCodeAt(i) + (hash << 5) - hash;
-                    }
+                //Prompt for setting a username
+                
+                
+
+                var socket = io();
+
+				//Adds an option to the MCQ attack composer.
+				function addOption () {
+					var $optionInputDiv = $('<input class="question-option-input" placeholder="Type option description...">');
                     
-                    //Calculate color
-                    var index = Math.abs(hash % COLORS.length);
-                    return COLORS[index];
-                }
+                    var $correctAnswerDiv = $('<input type="radio" class="question-option-correct">');
+
+                    var $questionOption = $('<li class="question-option"/>')
+                        .append($optionInputDiv, $correctAnswerDiv);
+						
+					$('.attacks-composed-list').append ( $questionOption );
+				}
 
                 //Keyboard events
-
-                $window.keydown (function (event) {
-                    //When the client hits ENTER on their keyboard
-                    if (event.which === 13) {
-                        if (username) {
-                            sendMessage();
-                            socket.emit('stop typing');
-                            typing = false;
-                        }
-                    }
-                });
 				
 				$('.add-answer-option').on ( 'click', function () {
 					addOption();
@@ -319,55 +424,10 @@
 					$('.answer-option-list').parent().append ('Correct!');
 					$(this).hide();
 				});
-
-                $inputMessage.on ('input', function() {
-                    updateTyping();
-                });
-
-                // Click events
-
-                //Focus input when clicking on the message input's border
-                $inputMessage.click (function () {
-                    $inputMessage.focus();
-                });
-
-                $createGame.click(function () {
-                    sendGame();
-                })
-
-
+				
                 //Socket events
 
-                //Send this event to notify server of a new connection.
-                socket.on ('connect', function() {
-                    var userId = "<%=userId %>";
-                    var moduleId = "<%=moduleId %>";
-                    var tutorialId = "<%=tutorialId %>";
-                    
-                    var data = {
-                        'userId' : userId,
-                        'moduleId' : moduleId,
-                        'tutorialId' : tutorialId
-                    };
-                    
-                    socket.emit ('new connection', data);
-                });
                 
-                //Whenever the server emits 'login', log the login message
-                socket.on ('login', function (data) {
-                    connected = true;
-                    //Display the welcome message
-                    var message = "Welcome to the Lobby ";
-                    log (message, {
-                        prepend: true
-                    });
-                    addParticipantsMessage (data);
-                });
-
-                //Whenever the server emits 'new message', update the chat body
-                socket.on ('new message', function (data) {
-                    addChatMessage (data);
-                });
 				
 				// Whenever the server emits 'user joined', log it in the chat body
                 socket.on ('add attack', function (data) {
@@ -383,29 +443,6 @@
 					});
                     
 					$('.attacks-received-list').append ( $optionInputDiv, $optionsList, $submitButton );
-                });
-
-                // Whenever the server emits 'user joined', log it in the chat body
-                socket.on ('user joined', function (data) {
-                    log (data.username + ' joined');
-                    addParticipantsMessage (data);
-                });
-
-                //Whenever the server emits 'user left', log it in the chat body
-                socket.on ('user left', function (data) {
-                    log (data.username + ' left');
-                    addParticipantsMessage (data);
-                    removeChatTyping (data);
-                });
-
-                //Whenever the server emits 'typing', show the typing message
-                socket.on ('typing', function (data) {
-                    addChatTyping(data);
-                });
-
-                //Whenever the server emits 'stop typing', kill the typing message
-                socket.on ('stop typing', function (data) {
-                    removeChatTyping(data);
                 });
 
                 socket.on ('battle created', function (data) {
