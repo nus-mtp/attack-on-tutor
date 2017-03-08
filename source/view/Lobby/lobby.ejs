@@ -65,7 +65,8 @@
 										{{ message.message }}
 									</div>
 									<div ng-if="message.type == 'typing'">
-										{{ message.message }}
+										<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span>
+										<span class="messageBody" ng-bind="message.message"></span>
 									</div>
 								</li>
 							</ul>
