@@ -23,6 +23,7 @@ var ensureAuth = function (req, res, next) {
 
 	// Get token from body or query or headers
 	var token = req.body.token || req.query.token || req.headers['token'] || req.cookies.token;
+
 	if (token) {
 		return jwt.verify (token, app.get('jwt-secret'), function (err, decoded) {
 			if (err) {
@@ -42,7 +43,7 @@ var ensureAuth = function (req, res, next) {
 	} else {
 		req.body.auth = {
 			success: false,
-			message: 'Null'
+			message: 'No token'
 		};
 		return next();
 	}
@@ -53,7 +54,6 @@ var setAuth = function (id, name) {
 	var tmpuser = {};
 	tmpuser.id = id;
 	tmpuser.name = name
-
 	//set token
 	var token = jwt.sign (tmpuser, app.get ('jwt-secret'), {
 		expiresIn: '30d'

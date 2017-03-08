@@ -19,6 +19,8 @@ var get = function (req, res, next)
 		console.log('');
 		console.log(auth.decoded);
 		user = auth.decoded;
+	} else {
+		console.log('auth failed');
 	}
 	res.render
 	(

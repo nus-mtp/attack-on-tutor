@@ -35,7 +35,6 @@ app.use (bodyParser.json ());
 app.use (bodyParser.urlencoded ({extended: false}));
 app.use (cookieParser ());
 
-
 //use router to handle different url request
 app.use (router);
 
@@ -57,8 +56,7 @@ var server = app.listen
 	{
 		var host = server.address().address
 		var port = server.address().port
-
-		console.log(app.get('api-key'));
+		
 		console.log("App listening at http://%s:%s", host, port)
 	}	
 )

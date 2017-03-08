@@ -16,4 +16,6 @@ router.get ('/login/callback', login.callback);
 
 router.get ('/dashboard', auth.ensureAuth, dashboard.get);
 
+router.post('/api/dashboard/syncIVLE', auth.ensureAuth, dashboard.syncIVLE);
+
 module.exports = router;

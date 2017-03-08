@@ -24,8 +24,6 @@ var callback = function (req, res, next) {
 	var ivleToken = req.query.token;
 	var apikey = app.get ('api-key');
 
-	console.log('https://ivle.nus.edu.sg/api/Lapi.svc/Profile_View?APIKey=' + apikey + '&AuthToken=' + ivleToken);
-
 	//view profile
 	rest ('https://ivle.nus.edu.sg/api/Lapi.svc/Profile_View?APIKey=' + apikey + '&AuthToken=' + ivleToken).then (function (response) {
 
@@ -40,6 +38,7 @@ var callback = function (req, res, next) {
 				}
 			}).then(function(user){
 				if (!user){
+					console.log('user doesnt exist');
 					User.create({
 						id: result.UserID,
 						name: result.Name,
@@ -50,12 +49,24 @@ var callback = function (req, res, next) {
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
 						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
-						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'), {token: authToken});
+						// Link to dashboard
+						res.cookie({
+							user: user,
+							token: authToken
+						});
+						return res.render('dashboard', {
+							title: 'DONE?',
+							user: user,
+							ip: req.app.get('server-ip'),
+							port: req.app.get('server-port'),
+							token: authToken});
+						//return res.json( { test: 'test' } );
 					}).catch(function(err){
 						//logger.error(result.UserID + ' create user failed');
 						return res.json({success:false, at:'Create user', message:err});
 					});
 				} else {
+					console.log('updating user');
 					User.update({
 						token: result.Token
 					},{
@@ -66,13 +77,23 @@ var callback = function (req, res, next) {
 						// TODO: integrate auth
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
-						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'), {token: authToken});
+						res.cookie({
+							user: user,
+							token: authToken
+						});
+						return res.render ('dashboard', {
+							title: 'DONE?',
+							user: user,
+							ip: req.app.get('server-ip'),
+							port: req.app.get('server-port'),
+							token: authToken});
+						//return res.json({test: 'test'});
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
 						console.log(err.stack);
 						return res.json({success:false, at:'Update user information', message:err});
 					});
-				}
+				}	
 			});
 		}
 		else {
