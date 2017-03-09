@@ -45,6 +45,8 @@ function Lobby () {
     
 	this.groupCount = 0;
 	this.groups = {};
+
+    this.questions = [];
     
     this.numUsers = 0;
     
@@ -62,6 +64,10 @@ io.on ('connection', function (socket) {
     
     //Listen for new connections and create a lobby if one does not exist yet.
     socket.on ('new connection', function (data) {
+        if (addedUser) {
+            return;
+        }
+        
         //Add a lobby to the lobbyList.
         var newLobby = lobbyList.addLobby ({
             'tutorialId' : data.tutorialId,
@@ -74,9 +80,6 @@ io.on ('connection', function (socket) {
         socket.join ( newLobby.roomName );
         socket.userId = data.userId;
 		
-		if (addedUser) {
-            return;
-        }
         var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
 		
         //Store the username in the socket session for this client.
@@ -174,9 +177,39 @@ io.on ('connection', function (socket) {
     });
 	
 	//Listen and execute broadcast of message on receiving 'new message' emission from the client.
-    socket.on ('new attack', function (data) {
+    socket.on ('new question', function (data) {
+        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+        lobby.questions.push (data);
+
+        //Parse the data and remove the correct indicator, to ensure clients do not have any access to the correct answers.
+        var parsedData = {};
+        parsedData.description = data.description;
+        parsedData.options = [];
+        data.options.forEach (function (option) {
+            parsedData.options.push ({
+                'description' : option.description
+            });
+        });
+
         // we tell the client to execute 'new message'
-        socket.broadcast.to(socket.roomName).emit ('add attack', data);
+        socket.broadcast.to(socket.roomName).emit ('add question', parsedData);
+    });
+
+    //Listen and execute broadcast of message on receiving 'new message' emission from the client.
+    socket.on ('submit answer', function (data) {
+        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+        if (data.index >= 0 && data.index < lobby.questions.length) {
+            var questionToCheck = lobby.questions[data.index];
+            if (data.options.length == questionToCheck.options.length) {
+                for (var optionIterator = 0; optionIterator < questionToCheck.options.length; optionIterator++) {
+                    if (data.options[optionIterator].selected != questionToCheck.options[optionIterator].isCorrect) {
+                        socket.emit ('wrong answer', data.index);
+                        return;
+                    }
+                }
+                socket.emit ('correct answer', data.index);
+            }
+        }
     });
 });
 
