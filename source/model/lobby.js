@@ -30,7 +30,17 @@ LobbyList.prototype.getLobby = function (moduleId, tutorialId) {
 }
 
 LobbyList.prototype.getUsersInRoom = function (roomName) {
-	return io.sockets.clients ( roomName );
+    var userSockets = [];
+    var socketsInRoom = io.sockets.adapter.rooms[roomName];
+    if (socketsInRoom) {
+        for (var socketId in socketsInRoom['sockets'] ) {
+            var userSocket = io.sockets.connected[socketId];
+            userSockets.push ({
+                'username' : userSocket.username
+            });
+        }
+    }
+	return userSockets;
 }
 
 var lobbyList =  new LobbyList();
@@ -91,6 +101,8 @@ io.on ('connection', function (socket) {
         socket.emit ('login', {
             numUsers: lobby.numUsers
         });
+
+        lobby.emit ('update users', lobbyList.getUsersInRoom (socket.roomName));
         
         //Update all clients whenever a user successfully joins the lobby.
         socket.broadcast.to(socket.roomName).emit ('user joined', {
@@ -105,29 +117,6 @@ io.on ('connection', function (socket) {
         socket.broadcast.to(socket.roomName).emit ('new message', {
             username: socket.username,
             message: data
-        });
-    });
-
-    //Listen and execute handling of new client socket on receiving 'add user' emission from the client.
-    socket.on ('add user', function (username) {
-        if (addedUser) {
-            return;
-        }
-        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-        //Store the username in the socket session for this client.
-        socket.username = username;
-        lobby.numUsers++;
-        addedUser = true;
-        
-        //Update the client that login is successful.
-        socket.emit ('login', {
-            numUsers: lobby.numUsers
-        });
-        
-        //Update all clients whenever a user successfully joins the lobby.
-        socket.broadcast.to(socket.roomName).emit ('user joined', {
-            username: socket.username,
-            numUsers: lobby.numUsers
         });
     });
 
@@ -156,6 +145,8 @@ io.on ('connection', function (socket) {
                 username: socket.username,
                 numUsers: lobby.numUsers
             });
+
+            lobby.emit ('update users', lobbyList.getUsersInRoom (socket.roomName));
         }
     });
 

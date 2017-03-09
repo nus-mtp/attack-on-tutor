@@ -119,8 +119,16 @@
 						<h2> Active Users </h2>
 					</div>
 					<div class="row">
-						<div class="usersList">
-							<ul class="Users"></ul>
+						<div class="users-active-list">
+							<ul class="users-active">
+								<li class="user-active" ng-repeat="user in users">
+                                    <div class="container-fluid">
+                                        <div class="row-fluid">
+                                            {{user.username}}
+                                        </div>
+                                    </div>
+                                </li>
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -469,15 +477,8 @@
                 //Socket events
 
 				// Whenever the server emits 'user joined', log it in the chat body
-                socket.on ('user joined', function (data) {
-                    $scope.users[data.username] = {
-                		'username' : data.username
-                    };
-                });
-
-                //Whenever the server emits 'user left', log it in the chat body
-                socket.on ('user left', function (data) {
-                    delete $scope.users[data.username];
+                socket.on ('update users', function (data) {
+                    $scope.users = data;
                 });
 
 			});
