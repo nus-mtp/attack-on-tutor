@@ -2,6 +2,8 @@ var rest = require ('rest');
 var auth = require ('../auth');
 var app = require ('../../app');
 var User = require ('../models/User');
+
+
 var protocol = 'https';
 var usehttps = app.get('use-https');
 
@@ -38,7 +40,6 @@ var callback = function (req, res, next) {
 				}
 			}).then(function(user){
 				if (!user){
-					console.log('user doesnt exist');
 					User.create({
 						id: result.UserID,
 						name: result.Name,
@@ -48,19 +49,9 @@ var callback = function (req, res, next) {
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
-						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
 						// Link to dashboard
-						res.cookie({
-							user: user,
-							token: authToken
-						});
-						return res.render('dashboard', {
-							title: 'DONE?',
-							user: user,
-							ip: req.app.get('server-ip'),
-							port: req.app.get('server-port'),
-							token: authToken});
-						//return res.json( { test: 'test' } );
+						res.cookie('token', authToken);
+						return res.redirect('/');
 					}).catch(function(err){
 						//logger.error(result.UserID + ' create user failed');
 						return res.json({success:false, at:'Create user', message:err});
@@ -74,20 +65,11 @@ var callback = function (req, res, next) {
 							id:result.UserID
 						}
 					}).then(function(user){
-						// TODO: integrate auth
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
-						res.cookie({
-							user: user,
-							token: authToken
-						});
-						return res.render ('dashboard', {
-							title: 'DONE?',
-							user: user,
-							ip: req.app.get('server-ip'),
-							port: req.app.get('server-port'),
-							token: authToken});
-						//return res.json({test: 'test'});
+						res.cookie('token', authToken);
+						return res.redirect('/');
+
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
 						console.log(err.stack);

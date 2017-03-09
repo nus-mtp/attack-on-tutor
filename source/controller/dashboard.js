@@ -3,6 +3,7 @@ var auth = require('../auth');
 var rest = require('rest');
 var app = require('../../app');
 var User = require('../models/User');
+var Tutorial = require('../models/Tutorial');
 
 var protocol = 'https';
 var usehttps = app.get('use-https');
@@ -20,9 +21,12 @@ if (!usehttps) {
  */
 var get = function (req, res, next) {
 	if (req.body.auth.success) {
+		console.log(req.body.auth.decoded);
 		res.render('dashboard', {
 			user: req.body.auth.decoded
 		});
+	} else {
+		res.send('Auth unsuccessful');
 	}
 	// console.log(req.body);
 	// if (req.body.auth.success) {
@@ -42,13 +46,13 @@ var get = function (req, res, next) {
 
 }
 
+
 var syncIVLE = function (req, res) {
 	if (req.body.auth.success) {
-		res.json({message: 'lmao'});
+		var user = req.body.auth.decoded.user;
 	} else {
 		console.log('permission denied');
 	}
-
 }
 
 module.exports.get = get;

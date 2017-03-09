@@ -20,7 +20,6 @@ var protectCSRF = function (req, res, next) {
 // ensureAuth is a middleware that ensures the JSON web token has been verified.
 
 var ensureAuth = function (req, res, next) {
-
 	// Get token from body or query or headers
 	var token = req.body.token || req.query.token || req.headers['token'] || req.cookies.token;
 
