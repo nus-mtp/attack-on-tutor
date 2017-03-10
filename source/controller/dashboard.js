@@ -19,41 +19,52 @@ if (!usehttps) {
  * @param res
  * @param next
  */
-var get = function (req, res, next) {
-	if (req.body.auth.success) {
-		console.log(req.body.auth.decoded);
-		res.render('dashboard', {
-			user: req.body.auth.decoded
-		});
+ var get = function (req, res, next) {
+
+ 	if (req.body.auth.success) {
+ 		console.log(req.body.auth.decoded);
+ 		res.render('dashboard', {
+ 			user: req.body.auth.decoded,
+ 			ip: app.get('server-ip'),
+ 			port: app.get('server-port'),
+ 			urls: {
+ 				getModules: protocol + '://' + app.get('server-ip')+ ':' + app.get('server-port') + '/api/dashboard/getModules'
+ 			// 	refreshTutorials: protocol + '://' + app.get('server-ip') + ':' + app.get('server-port') + '/api/dashboard/getAllUserTutorialSessions'
+ 			// 	//createSessions: protocol + '://' + app.get('server-ip') + ':' + app.get('server-port') + '/api/tutorial/createroom',
+ 			// 	//endSessions: protocol + '://' + app.get('server-ip') + ':' + app.get('server-port') + '/api/tutorial/deactivateroom'
+ 			}
+ 		});
 	} else {
 		res.send('Auth unsuccessful');
 	}
-	// console.log(req.body);
-	// if (req.body.auth.success) {
-	// 	res.render('dashboard', {
-	// 		user: req.body.auth.decoded,
-	// 		ip: app.get('server-ip'),
-	// 		port: app.get('server-port'),
-	// 		urls: {
-	// 			// refreshTutorials: protocol + '://' + app.get('server-ip') + ':' + app.get('server-port') + '/api/dashboard/getAllUserTutorialSessions',
-	// 			// createSessions: protocol + '://' + app.get('server-ip') + ':' + app.get('server-port') + '/api/tutorial/createroom',
-	// 			// endSessions: protocol + '://' + app.get('server-ip') + ':' + app.get('server-port') + '/api/tutorial/deactivateroom'
-	// 		}
-	// 	});
-	// } else {
-	// 	res.send('Auth unsuccessful');
-	// }
 
 }
 
 
-var syncIVLE = function (req, res) {
+var forceSyncIVLE = function (req, res, next) {
 	if (req.body.auth.success) {
-		var user = req.body.auth.decoded.user;
+		var user = req.body.auth.decoded;
+		console.log(Tutorial.forceSyncIVLE(user.id));
+		Tutorial.forceSyncIVLE(user.id).catch(function (err) {
+			res.json({success: false, message: err});
+		}).then(function() {
+			res.json({success: true, result: 'Synchronization Complete'});
+		}); 
 	} else {
-		console.log('permission denied');
+		res.send("Permission denied");
+	}
+}
+
+var findTutorials = function (req, res, next) {
+	if (req.body.auth.success) {
+		var user = req.body.auth.decoded;
+		
+	} else {
+		res.send("Permission denied");
+
 	}
 }
 
 module.exports.get = get;
-module.exports.syncIVLE = syncIVLE;
+module.exports.forceSyncIVLE = forceSyncIVLE;
+module.exports.findTutorials = findTutorials;

@@ -2,10 +2,58 @@
 <html>
 <head>
     <title>Dashboard</title>
+    <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js'></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
+    <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 </head>
 <body>
-
 User is: <%= user.name %>
+
+
+
+<button id="sync-ivle">sync</button>
+<button id="get-mods">get mods</button>
+
+<script type="application/javascript">
+
+    function syncIVLE() {
+        $.ajax({
+            type:'POST',
+            url:'/api/dashboard/forceSyncIVLE',
+            data:{
+                //'token':$('#token').val()
+            },
+            dataType:'json',
+            success: function(data){
+                if (data.success){
+                    console.log("sync success");
+                }
+                else {  
+                    console.log('sync failed, err: '+data.message);
+                }
+
+            }
+        });
+    }
+
+    function findTutorials() {
+        $.ajax({
+            type: 'POST',
+            url: '/api/dashboard/findTutorials',
+            data: { },
+            dataType: 'json',
+            success: function(data) {
+
+            }
+        });
+    }
+
+    $('#sync-ivle').click(function() {
+        syncIVLE();
+    });
+
+</script> 
+
 
 </body>
 </html>

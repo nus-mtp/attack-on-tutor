@@ -1,6 +1,6 @@
 {
-  "name": "app",
-  "version": "0.0.0",
+  "name": "e-tutorial",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./app"
@@ -9,5 +9,20 @@
     "body-parser": "^1.17.0",
     "ejs": "~2.3.3",
     "express": "~4.13.1"
-  }
+  },
+  "description": "E-tutorial app",
+  "main": "app.js",
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nus-mtp/e-tutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nus-mtp/e-tutorial/issues"
+  },
+  "homepage": "https://github.com/nus-mtp/e-tutorial#readme"
 }

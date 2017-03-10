@@ -8,7 +8,6 @@ var Sequelize = require ('sequelize');
 var User = require ('./User');
 var rest = require ('rest');
 var app = require ('../../app');
-var Rooms = require('./Rooms');
 
 /**
  * Define tutorial model
@@ -197,6 +196,7 @@ var findAndCountAllUsersInTutorial = function(tid){
  * @returns {Promise}
  */
 var fetchIVLEUserModules = function (token) {
+	//console.log('https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=' + app.get ('api-key') + '&AuthToken=' + token + '&Duration=0&IncludeAllInfo=false');
 	return rest ('https://ivle.nus.edu.sg/api/Lapi.svc/Modules?APIKey=' + app.get ('api-key') + '&AuthToken=' + token + '&Duration=0&IncludeAllInfo=false');
 }
 
@@ -218,16 +218,14 @@ var fetchIVLETutorialGroups = function (token, course) {
  * @return Promise
  */
 var forceSyncIVLE = function (uid) {
-	return new Promise (function (fulfill, reject) {
-		User.findOne ({
+	return new Promise(function (fulfill, reject) {
+		User.findOne( {
 			where: {
 				id: uid
-			},
+			}
 		}).then (function (user) {
-			return fetchIVLEUserModules (user.token).then (function (response) {
-				//console.log(JSON.parse(response.entity).Results);
-				//console.log(response);
-				return [response, JSON.parse (response.entity).Results, user];
+			return fetchIVLEUserModules(user.token).then( function (response) {
+				return [response, JSON.parse(response.entity).Results, user];
 			});
 		}).spread (function (response, courses, user) {
 			//console.log(courses);
@@ -245,7 +243,7 @@ var forceSyncIVLE = function (uid) {
 				return [result, user];
 			});
 		}).spread (function (result, user) {
-			//create tutorial in this block
+			// Create tutorials in db
 			var groups = [];
 			for (var resultIndex in result) {
 				for (var groupIndex in result[resultIndex]['tutorialGroup']) {
@@ -279,11 +277,11 @@ var forceSyncIVLE = function (uid) {
 			}).catch(function(err){
 				reject ('Sync Failed: ' + err.stack);
 			})
-		}).then (function (result) {
-			//Add user tutorial relation in this block
+		}).then(function (result) {
+			// Create user-tutorial relation
 			var tutorials = result.tutorials;
 			var groups = result.groups;
-
+			console.log(groups);
 			if (tutorials.length != groups.length) {
 				return reject ('Database Error!');
 			}
@@ -295,30 +293,22 @@ var forceSyncIVLE = function (uid) {
 				relations.push (relation);
 			}
 			return Promise.all (relations.map (function (relation) {
-				//If room has not been created, create the room first
-				//console.log(relation['tutorial'].id);
-				var newroom = new Rooms.Room();
-				return Rooms.getLobby().findOrAddRoom(relation['tutorial'].id, newroom).then(function(room){
-					if (!room.get('default').get(result.user.id)){
-						var socketClient = new Rooms.SocketClient(result.user.name, result.user.id,null);
-						socketClient.regist(relation['tutorial'].id);
-					}
-					var role = 'student';
-					if (relation['permission'] === 'M') {
-						role = 'tutor';
-						room.tutors[result.user.id] = room.get('default').get(result.user.id);
-					}
-					return relation['tutorial'].addUser (result.user, {role: role});
-				});
+				var role = 'student';
+				if (relation['permission'] === 'M') {
+					role = 'tutor';
+				}
+				console.log('relation: '+ JSON.parse(relation));
+				return relation['tutorial'].addUser(result.user, {role: role});
 			}));
-		}).then (function (result) {
+		}).then(function (result) {
 			if (result) {
 				fulfill (true);
-			}
-		}).catch (function (err) {
+			}	
+		}).catch(function (err) {
 			reject ('Sync Failed: ' + err.stack);
 		})
 	});
+
 };
 
 /**

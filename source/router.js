@@ -16,6 +16,10 @@ router.get ('/login/callback', login.callback);
 
 router.get ('/dashboard', auth.ensureAuth, dashboard.get);
 
-router.post('/api/dashboard/syncIVLE', auth.ensureAuth, dashboard.syncIVLE);
+router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSyncIVLE);
+router.post('/api/dashboard/findTutorials', auth.ensureAuth, dashboard.findTutorials);
+
+//router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSyncIVLE);
+//router.post ('/api/dashboard/getAllUserTutorialSessions', auth.ensureAuth, dashboard.getAllUserTutorialSessions);
 
 module.exports = router;
