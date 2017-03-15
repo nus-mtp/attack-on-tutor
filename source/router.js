@@ -8,8 +8,10 @@ var router = express.Router ();
 var index = require ('./controller/index');
 var login = require ('./controller/login');
 
+var lobby = require ('./controller/lobby');
 
 router.get ('/', index.get);
+router.get ('/lobby/:userId/:moduleId/:tutorialId', lobby.get);
 
 router.get ('/login', login.get);
 router.get ('/login/callback', login.callback);

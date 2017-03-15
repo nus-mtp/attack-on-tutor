@@ -19,6 +19,7 @@ app.set ('jwt-secret', config['jwt-secret']);
 app.set ('use-https', JSON.parse (config['use-https']));
 
 var router = require ('./source/router');
+var lobby = require ('./source/model/lobby.js');
 
 // view engine setup
 app.set ('views', path.join (__dirname, './source/view'));
@@ -56,3 +57,4 @@ var server = app.listen
 	}	
 )
 
+lobby.listen (server);
