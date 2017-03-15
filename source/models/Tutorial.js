@@ -266,6 +266,8 @@ var forceSyncIVLE = function (uid) {
 						coursecode: group['ModuleCode'],
 						coursename: group['CourseName'],
 						week: group['Week'],
+					
+
 						day: group['Day'],
 						time: group['Time']
 					}
@@ -280,8 +282,7 @@ var forceSyncIVLE = function (uid) {
 		}).then(function (result) {
 			// Create user-tutorial relation
 			var tutorials = result.tutorials;
-			var groups = result.groups;
-			console.log(groups);
+			var groups = result.groups;	
 			if (tutorials.length != groups.length) {
 				return reject ('Database Error!');
 			}
@@ -292,12 +293,13 @@ var forceSyncIVLE = function (uid) {
 				relation['permission'] = groups[groupIndex]['Permission'];
 				relations.push (relation);
 			}
+			
 			return Promise.all (relations.map (function (relation) {
 				var role = 'student';
 				if (relation['permission'] === 'M') {
 					role = 'tutor';
 				}
-				console.log('relation: '+ JSON.parse(relation));
+				
 				return relation['tutorial'].addUser(result.user, {role: role});
 			}));
 		}).then(function (result) {

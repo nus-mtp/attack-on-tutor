@@ -44,7 +44,6 @@ if (!usehttps) {
 var forceSyncIVLE = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
-		console.log(Tutorial.forceSyncIVLE(user.id));
 		Tutorial.forceSyncIVLE(user.id).catch(function (err) {
 			res.json({success: false, message: err});
 		}).then(function() {
@@ -58,7 +57,12 @@ var forceSyncIVLE = function (req, res, next) {
 var findTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
-		
+		var tuts = Tutorial.findTutorialSession(user.id).catch(function (err) {
+			res.json({success: false, message: err});
+		}).then(function() {
+			res.json({success: true, result: 'Synchronization Complete'});
+		});
+		console.log(tuts);
 	} else {
 		res.send("Permission denied");
 
