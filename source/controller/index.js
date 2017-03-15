@@ -15,9 +15,6 @@ var get = function (req, res, next)
 	var auth = req.body.auth;
 	var user;
 	if (auth.success) {
-		// console.log(auth);
-		// console.log('');
-		// console.log(auth.decoded);
 		user = auth.decoded;
 	} else {
 		console.log('auth failed');
