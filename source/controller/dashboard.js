@@ -54,21 +54,25 @@ var forceSyncIVLE = function (req, res, next) {
 	}
 }
 
-var findTutorials = function (req, res, next) {
+// Query methods
+
+// Returns JSON object containing users tutorial sessions and roles
+var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
-		var tuts = Tutorial.findTutorialSession(user.id).catch(function (err) {
+		console.log(user.id);
+		Tutorial.getTutorialsession(user.id).catch(function (err) {
 			res.json({success: false, message: err});
-		}).then(function() {
-			res.json({success: true, result: 'Synchronization Complete'});
+		}).then(function (data) {
+			res.json({success: true, result: 'Found tutorials'});
+			console.log(data[0].dataValues);
 		});
-		console.log(tuts);
 	} else {
 		res.send("Permission denied");
-
 	}
 }
 
+
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
-module.exports.findTutorials = findTutorials;
+module.exports.getTutorials = getTutorials;

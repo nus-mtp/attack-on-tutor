@@ -8,7 +8,7 @@
 </head>
 <body>
 User is: <%= user.name %>
-
+<br>
 
 
 <button id="sync-ivle">sync</button>
@@ -36,10 +36,10 @@ User is: <%= user.name %>
         });
     }
 
-    function findTutorials() {
+    function getTutorials() {
         $.ajax({
             type: 'POST',
-            url: '/api/dashboard/findTutorials',
+            url: '/api/dashboard/getTutorials',
             data: { },
             dataType: 'json',
             success: function(data) {
@@ -50,6 +50,10 @@ User is: <%= user.name %>
 
     $('#sync-ivle').click(function() {
         syncIVLE();
+    });
+
+    $('#get-mods').click(function() {
+        getTutorials();
     });
 
 </script> 
