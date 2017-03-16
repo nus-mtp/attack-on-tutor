@@ -56,7 +56,11 @@ var forceSyncIVLE = function (req, res, next) {
 
 // Query methods
 
-// Returns JSON object containing users tutorial sessions and roles
+/**
+ * Gets all tutorials of current user.
+ * @param uid
+ * @returns JSON
+ */
 var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
