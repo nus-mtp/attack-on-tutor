@@ -5,14 +5,38 @@
     <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
     <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width-device-width, initial-scale="1">
+	
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+	<style type="text/css">
+		body { background: white; }
+		
+		.avatarWardrobe {
+			width: 600px;
+			border: 25px solid green;
+			padding: 25px;
+			margin: 25px;
+		}
+		
+		.moduleList {
+			width: 620px;
+			border: 25px solid green;
+			padding: 10px;
+			margin: 25px;
+		}
+	</style>
 </head>
 <body>
-User is: <%= user.name %>
-
-
-
-<button id="sync-ivle">sync</button>
-<button id="get-mods">get mods</button>
 
 <script type="application/javascript">
 
@@ -52,9 +76,43 @@ User is: <%= user.name %>
         syncIVLE();
     });
 
+	$('#get-mods').click(function() {
+        findTutorials();
+    });
 </script> 
 
-
+	<!-- <div class="container-fluid"> Full Screen -->
+ 	<div class="container-fluid"> <!-- Container - Fixed Width XS SM MD LG -->
+		
+		<!-- Mark -> Highlight 
+			Blockquote -> Quoter + Footer
+			DL + DT + DD -> List
+			Code -> Light Pink Code
+			Pre -> Multi Line Code
+		-->
+		
+		<h1>Welcome to Gamify, <%= user.name %> (<%= user.id %>)</h1>
+		<div class="row">
+			<div class="col-md-6" style="background-color:#FF9999">	
+				<div class="avatarWardrobe">
+					<img src="https://aquelia.files.wordpress.com/2013/08/p4_characterscreen.jpg" alt="Avatar Wardrobe">
+					<button id="sync-ivle">Sync with IVLE</button>
+				</div>
+			</div>
+			
+			<div class="col-md-6" style="background-color:#00CC99">
+				<h2><%= user.name %>'s Modules</h2>
+				<div class="moduleList">
+					<img src="https://www.w3schools.com/css/trolltunga.jpg" alt="Troll Tunga" height="200" width="550">
+					<img src="https://www.w3schools.com/css/trolltunga.jpg" alt="Troll Tunga" height="200" width="550">
+					<button id="get-mods">Check Your Modules</button>
+					<!--<%= user.iat %>-->
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
 </body>
 </html>
 
