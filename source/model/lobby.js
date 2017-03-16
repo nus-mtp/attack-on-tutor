@@ -1,10 +1,28 @@
 var app = require ('../../app');
 var io = require ('socket.io')();
+var lobbyio = io.of ('/lobby');
+
+var users = {
+    'A0125566B' : {
+        'username' : 'Coral',
+        'userType' : 'tutor'
+    },
+    'A0125566M' : {
+        'username' : 'Melania',
+        'userType' : 'student'
+    },
+    'A0125566C' : {
+        'username' : 'Trumpet',
+        'userType' : 'student'
+    }
+};
 
 var listen = function (server) {
 	io.listen (server);
 	console.log('Server Started and Socket listened on ' + server);
 }
+
+var lobbyList =  new LobbyList();
 
 function LobbyList () {
     this.lobbyCount = 0,
@@ -19,36 +37,23 @@ LobbyList.prototype.addLobby = function (roomData) {
 		this.lobbies[roomData.moduleId][roomData.tutorialId] = new Lobby();
 		this.lobbies[roomData.moduleId][roomData.tutorialId].tutorialId = roomData.tutorialId;
 		this.lobbies[roomData.moduleId][roomData.tutorialId].moduleId = roomData.moduleId;
-		this.lobbies[roomData.moduleId][roomData.tutorialId].roomName = roomData.moduleId + "" + roomData.tutorialId;
+		this.lobbies[roomData.moduleId][roomData.tutorialId].namespace = roomData.namespace;
 		this.lobbyCount++;
 	}
 	return this.lobbies[roomData.moduleId][roomData.tutorialId];
 }
 
 LobbyList.prototype.getLobby = function (moduleId, tutorialId) {
-    return this.lobbies[moduleId][tutorialId];
+    if (this.lobbies[moduleId])
+        return this.lobbies[moduleId][tutorialId];
+    else
+        return null;
 }
-
-LobbyList.prototype.getUsersInRoom = function (roomName) {
-    var userSockets = [];
-    var socketsInRoom = io.sockets.adapter.rooms[roomName];
-    if (socketsInRoom) {
-        for (var socketId in socketsInRoom['sockets'] ) {
-            var userSocket = io.sockets.connected[socketId];
-            userSockets.push ({
-                'username' : userSocket.username
-            });
-        }
-    }
-	return userSockets;
-}
-
-var lobbyList =  new LobbyList();
 
 function Lobby () {
     this.tutorialId = '';
     this.moduleId = '';
-	this.roomName = '';
+	this.namespace = '';
     
 	this.locked = false;
 	this.tutors = {};
@@ -64,74 +69,259 @@ function Lobby () {
 	//this.groups[defaultGroup.groupId] = defaultGroup;
 }
 
-Lobby.prototype.emit = function (key, value) {
-    io.sockets.in ( this.roomName ).emit (key, value);
+Lobby.prototype.emitToLobby = function (key, value) {
+    if (this.namespace.length > 0)
+        lobbyio.in (this.namespace).emit (key, value);
+}
+
+Lobby.prototype.emitToGroup = function (group, key, value) {
+    if (this.namespace.length > 0) {
+        if (this.groups[group]) {
+            lobbyio.in (this.namespace + '/' + group).emit (key, value);
+        } else if (this.namespace == group) {
+            this.broadcastToLobby (key, value);
+        }
+    }
+}
+
+Lobby.prototype.broadcastToLobby = function (socket, key, value) {
+    if (this.namespace.length > 0) {
+        socket.broadcast.to(this.namespace).emit (key, value);
+    }
+}
+
+Lobby.prototype.broadcastToGroup = function (socket, group, key, value) {
+    if (this.namespace.length > 0) {
+        if (this.groups[group]) {
+            socket.broadcast.to(this.namespace + '/' + group).emit (key, value);
+        } else if (this.namespace == group) {
+            this.broadcastToLobby (socket, key, value);
+        }
+    }
+}
+
+Lobby.prototype.getUsersInRoom = function (roomName) {
+    var userSockets = [];
+    var socketsInRoom = lobbyio.adapter.rooms[roomName];
+    if (socketsInRoom) {
+        for (var socketId in socketsInRoom.sockets) {
+            if (socketsInRoom.sockets.hasOwnProperty(socketId)) {
+                if (lobbyio.connected[socketId]) {
+                    userSockets.push ({
+                        'username' : lobbyio.connected[socketId].username,
+                        'userType' : lobbyio.connected[socketId].userType,
+                        'socketId' : socketId
+                    });
+                }
+            }
+        }
+    }
+    return userSockets;
+}
+
+Lobby.prototype.getUsersInLobby = function () {
+    //Group the users according to the room they are in.
+    var rooms = {};
+    //Start with the "namespace" room that contains all users in the current tutorial group.
+    rooms[this.namespace] = this.getUsersInRoom (this.namespace);
+    
+    for (var group in this.groups) {
+        rooms[group] = this.getUsersInRoom (this.namespace + '/' + group);
+    }
+    
+    return rooms;
+}
+
+Lobby.prototype.addGroup = function (group) {
+    if (!this.groups[group]) {
+        this.groups[group] = group;
+        this.groupCount++;
+    }
+}
+
+Lobby.prototype.removeGroup = function (group) {
+    if (this.groups[group]) {
+        var groupname = this.namespace + '/' + group;
+        var socketsInRoom = lobbyio.adapter.rooms[groupname];
+        if (socketsInRoom) {
+            for (var socketId in socketsInRoom.sockets) {
+                if (socketsInRoom.sockets.hasOwnProperty(socketId)) {
+                    if (lobbyio.connected[socketId]) {
+                        lobbyio.connected[socketId].leave (groupname);
+                    }
+                }
+            }
+        }
+        delete this.groups[group];
+        this.groupCount--;
+    }
+}
+
+Lobby.prototype.getAllGroupsInLobby = function () {
+    var allGroups = [];
+    //Push the namespace, which is effectively a group containing all users in the tutorial.
+    allGroups.push (this.namespace);
+    for (group in this.groups) {
+        allGroups.push ( group );
+    }
+    return allGroups;
+}
+
+Lobby.prototype.addSocketToGroup = function (socket, group) {
+    if (this.groups[group]) {
+        socket.join (this.namespace + '/' + group);
+    }
+}
+
+Lobby.prototype.removeSocketFromGroup = function (socket, group) {
+    if (this.groups[group]) {
+        socket.leave (this.namespace + '/' + group);
+    }
 }
 
 //On connection of each new client socket.
-io.on ('connection', function (socket) {
+lobbyio.on ('connection', function (socket) {
     var addedUser = false;
-    
+
     //Listen for new connections and create a lobby if one does not exist yet.
     socket.on ('new connection', function (data) {
         if (addedUser) {
             return;
         }
-        
-        //Add a lobby to the lobbyList.
-        var newLobby = lobbyList.addLobby ({
-            'tutorialId' : data.tutorialId,
-            'moduleId' : data.moduleId
-        });
 
+        var userId = data.userId;
+        var lobby;
+        //Temp measure to identify students and tutors.
+        //TODO: Make this connect to the db.
+        if (users[userId]) {
+            if (users[userId].userType == 'tutor') {
+                //Add a lobby to the lobbyList if a tutor connects.
+                lobby = lobbyList.addLobby ({
+                    'tutorialId' : data.tutorialId,
+                    'moduleId' : data.moduleId,
+                    'namespace' : data.moduleId + "/" + data.tutorialId 
+                });
+            } else if (users[userId].userType == 'student') {
+                lobby = lobbyList.getLobby(data.moduleId, data.tutorialId);
+                //The lobby is not open to the student yet.
+                if (!lobby) {
+                    socket.emit ('invalid');
+                    return;
+                }
+            }
+        } else {
+            socket.emit ('invalid');
+            return;
+        }
+        
         socket.tutorialGroup = data.tutorialId;
 		socket.moduleGroup = data.moduleId;
-		socket.roomName = newLobby.roomName;
-        socket.join ( newLobby.roomName );
+		socket.namespace = lobby.namespace;
         socket.userId = data.userId;
-		
-        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-		
-        //Store the username in the socket session for this client.
-        socket.username = data.userId;
+        socket.username = users[userId].username;;
+        socket.userType = users[userId].userType;
+
+        //Join the main tutorial group room.
+        socket.join ( lobby.namespace );
+
         lobby.numUsers++;
         addedUser = true;
         
         //Update the client that login is successful.
         socket.emit ('login', {
-            numUsers: lobby.numUsers
+            userType: socket.userType,
+            username: socket.username,
+            numUsers: lobby.numUsers,
+            defaultGroup: lobby.namespace
         });
 
-        lobby.emit ('update users', lobbyList.getUsersInRoom (socket.roomName));
+        updateUsers (lobby, socket);
         
         //Update all clients whenever a user successfully joins the lobby.
-        socket.broadcast.to(socket.roomName).emit ('user joined', {
+        socket.broadcast.to(socket.namespace).emit ('user joined', {
             username: socket.username,
             numUsers: lobby.numUsers
         });
-    });
 
-    //Listen and execute broadcast of message on receiving 'new message' emission from the client.
-    socket.on ('new message', function (data) {
-        // we tell the client to execute 'new message'
-        socket.broadcast.to(socket.roomName).emit ('new message', {
-            username: socket.username,
-            message: data
-        });
-    });
+        //Initialise the socket
+        if (addedUser) {
+            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
+            socket.on ('new message', function (data) {
+                // we tell the client to execute 'new message'
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                lobby.broadcastToGroup (socket, data.group, 'new message', {
+                    username: socket.username,
+                    message: data.message,
+                    group: data.group
+                });
+            });
 
-    //Broadcast that the client is typing a message to other clients connected.
-    socket.on ('typing', function () {
-        socket.broadcast.to(socket.roomName).emit ('typing', {
-            username: socket.username
-        });
-    });
+            //Broadcast that the client is typing a message to other clients connected.
+            socket.on ('typing', function (data) {
+                socket.broadcast.to(socket.namespace).emit ('typing', {
+                    username: socket.username,
+                    group: data
+                });
+            });
 
-    //Broadcast when the client stops typing a message to other clients connected.
-    socket.on ('stop typing', function () {
-        socket.broadcast.to(socket.roomName).emit ('stop typing', {
-            username: socket.username
-        });
+            //Broadcast when the client stops typing a message to other clients connected.
+            socket.on ('stop typing', function () {
+                socket.broadcast.to(socket.namespace).emit ('stop typing', {
+                    username: socket.username
+                });
+            });
+            
+            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
+            //TODO separate out the different listeners for tutors and students.
+            socket.on ('new question', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                lobby.questions.push (data);
+
+                //Parse the data and remove the correct indicator, to ensure clients do not have any access to the correct answers.
+                var parsedData = {};
+                parsedData.description = data.description;
+                parsedData.options = [];
+                data.options.forEach (function (option) {
+                    parsedData.options.push ({
+                        'description' : option.description
+                    });
+                });
+
+                socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
+            });
+
+            socket.on ('edit group', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                var socketIds = data.socketIds;
+                var groupname = data.groupname;
+                lobby.addGroup (groupname);
+                for (var index in socketIds) {
+                    if (lobbyio.connected[socketIds[index]]) {
+                        lobby.addSocketToGroup (lobbyio.connected[socketIds[index]], groupname);
+                        lobbyio.to(socketIds[index]).emit ('added group', groupname);
+                    }
+                }
+                updateUsers (lobby, socket);
+                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
+            });
+
+            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
+            socket.on ('submit answer', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                if (data.index >= 0 && data.index < lobby.questions.length) {
+                    var questionToCheck = lobby.questions[data.index];
+                    if (data.options.length == questionToCheck.options.length) {
+                        for (var optionIterator = 0; optionIterator < questionToCheck.options.length; optionIterator++) {
+                            if (data.options[optionIterator].selected != questionToCheck.options[optionIterator].isCorrect) {
+                                socket.emit ('wrong answer', data.index);
+                                return;
+                            }
+                        }
+                        socket.emit ('correct answer', data.index);
+                    }
+                }
+            });
+        }
     });
 
     //Listen to when the client disconnects and execute.
@@ -141,14 +331,15 @@ io.on ('connection', function (socket) {
             --lobby.numUsers;
 
             //Broadcast to other clients that this client has disconnected
-            socket.broadcast.to(socket.roomName).emit ('user left', {
+            socket.broadcast.to(socket.namespace).emit ('user left', {
                 username: socket.username,
                 numUsers: lobby.numUsers
             });
 
-            lobby.emit ('update users', lobbyList.getUsersInRoom (socket.roomName));
+            updateUsers (lobby, socket);
         }
     });
+    
 
     //When the client starts a battle
     socket.on ('start battle', function () {
@@ -161,48 +352,19 @@ io.on ('connection', function (socket) {
         gameCollection.gameList.gameId.open = true;
         gameCollection.totalGameCount ++;
 
-        socket.broadcast.to(socket.roomName).emit ('battle created', {
+        socket.broadcast.to(socket.namespace).emit ('battle created', {
             username: socket.username,
             gameId: gameId
         });
     });
-	
-	//Listen and execute broadcast of message on receiving 'new message' emission from the client.
-    socket.on ('new question', function (data) {
-        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-        lobby.questions.push (data);
-
-        //Parse the data and remove the correct indicator, to ensure clients do not have any access to the correct answers.
-        var parsedData = {};
-        parsedData.description = data.description;
-        parsedData.options = [];
-        data.options.forEach (function (option) {
-            parsedData.options.push ({
-                'description' : option.description
-            });
-        });
-
-        // we tell the client to execute 'new message'
-        socket.broadcast.to(socket.roomName).emit ('add question', parsedData);
-    });
-
-    //Listen and execute broadcast of message on receiving 'new message' emission from the client.
-    socket.on ('submit answer', function (data) {
-        var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-        if (data.index >= 0 && data.index < lobby.questions.length) {
-            var questionToCheck = lobby.questions[data.index];
-            if (data.options.length == questionToCheck.options.length) {
-                for (var optionIterator = 0; optionIterator < questionToCheck.options.length; optionIterator++) {
-                    if (data.options[optionIterator].selected != questionToCheck.options[optionIterator].isCorrect) {
-                        socket.emit ('wrong answer', data.index);
-                        return;
-                    }
-                }
-                socket.emit ('correct answer', data.index);
-            }
-        }
-    });
 });
+
+function updateUsers (lobby, socket) {
+    lobby.emitToLobby ('update users', {
+        'userList' : lobby.getUsersInLobby(),
+        'groupList' : lobby.getAllGroupsInLobby()
+    });
+}
 
 //Join a Game
 function joinGame(username, game) {
