@@ -12,6 +12,8 @@
  */
 var get = function (req, res, next)
 {
+
+	var user;
 	var auth = req.body.auth;
 	var user;
 	if (auth.success) {

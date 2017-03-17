@@ -7,6 +7,11 @@ var router = express.Router ();
 
 var auth = require('./auth');
 var index = require ('./controller/index');
+
+var lobby = require ('./controller/lobby');
+
+router.get ('/lobby/:userId/:moduleId/:tutorialId', lobby.get);
+
 var login = require ('./controller/login');
 var dashboard = require('./controller/dashboard');
 

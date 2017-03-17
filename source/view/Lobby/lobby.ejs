@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>E-Tutorial Lobby</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+
+    <body ng-app="lobbyApp">
+		<div ng-controller="socketCtrl" class="container" id="header-bar">
+			<div class="row">
+				<div class="text-center col-md-12">
+					<h1>Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row" id="battle-container">
+				<div ng-controller="tutorCtrl">
+					<div class="col-md-6 col-sm-6 col-xs-6" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+						<div class="row">
+							<h2> Question Composer</h2>
+						</div>
+						<div class="row">
+							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
+								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..."></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="question-options-area" style="width:100%; max-height:300px; overflow:auto;">
+								<ul class="options-composed-list">
+	                                <li class="question-option-composed" ng-repeat="option in composerQuestion.options">
+	                                    <div class="container-fluid">
+	                                        <div class="row-fluid">
+	                                            <div class="col-md-8 col-sm-8 col-xs-8">
+	                                                <input class="option-description-input" ng-model="option.description" placeholder="Type option..."></input>
+	                                            </div>
+	                                            <div class="col-md-4 col-sm-4 col-xs-4">
+	                                                <input type="checkbox" ng-model="option.isCorrect"></input>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                            </ul>
+							</div>
+						</div>
+						<div class="row">
+							<button class="btn btn-info add-question-option" ng-click="addOption()">Add Option</button>
+							<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
+						</div>
+					</div>
+				</div>
+                
+                <div ng-controller="studentCtrl">
+					<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+						<div class="text-center row">
+							<h2> Combat Log </h2>
+						</div>
+						<div class="row">
+							<div class="questions-received-area" style="width:100%; max-height:300px; overflow:auto;">
+								<ul class="questions-received-list">
+	                                <li class="question-received" ng-repeat="question in questions">
+	                                    <div class="container-fluid">
+	                                        <div class="row-fluid">
+	                                            <h3>{{question.description}}</h3>
+	                                        </div>
+	                                        <div class="question-received-options">
+	                                            <div ng-repeat="option in question.options" class="row-fluid">
+	                                                <div class="col-md-8 col-sm-8 col-xs-8">
+	                                                    {{ option.description }}
+	                                                </div>
+	                                                <div class="col-md-4 col-sm-4 col-xs-4">
+	                                                    <input ng-disabled="question.submitted" type="checkbox" ng-model="option.selected"></input>
+	                                                </div>
+	                                            </div>
+	                                        </div>
+	                                        <div class="row-fluid">
+	                                            <button class="btn btn-success submit-answer" ng-if="!question.answered" ng-click="sendAnswer($index)" style="float:right;">Submit!</button>
+	                                            <div ng-if="question.submitted">
+	                                            	{{question.remarks}}
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </li>
+	                            </ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row" id="lobby-container">
+				<div ng-controller="chatCtrl">
+					<div class="col-md-8 col-sm-6 col-xs-6" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+						<div class="row">
+							<h2> Messages </h2>
+						</div>
+						<div class="row">
+							<div class="groups-list">
+                                <div class="container-fluid">
+                                    <div class="row-fluid">
+                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="chat-area" style="width:100%; max-height:300px; overflow:auto;">
+								<ul class="messages">
+									<li ng-repeat="message in messages[socket.getSocketGroups()[selectedGroup]]"
+										ng-class="{'log' : message.type=='log', 'message' : message.type=='message'}"
+										data-username="{{message.user}}">
+										<div ng-if="message.type == 'chat'">
+											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span>
+											<span class="messageBody" ng-bind="message.message"></span>
+										</div>
+										<div ng-if="message.type == 'log'">
+											{{ message.message }}
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="row">
+							<div class="typing-message-area" style="width:100%;">
+								<ul class="typing-messages">
+									<li ng-repeat="typingMessage in typingMessages">
+										<div>
+											<span class="username" ng-bind="typingMessage.user" style="color:{{getUsernameColor(typingMessage.user)}}; padding-right:5px;"></span>
+											<span class="messageBody" ng-bind="typingMessage.message"></span>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="row">
+							<!-- ng-model within ng-if block must reference the data prepended by $parent -->
+							<input class="inputMessage" style="width:100%;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type here..."/>
+						</div>
+					</div>
+				</div>
+				<div ng-controller="activeUsersCtrl">
+					<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+						<div class="text-center row">
+							<h2> Active Users </h2>
+						</div>
+						<div class="row">
+							<div class="groups-list">
+                                <div class="container-fluid">
+                                    <div class="row-fluid">
+                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+						<div class="row" ng-if="socket.getUserType() =='tutor'">
+							<div class="users-active-list">
+								<ul class="users-active">
+									<li class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
+	                                    <div class="container-fluid">
+	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'black' : 'red'}">
+	                                            {{user.username}}
+	                                        </div>
+	                                    </div>
+	                                </li>
+								</ul>
+							</div>
+						</div>
+						<div class="row" ng-if="socket.getUserType() == 'student'">
+							<div class="users-active-list">
+								<ul class="users-active">
+									<li class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
+	                                    <div class="container-fluid">
+	                                        <div class="row-fluid">
+	                                            {{user.username}}
+	                                        </div>
+	                                    </div>
+	                                </li>
+								</ul>
+							</div>
+						</div>
+						<div class="row-fluid" ng-if="socket.getUserType() == 'tutor'">
+							<div class="col-md-6 col-sm-6 col-xs-6">
+                            	<input class="input-group-name" style="width:100%;" ng-model="$parent.$parent.newGroupName" placeholder="Group name here..."/>
+                        	</div>
+                        	<div class="col-md-6 col-sm-6 col-xs-6">
+                            	<button class="btn btn-success create-group" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right;">Create Group!</button>
+                            	<div ng-if="selectedGroup > 0">
+                            		<button class="btn btn-warning delete-group" ng-click="deleteGroup()" style="float:right;">Delete Group</button>
+                            	</div>
+                        	</div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="/test.js"></script>
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script>
+		
+			window.userId = "<%=userId %>";
+            window.moduleId = "<%=moduleId %>";
+            window.tutorialId = "<%=tutorialId %>";
+
+			var lobbyApp = angular.module('lobbyApp', []);
+			
+			lobbyApp.factory('socket', function ($rootScope, $window) {
+				var connect = function (namespace) {
+				    return io.connect(namespace, {
+				       query: 'namespace=' + namespace
+				    });
+				}
+
+				var connectionStates = [
+					'pending',
+					'invalid',
+					'connected'
+				];
+				var connectionState = connectionStates[0];
+
+				var socket = connect('/' + 'lobby');
+				var userType = '';
+
+				var socketGroups = [];
+				var allSocketGroups = [];
+				
+				return {
+					//Connection State functions
+					getConnectionState: function () {
+						return connectionState;
+					},
+					setConnectionState: function (value) {
+						connectionState = value;
+					},
+					PENDING: function() {
+						return connectionStates[0];
+					},
+					INVALID: function() {
+						return connectionStates[1];
+					},
+					CONNECTED: function () {
+						return connectionStates[2];
+					},
+					//User Type functions
+					getUserType: function () {
+						return userType;
+					},
+					setUserType: function (type) {
+						userType = type;
+					},
+					//Socket Group functions
+					addSocketGroup: function (groupName) {
+						socketGroups.push (groupName);
+					},
+					removeSocketGroup: function (groupName) {
+						var index = socketGroups.indexOf (groupName);
+						if (index > -1) {
+							socketGroups.splice(index, 1);
+						}
+					},
+					getSocketGroups: function () {
+						return socketGroups;
+					},
+					setAllSocketGroups: function (allGroups) {
+						allSocketGroups = allGroups;
+					},
+					getAllSocketGroups: function () {
+						return allSocketGroups;
+					},
+					//Wrappers for Socket IO client functions.
+					socketId: function () {
+						return socket.nsp + '#' + socket.id;
+					},
+					on: function (eventName, callback) {
+						socket.on (eventName, function () {  
+							var args = arguments;
+							$rootScope.$apply (function () {
+								callback.apply (socket, args);
+							});
+						});
+					},
+					emit: function (eventName, data, callback) {
+						socket.emit(eventName, data, function () {
+							var args = arguments;
+							$rootScope.$apply (function () {
+								if (callback) {
+									callback.apply (socket, args);
+								}
+							});
+						})
+					}
+				};	
+			});
+			
+			//Directive for calling function on enter key
+			//Usage:
+			//		ng-enter="functionName()"
+			lobbyApp.directive ('ngEnter', function () {
+				return function (scope, element, attrs) {
+					element.bind("keydown keypress", function (event) {
+						if (event.which === 13) {
+							scope.$apply(function (){
+								scope.$eval(attrs.ngEnter);
+							});
+							event.preventDefault();
+						}
+					});
+				};
+			});
+            
+            //Controller for socket events used throughout the page.
+            lobbyApp.controller ('socketCtrl', function ($scope, $window, socket) {
+                //Send this event to notify server of a new connection.
+                socket.on ('connect', function() {
+                    var userId = $window.userId;
+                    var moduleId = $window.moduleId;
+                    var tutorialId = $window.tutorialId;
+                    
+                    var data = {
+                        'userId' : userId,
+                        'moduleId' : moduleId,
+                        'tutorialId' : tutorialId
+                    };
+                    
+                    socket.emit ('new connection', data);
+                });
+
+                socket.on ('invalid', function() {
+                    socket.setConnectionState (socket.INVALID());
+                });
+
+                socket.on ('login', function(data) {
+                	socket.setUserType (data.userType);
+                    socket.setConnectionState (socket.CONNECTED());
+                });
+            });
+			
+			lobbyApp.controller ('tutorCtrl', function($scope, socket) {
+				$scope.socket = socket;
+                $scope.composerQuestion = {
+                    'description' : '',
+                    'options' : []
+                };
+                
+                //Adds an option to the MCQ attack composer.
+				$scope.addOption = function () {
+					$scope.composerQuestion.options.push ({
+						'description' : '',
+						'isCorrect' : false
+					});
+				};
+
+				$scope.sendQuestion = function () {
+					socket.emit ('new question', $scope.composerQuestion);
+					$scope.composerQuestion = {
+						'description' : '',
+                    	'options' : []
+					};
+				};
+			});
+            
+            lobbyApp.controller ('studentCtrl', function($scope, socket) {
+            	$scope.socket = socket;
+                $scope.questions = [];
+                
+                //Socket events
+
+				//Receives questions received from other users.
+                socket.on ('add question', function (data) {
+					data.answered = false;
+					data.submitted = false;
+					data.remarks = "";
+					data.options.forEach ( function (option) {
+						option.selected = false;
+					});
+					$scope.questions.push (data);
+                });
+
+                //Receives questions received from other users.
+                socket.on ('wrong answer', function (data) {
+					$scope.questions[data].submitted = true;
+					$scope.questions[data].remarks = "You are wrong!";
+                });
+
+                //Receives questions received from other users.
+                socket.on ('correct answer', function (data) {
+					$scope.questions[data].submitted = true;
+					$scope.questions[data].remarks = "You are correct!";
+                });
+
+                $scope.sendAnswer = function ( index ) {
+                	socket.emit ('submit answer', {
+                		'index' : index,
+                		'options' : $scope.questions[index].options
+                	});
+                	$scope.questions[index].answered = true;
+                };
+			});
+			
+			lobbyApp.controller ('chatCtrl', function ($scope, $window, socket) {
+				$scope.socket = socket;
+
+                $scope.chatMessage = "";
+                $scope.selectedGroup = 0;
+                $scope.defaultGroup = "";
+				$scope.messages = {};
+				$scope.typingMessages = [];
+                
+                var FADE_TIME = 150; // ms
+                var TYPING_TIMER_LENGTH = 400; // ms
+                var COLORS = [
+					'#e21400', '#91580f', '#f8a700', '#f78b00',
+					'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
+					'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
+                ];
+				var lastTypingTime;
+                
+                var typing = false;
+				
+				var username = "<%= userId %>";
+            
+                //Socket listeners
+                
+                //Whenever the server emits 'login', log the login message
+                socket.on ('login', function (data) {
+                    //Display the welcome message
+                    $scope.defaultGroup = data.defaultGroup;
+                    var message = "Welcome to the Lobby ";
+                    logMessage ({
+						'type' : 'log',
+						'message': message
+					}, data.defaultGroup);
+                    addParticipantsMessage (data);
+
+                    username = data.username;
+                });
+
+                //Whenever the server emits 'new message', update the chat body
+                socket.on ('new message', function (data) {
+                    addChatMessage (data, data.group);
+                });
+				
+				// Whenever the server emits 'user joined', log it in the chat body
+                socket.on ('user joined', function (data) {
+                    logMessage ({
+						'type' : 'log',
+						'message' : data.username + ' joined'
+					}, $scope.defaultGroup);
+                    addParticipantsMessage (data);
+                });
+
+                //Whenever the server emits 'user left', log it in the chat body
+                socket.on ('user left', function (data) {
+                    logMessage ({
+						'type' : 'log',
+						'message' : data.username + ' left'
+					}, $scope.defaultGroup);
+                    addParticipantsMessage (data);
+                    removeChatTyping (data);
+                });
+
+                //Whenever the server emits 'typing', show the typing message
+                socket.on ('typing', function (data) {
+                    addChatTyping(data);
+                });
+
+                //Whenever the server emits 'stop typing', kill the typing message
+                socket.on ('stop typing', function (data) {
+                    removeChatTyping(data);
+                });
+
+                socket.on ('update users', function (data) {
+                	if (!$scope.messages[data.groupList[0]]) {
+						$scope.messages[data.groupList[0]] = [];
+                	}
+                    
+                });
+
+                socket.on ('added group', function (data) {
+                    $scope.messages[data] = [];
+                });
+
+                socket.on ('removed group', function (data) {
+                    delete $scope.messages[data];
+                });
+				
+                //Scope functions.
+                $scope.setSelectedGroup = function (index) {
+                	$scope.selectedGroup = index;
+                };
+
+				//Sends a chat message
+                $scope.sendMessage = function () {
+                    var message = $scope.chatMessage;
+                    //Prevent markup from being injected into the message
+                    message = cleanInput(message);
+                    //If there is a non-empty message
+                    if (message) {
+                        $scope.chatMessage="";
+                        
+                        addChatMessage({
+                            'username': username,
+                            'message': message
+                        }, socket.getSocketGroups()[$scope.selectedGroup]);
+                        
+                        //Tell server to execute 'new message' and send along one parameter
+                        socket.emit ('new message', {
+                        	'message' : message,
+                        	'group' : socket.getSocketGroups()[$scope.selectedGroup]
+                        });
+                    }
+					
+					socket.emit('stop typing');
+					typing = false;
+                };
+				
+				//Gets the color of a username through our hash function
+                $scope.getUsernameColor = function (username) {
+                    //Compute hash code
+                    var hash = 7;
+                    for (var i = 0; i < username.length; i++) {
+                        hash = username.charCodeAt(i) + (hash << 5) - hash;
+                    }
+                    
+                    //Calculate color
+                    var index = Math.abs(hash % COLORS.length);
+                    return COLORS[index];
+                };
+				
+				// Updates the typing event
+                $scope.updateTyping = function () {
+                    if (!typing) {
+                        typing = true;
+                        socket.emit ('typing', socket.getSocketGroups()[$scope.selectedGroup]);
+                    }
+                    
+                    lastTypingTime = (new Date()).getTime();
+                    setTimeout(function () {
+                        var typingTimer = (new Date()).getTime();
+                        var timeDiff = typingTimer - lastTypingTime;
+                        if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
+                            socket.emit ('stop typing');
+                            typing = false;
+                        }
+                    }, TYPING_TIMER_LENGTH);
+                };
+				
+				//Private functions.
+				
+				//Prevents input from having injected markup
+                var cleanInput = function (input) {
+                    return $('<div/>').text(input).text();
+                };
+
+                //Adds a message element to the messages and scrolls to the bottom
+                //message          	The message to add to chat { user: '', message:'', type:'log || chat' }
+                //options.prepend   If the element should prepend all other messages (default = false)
+                var logMessage = function (message, groupname) {
+                    if (!$scope.messages[groupname]) {
+                    	$scope.messages[groupname] = [];
+                    }
+                    $scope.messages[groupname].push(message);
+
+                    //$('.chat-area')[0].scrollTop = $('.chat-area')[0].scrollHeight;
+                };
+				
+				var addParticipantsMessage = function (data) {
+                    var message = '';
+                    if (data.numUsers === 1) {
+                        message += "It's just you and me, honey bee.";
+                    } else {
+                        message += "There are " + data.numUsers + " players in the Lobby";
+                    }
+                    logMessage ({
+						'type' : 'log',
+						'message' : message
+					}, $scope.defaultGroup);
+                };
+				
+				//Adds the visual chat message to the message list
+                var addChatMessage = function (data, groupname) {
+                    logMessage ({
+						'user' : data.username,
+						'type' : 'chat',
+						'message' : data.message
+					}, groupname);
+                };
+				
+				// Adds the visual chat typing message
+                var addChatTyping = function (data) {
+                	if (socket.getSocketGroups().indexOf (data.group) >= 0) {
+                    	$scope.typingMessages.push({
+	                    	'user' : data.username,
+	                    	'message' : 'is typing in : ' + data.group
+	                    });
+                    }
+                };
+
+                //Removes the visual chat typing message
+                var removeChatTyping = function (data) {
+                	var indexToRemove = [];
+                	$scope.typingMessages.forEach (function (value, i) {
+				    	if (value.user == data.username) {
+                    		indexToRemove.push (i);
+                    	}
+					});
+					indexToRemove.forEach (function (value, i) {
+				    	$scope.typingMessages.splice (value, 1);
+					});
+                };
+			});
+
+			lobbyApp.controller ('activeUsersCtrl', function($scope, socket) {
+				$scope.socket = socket;
+
+				$scope.newGroupName = '';
+				$scope.selectedGroup = 0;
+				$scope.selectedUsers = [];
+
+                $scope.users = {};
+                
+                //Socket events
+
+				// Whenever the server emits 'user joined', log it in the chat body
+                socket.on ('update users', function (data) {
+                    $scope.users = data.userList;
+                    $scope.socket.setAllSocketGroups (data.groupList);
+                    if ( $scope.socket.getSocketGroups().length == 0) {
+                    	$scope.socket.addSocketGroup (data.groupList[0]);
+                    }
+                });
+
+                socket.on ('added group', function (data) {
+                	$scope.socket.addSocketGroup ( data );
+                });
+
+                socket.on ('deleted group', function (data) {
+                	$scope.socket.removeSocketGroup ( data );
+                });
+
+                //Scope Functions
+
+                $scope.setSelectedGroup = function (index) {
+                	$scope.selectedGroup = index;
+                };
+
+                $scope.selectUser = function (socketId) {
+                	var index = $scope.selectedUsers.indexOf (socketId);
+                	if ( index < 0) {
+                		$scope.selectedUsers.push (socketId);
+                	} else {
+                		$scope.selectedUsers.splice (index, 1);
+                	}
+                }
+
+                $scope.isValidGroupParams = function () {
+                	var groupName = cleanInput ($scope.newGroupName);
+                	return (groupName.length > 0 && $scope.selectedUsers.length > 0);
+                }
+
+                $scope.createGroup = function () {
+                	if ($scope.selectedUsers.indexOf (socket.socketId()) < 0) {
+                		$scope.selectedUsers.push (socket.socketId());
+                	}
+                	socket.emit ('edit group', {
+                		'groupname' : cleanInput ($scope.newGroupName),
+                		'socketIds' : $scope.selectedUsers
+                	});
+                	$scope.selectedUsers = [];
+                	$scope.newGroupName = '';
+                };
+
+                $scope.deleteGroup = function () {
+                	//Ensure the group to delete is not the default group.
+                	if ($scope.selectedGroup > 0) {
+                		
+	                	socket.emit ('delete group', {
+	                		'groupname' : cleanInput ($scope.socket.getAllSocketGroups()[$scope.selectedGroup])
+	                	});
+	                	$scope.selectedGroup = 0;
+                	}
+                };
+
+                //Prevents input from having injected markup
+                var cleanInput = function (input) {
+                    return $('<div/>').text(input).text();
+                };
+			});
+        </script>
+    </body>
+</html>
