@@ -148,7 +148,7 @@
 							<div class="groups-list">
                                 <div class="container-fluid">
                                     <div class="row-fluid">
-                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="$parent.selectedGroup = $index;">{{group}}</button>
+                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
                                     </div>
                                 </div>
 							</div>
@@ -185,6 +185,9 @@
                         	</div>
                         	<div class="col-md-6 col-sm-6 col-xs-6">
                             	<button class="btn btn-success create-group" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right;">Create Group!</button>
+                            	<div ng-if="selectedGroup > 0">
+                            		<button class="btn btn-warning delete-group" ng-click="deleteGroup()" style="float:right;">Delete Group</button>
+                            	</div>
                         	</div>
                         </div>
 					</div>
@@ -192,6 +195,7 @@
 			</div>
 		</div>
 
+		<script type="text/javascript" src="/test.js"></script>
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -479,6 +483,10 @@
                 socket.on ('added group', function (data) {
                     $scope.messages[data] = [];
                 });
+
+                socket.on ('removed group', function (data) {
+                    delete $scope.messages[data];
+                });
 				
                 //Scope functions.
                 $scope.setSelectedGroup = function (index) {
@@ -630,6 +638,16 @@
                 	$scope.socket.addSocketGroup ( data );
                 });
 
+                socket.on ('deleted group', function (data) {
+                	$scope.socket.removeSocketGroup ( data );
+                });
+
+                //Scope Functions
+
+                $scope.setSelectedGroup = function (index) {
+                	$scope.selectedGroup = index;
+                };
+
                 $scope.selectUser = function (socketId) {
                 	var index = $scope.selectedUsers.indexOf (socketId);
                 	if ( index < 0) {
@@ -654,6 +672,17 @@
                 	});
                 	$scope.selectedUsers = [];
                 	$scope.newGroupName = '';
+                };
+
+                $scope.deleteGroup = function () {
+                	//Ensure the group to delete is not the default group.
+                	if ($scope.selectedGroup > 0) {
+                		
+	                	socket.emit ('delete group', {
+	                		'groupname' : cleanInput ($scope.socket.getAllSocketGroups()[$scope.selectedGroup])
+	                	});
+	                	$scope.selectedGroup = 0;
+                	}
                 };
 
                 //Prevents input from having injected markup

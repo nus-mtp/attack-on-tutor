@@ -100,7 +100,18 @@ Lobby.prototype.broadcastToGroup = function (socket, group, key, value) {
     }
 }
 
+//Function to parse group name and append the namespace.
+Lobby.prototype.getRoomName = function (group) {
+    if (this.groups[group]) {
+        return this.namespace + '/' + group;
+    } else if (this.namespace == group) {
+        return this.namespace;
+    }
+
+}
+
 Lobby.prototype.getUsersInRoom = function (roomName) {
+    var roomName = this.getRoomName (roomName);
     var userSockets = [];
     var socketsInRoom = lobbyio.adapter.rooms[roomName];
     if (socketsInRoom) {
@@ -126,7 +137,7 @@ Lobby.prototype.getUsersInLobby = function () {
     rooms[this.namespace] = this.getUsersInRoom (this.namespace);
     
     for (var group in this.groups) {
-        rooms[group] = this.getUsersInRoom (this.namespace + '/' + group);
+        rooms[group] = this.getUsersInRoom (group);
     }
     
     return rooms;
@@ -301,6 +312,18 @@ lobbyio.on ('connection', function (socket) {
                         lobbyio.to(socketIds[index]).emit ('added group', groupname);
                     }
                 }
+                updateUsers (lobby, socket);
+                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
+            });
+
+            socket.on ('delete group', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                var groupname = data.groupname;
+                var usersInGroup = lobby.getUsersInRoom(groupname);
+                usersInGroup.forEach (function (value, i) {
+                    lobbyio.to(value.socketId).emit ('deleted group', groupname);
+                });
+                lobby.removeGroup (groupname);
                 updateUsers (lobby, socket);
                 //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });

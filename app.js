@@ -10,6 +10,7 @@ var lobby = require ('./source/model/lobby.js');
 // view engine setup
 app.set ('views', path.join (__dirname, './source/view'));
 app.set ('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
 
 // File Limitation
 app.set ('MAX_FILE_SIZE', 30000000); // In Bytes, equals to 30Mb
