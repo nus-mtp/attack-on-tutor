@@ -327,11 +327,53 @@ var findTutorialSession = function (uid) {
 };
 
 
+/**
+ * Find tutorial info by tutorial id
+ * @param tid
+ * @returns {Promise}
+ */
+var findTutorialInfo = function (tid) {
+	return tutorial.findAll({
+		where: {
+			id: tid
+		}
+	});
+}
+
+/**
+ * Finds all tutorial info of a user's tutorials
+ * @param uid
+ * @returns [{tutinfo}, {tutinfo} ...] <- SHOULD RETURN PROMISE
+ */
+
+ var findAllTutorialInfoOfUser = function (uid) {
+ 	// LITERAL QUERY!!! NOT GOOD! CHANGE LATER!
+ 	return sequelize.query("SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = 'a0127127')").
+ 	spread(function (results, metadata) {
+ 		return results;
+ 	});
+ 	// TODO: SUBQUERIES??? 
+ 	// SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = 'a0127127');
+ 	// return tutorial.findAll({
+ 	// 	where: {
+ 	// 		id: {
+ 	// 			$in: {
+
+ 	// 			}
+ 	// 		}
+ 	// 	}
+ 	// });
+ }
+
+
+
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.findTutorial = findTutorial;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findTutorialSession = findTutorialSession;
+module.exports.findTutorialInfo = findTutorialInfo;
 module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
+module.exports.findAllTutorialInfoOfUser = findAllTutorialInfoOfUser;

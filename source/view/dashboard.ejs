@@ -7,12 +7,15 @@
     <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 </head>
 <body>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<input id="uid" type="hidden" value="<%= user.id %>">
+
 User is: <%= user.name %>
 <br>
-
-
-<button id="sync-ivle">sync</button>
-<button id="get-mods">get mods</button>
+<h3>Modules</h3>
+<div id="tutorials"></div>
 
 <script type="application/javascript">
 
@@ -29,13 +32,14 @@ User is: <%= user.name %>
                     console.log("sync success");
                 }
                 else {  
-                    console.log('sync failed, err: '+data.message);
+                    console.log('sync failed, err: ' +data.message);
                 }
 
             }
         });
     }
 
+    
     function getTutorials() {
         $.ajax({
             type: 'POST',
@@ -43,11 +47,19 @@ User is: <%= user.name %>
             data: { },
             dataType: 'json',
             success: function(data) {
-
+                showTutorials(data.data);
             }
         });
     }
 
+    function showTutorials(tutorials) {
+        console.log(tutorials.toString());
+        for (i = 0; i < tutorials.length; i++) {
+            $('#tutorials').append(tutorials[i].coursecode + "<br>");
+        }
+    }
+    
+    /*
     $('#sync-ivle').click(function() {
         syncIVLE();
     });
@@ -55,6 +67,13 @@ User is: <%= user.name %>
     $('#get-mods').click(function() {
         getTutorials();
     });
+    */
+
+    syncIVLE();
+    getTutorials();
+    showTutorials();
+
+
 
 </script> 
 
