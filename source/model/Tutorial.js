@@ -1,5 +1,5 @@
 /**
- * @module models/Tutorial
+ * @module model/Tutorial
  * @type {Sequelize|*|exports|module.exports}
  */
 
@@ -344,20 +344,28 @@ var findTutorialInfo = function (tid) {
 /**
  * Finds all tutorial info of a user's tutorials
  * @param uid
- * @returns [{tutInfo}] <- SHOULD RETURN PROMISE (?)
+ * @returns [{tutinfo}, {tutinfo} ...] <- SHOULD RETURN PROMISE
  */
 
  var findAllTutorialInfoOfUser = function (uid) {
 
- 	return findTutorialSession(uid).then(function (result) {
- 		console.log(result);
- 	});
-
-
- 	// return sequelize.query("SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = '"+uid+"')").
- 	// spread(function (results, metadata) {
- 	// 	return results;
+ 	// return findTutorialSession(uid).then(function (data) {
+ 	// 	console.log(111);
+ 	// 	console.log(data);
+ 	// 	return tutorial.findAll({
+ 	// 		where: {
+ 	// 			id: {
+ 	// 				$in: data
+ 	// 			}
+ 	// 		}
+ 	// 	});
  	// });
+
+
+ 	return sequelize.query("SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = '"+uid+"')").
+ 	spread(function (results, metadata) {
+ 		return results;
+ 	});
 
  	// TODO: SUBQUERIES??? 
  	// SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = 'a0127127');
