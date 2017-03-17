@@ -2,8 +2,8 @@ var express = require('express');
 var auth = require('../auth');
 var rest = require('rest');
 var app = require('../../app');
-var User = require('../models/User');
-var Tutorial = require('../models/Tutorial');
+var User = require('../model/User');
+var Tutorial = require('../model/Tutorial');
 
 var protocol = 'https';
 var usehttps = app.get('use-https');
@@ -72,9 +72,12 @@ var getTutorials = function (req, res, next) {
 		Tutorial.findAllTutorialInfoOfUser(user.id).catch(function (err) {
 			res.json({success: false, message: err});
 		}).then(function (data) {
+			console.log(data);
 			tuts = data;
 			res.json({success: true, message: 'Success', data: tuts});
 		});
+
+
 		// Tutorial.findTutorialSession(user.id).catch(function (err) {
 		// 	res.json({success: false, message: err});
 		// }).then(function (data) {

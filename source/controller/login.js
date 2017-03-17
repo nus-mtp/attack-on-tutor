@@ -1,7 +1,7 @@
 var rest = require ('rest');
 var auth = require ('../auth');
 var app = require ('../../app');
-var User = require ('../models/User');
+var User = require ('../model/User');
 
 
 var protocol = 'https';
