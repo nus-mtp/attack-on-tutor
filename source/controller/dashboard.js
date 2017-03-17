@@ -72,9 +72,12 @@ var getTutorials = function (req, res, next) {
 		Tutorial.findAllTutorialInfoOfUser(user.id).catch(function (err) {
 			res.json({success: false, message: err});
 		}).then(function (data) {
+			console.log(data);
 			tuts = data;
 			res.json({success: true, message: 'Success', data: tuts});
 		});
+
+
 		// Tutorial.findTutorialSession(user.id).catch(function (err) {
 		// 	res.json({success: false, message: err});
 		// }).then(function (data) {
