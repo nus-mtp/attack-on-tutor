@@ -2,6 +2,7 @@
 log/server/
 log/database/
 *.log
+logfile
 
 # Runtime data
 pids

@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+    <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js'></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
+    <script type="text/javascript" src="/javascripts/intercom.js/intercom.js"></script>
+</head>
+<body>
+<input id="token" type="hidden" value="<%= token %>">
+
+<h1>Login Successful</h1>
+
+<a href='/'>
+<img id='back-button' src="http://i.imgur.com/rEWZzhj.jpg" >
+</a>
+
+<p><%= token %></p>
+
+<script type="application/javascript">
+
+    console.log(req.body);
+
+    function goBack() {
+        $.ajax({
+            type: 'POST',
+            url: '/api/dashboard/syncIVLE',
+            data: {
+                'token':$('#token').val()
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.success) {
+                    console.log('set cookie');
+                    console.log($('#token').val());
+                    Cookies.set('token', $('#token').val(), {path: '/',expires:30});
+                } else {
+                    console.log('failed');
+                }
+            }
+        });
+    };
+
+    $('#back-button').click(function () {
+        goBack();
+    });
+
+</script>
+
+<!--
+<script type="application/javascript">
+
+</script>
+
+    function forceSync (){
+        $.ajax({
+            type:'POST',
+            url:'/api/dashboard/forcesyncivle',
+            data:{
+                'token':$('#token').val()
+            },
+            dataType:'json',
+            success: function(data){
+                if (data.success){
+                    var intercom = Intercom.getInstance();
+                    intercom.emit('login_result', {message: 'login_success'});
+                    Cookies.set('token', $('#token').val(), {path: '/',expires:30});
+                    window.close();
+                }
+                else {
+                    console.log('sync failed, err: '+data.message);
+                }
+
+            }
+        });
+    };
+
+</script>
+-->
+</body>
+</html>
+
+<style>
+
+    body {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        background: url("/images/UIElements/reindeer-for-pop-up.png");
+        -webkit-background-size: cover;
+        background-size: cover;
+        height: 100vh;
+        width: 100%;
+    }
+
+    #sync-button {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        bottom: 60%;
+        right: 8%;
+        cursor: pointer;
+    }
+</style>
