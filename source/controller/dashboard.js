@@ -77,42 +77,6 @@ var getTutorials = function (req, res, next) {
 			res.json({success: true, message: 'Success', data: tuts});
 		});
 
-
-		// Tutorial.findTutorialSession(user.id).catch(function (err) {
-		// 	res.json({success: false, message: err});
-		// }).then(function (data) {
-
-		// 	var promises = [];
-
-		// 	for (i = 0; i < data.length; i++) {
-
-		// 		var tut = (data[i].dataValues);
-
-		// 		var tutInfo = {};
-
-		// 		console.log(tut.tutorialId);
-
-		// 		// Get tutorial details
-		// 		promises.push(
-		// 			Tutorial.findTutorialInfo(tut.tutorialId).catch(function (err) {
-		// 				res.json({success: false, message: err});
-		// 			}).then(function (data) {
-		// 				tutInfo = data[0].dataValues;
-		// 				console.log(tutInfo);
-		// 				tuts.push(tutInfo);
-		// 			})
-		// 		);
-
-
-
-		// 	}
-
-		// }).then(function () {
-		// 	console.log(111111);
-		// 	console.log(tuts);
-		// 	res.json({success: false, message: 'Success', data: tuts});
-
-		// });
 	} else {
 		res.send("Permission denied");
 	}
