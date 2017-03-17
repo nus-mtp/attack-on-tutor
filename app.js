@@ -3,6 +3,7 @@ var app = module.exports = express ();
 var fs = require ('fs');
 var path = require ('path');
 
+
 app.set ('rootPath', __dirname);
 
 // parse config file
@@ -27,19 +28,24 @@ app.set ('view engine', 'ejs');
 // File Limitation
 app.set ('MAX_FILE_SIZE', 30000000); // In Bytes, equals to 30Mb
 
+var cookieParser = require ('cookie-parser');
+var bodyParser = require ('body-parser');
+
+app.use (bodyParser.json ());
+app.use (bodyParser.urlencoded ({extended: false}));
+app.use (cookieParser ());
+
 //use router to handle different url request
 app.use (router);
-
-
 
 //error handling
 app.use
 (
 	function (req, res, next)
 	{
-		var err = new Error ('Not Found');
-		err.status = 404;
-		next (err);
+		// var err = new Error ('Not Found');
+		// err.status = 404;
+		// next (err);
 	}
 );
 
@@ -50,9 +56,9 @@ var server = app.listen
 	{
 		var host = server.address().address
 		var port = server.address().port
-
-		console.log(app.get('api-key'));
+		
 		console.log("App listening at http://%s:%s", host, port)
 	}	
 )
+
 

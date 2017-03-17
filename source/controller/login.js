@@ -2,17 +2,22 @@ var rest = require ('rest');
 var auth = require ('../auth');
 var app = require ('../../app');
 var User = require ('../models/User');
+
+
 var protocol = 'https';
 var usehttps = app.get('use-https');
 
 var ivleToken;
-
 
 if (!usehttps) {
 	protocol = 'http';
 }
 
 var get = function (req, res, next) {
+	var auth = req.body.auth;
+	if (auth.success) {
+		res.redirect('/');
+	}
 	res.redirect('https://ivle.nus.edu.sg/api/login/?apikey=' + app.get('api-key') + '&url=' + protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/login/callback');
 }
 
@@ -21,8 +26,6 @@ var callback = function (req, res, next) {
 	var ivleToken = req.query.token;
 	var apikey = app.get ('api-key');
 
-	console.log('https://ivle.nus.edu.sg/api/Lapi.svc/Profile_View?APIKey=' + apikey + '&AuthToken=' + ivleToken);
-
 	//view profile
 	rest ('https://ivle.nus.edu.sg/api/Lapi.svc/Profile_View?APIKey=' + apikey + '&AuthToken=' + ivleToken).then (function (response) {
 
@@ -30,7 +33,6 @@ var callback = function (req, res, next) {
 
 		if (result != undefined) {
 			result.Token = ivleToken;
-
 
 			User.findOne({
 				where:{
@@ -45,15 +47,17 @@ var callback = function (req, res, next) {
 						gender: result.Gender,
 						token: result.Token,
 					}).then(function(user){
-						//var authToken = auth.setAuth (result.UserID, result.Name);
+						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
-						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
-						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'));
+						// Link to dashboard
+						res.cookie('token', authToken);
+						return res.redirect('/');
 					}).catch(function(err){
 						//logger.error(result.UserID + ' create user failed');
 						return res.json({success:false, at:'Create user', message:err});
 					});
 				} else {
+					console.log('updating user');
 					User.update({
 						token: result.Token
 					},{
@@ -61,17 +65,17 @@ var callback = function (req, res, next) {
 							id:result.UserID
 						}
 					}).then(function(user){
-						// TODO: integrate auth
-						// var authToken = auth.setAuth (result.UserID, result.Name);
+						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
-						//return res.redirect (app.get('server-ip') + ':' + app.get('server-port'), {token: authToken});
-						return res.redirect (protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port'));
+						res.cookie('token', authToken);
+						return res.redirect('/');
+
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
 						console.log(err.stack);
 						return res.json({success:false, at:'Update user information', message:err});
 					});
-				}
+				}	
 			});
 		}
 		else {
