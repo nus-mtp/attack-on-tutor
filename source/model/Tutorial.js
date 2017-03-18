@@ -346,24 +346,9 @@ var findTutorialInfo = function (tid) {
  * @param uid
  * @returns {Promise}
  */
-
  var findAllTutorialInfoOfUser = function (uid) {
- 	
- 	// SELECT * FROM tutorials INNER JOIN userTutorials ON tutorials.id=userTutorials.tutorialId AND userTutorials.userId='a0127127'
- 	return tutorial.findAndCountAll({
- 		include: [{
- 			model: userTutorial,
- 			attributes: ['userId', 'tutorialId'],
- 			where: {
- 				userId: uid
- 			}
- 		}]
- 	});
-
+ 	return;
  }
-
- }
-
 
 
 module.exports = tutorial;

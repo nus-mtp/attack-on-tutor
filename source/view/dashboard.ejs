@@ -30,6 +30,7 @@ User is: <%= user.name %>
             success: function(data){
                 if (data.success){
                     console.log("sync success");
+                    getTutorials(data);
                 }
                 else {  
                     console.log('sync failed, err: ' +data.message);
@@ -53,9 +54,8 @@ User is: <%= user.name %>
     }
 
     function showTutorials(tutorials) {
-        console.log(tutorials.toString());
-        for (i = 0; i < tutorials.length; i++) {
-            $('#tutorials').append(tutorials[i].coursecode + "<br>");
+        for (i = 0; i < (tutorials.rows).length; i++) {
+            $('#tutorials').append((tutorials.rows[i]).coursecode + "<br>");
         }
     }
     
@@ -70,8 +70,6 @@ User is: <%= user.name %>
     */
 
     syncIVLE();
-    getTutorials();
-    showTutorials();
 
 
 
