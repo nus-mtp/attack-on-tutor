@@ -344,40 +344,24 @@ var findTutorialInfo = function (tid) {
 /**
  * Finds all tutorial info of a user's tutorials
  * @param uid
- * @returns [{tutinfo}, {tutinfo} ...] <- SHOULD RETURN PROMISE
+ * @returns {Promise}
  */
 
  var findAllTutorialInfoOfUser = function (uid) {
-
- 	// return findTutorialSession(uid).then(function (data) {
- 	// 	console.log(111);
- 	// 	console.log(data);
- 	// 	return tutorial.findAll({
- 	// 		where: {
- 	// 			id: {
- 	// 				$in: data
- 	// 			}
- 	// 		}
- 	// 	});
- 	// });
-
-
- 	return sequelize.query("SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = '"+uid+"')").
- 	spread(function (results, metadata) {
- 		return results;
+ 	
+ 	// SELECT * FROM tutorials INNER JOIN userTutorials ON tutorials.id=userTutorials.tutorialId AND userTutorials.userId='a0127127'
+ 	return tutorial.findAndCountAll({
+ 		include: [{
+ 			model: userTutorial,
+ 			attributes: ['userId', 'tutorialId'],
+ 			where: {
+ 				userId: uid
+ 			}
+ 		}]
  	});
 
- 	// TODO: SUBQUERIES??? 
- 	// SELECT * FROM tutorials WHERE id IN (SELECT tutorialId FROM userTutorials WHERE userId = 'a0127127');
- 	// return tutorial.findAll({
- 	// 	where: {
- 	// 		id: {
- 	// 			$in: {
+ }
 
- 	// 			}
- 	// 		}
- 	// 	}
- 	// });
  }
 
 
