@@ -481,10 +481,13 @@
                 });
 
                 socket.on ('added group', function (data) {
-                    $scope.messages[data] = [];
+                	if (!$scope.messages[data]) {
+                		$scope.messages[data] = [];
+                	}
                 });
 
-                socket.on ('removed group', function (data) {
+                socket.on ('deleted group', function (data) {
+                	$scope.selectedGroup = 0;
                     delete $scope.messages[data];
                 });
 				
