@@ -34,48 +34,45 @@ var get = function (req, res, next)
 	}
 };
 
-
+/**
+ * Checks if user is allowed to enter lobby.
+ * @param  req
+ * @param  res
+ * @param  next
+ */
 var enterLobby = function (req, res, next) {
 
 	var user = req.body.auth.decoded;
 
+	console.log(req.body);
+
 	var userId = user.id;
-	var moduleId = 'CS3247';
-	var tutorialId = '4';
+	var moduleId = req.body.courseId;
+	var tutorialId = req.body.tutorialId;
 
-	res.json({success: true});
-
-	// res.render ('lobby/lobby', {
-	// 	title: 'Lobby UI',
-	// 	userId: userId,
-	// 	moduleId: moduleId,
-	// 	tutorialId: tutorialId
-	// });
-}
-
-/**
- * Check if user belongs to tutorial class.
- * 
- * @param  uid
- * @param  tid
- * @return boolean
- */
-var userBelongsToTutorialClass = function (uid, tid) {
-
-	Tutorial.checkIfInTutorialUserList(uid, tid).then(function (data) {
-		return data == null ? false : true;
+	// Checks if user is in user list
+	Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
+		if (data !== null) {
+			res.render ('lobby/lobby', {
+				title: 'Lobby UI',
+				userId: userId,
+				moduleId: moduleId,
+				tutorialId: tutorialId
+			});
+		} else {
+			res.json({ success: false, message: 'Permission denied.'});
+		}
 	});
-
 }
+
 
 /**
  * Check if user is a tutor of class.
- * 
  * @param  uid
  * @param  tid
  * @return boolean
  */
-userIsTutorOfClass = function (uid, tid) {
+var userIsTutorOfClass = function (uid, tid) {
 
 	Tutorial.findTutorialTutorID(tid).then(function (data) {
 		if (data !== null) {
