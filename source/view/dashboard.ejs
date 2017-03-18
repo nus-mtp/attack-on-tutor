@@ -75,11 +75,13 @@ User is: <%= user.name %>
             url: '/api/lobby/enterLobby',
             dataType: 'json',
             data: {
-                courseId: tut.courseid,
-                tutorialId: tut.id
+                id: tut.id,
+                name: tut.name,
+                coursecode: tut.coursecode,
+                courseid: tut.courseid
             },
-            success: function(data) {
-                console.log(data);
+            success: function (data) {
+                window.location = 'http://127.0.0.1:8081/lobby/'+$('#uid').val()+'/'+tut.coursecode+'/'+tut.name;
             }
         });
     });
