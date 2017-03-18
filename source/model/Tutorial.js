@@ -373,3 +373,4 @@ module.exports.findTutorialInfo = findTutorialInfo;
 module.exports.findAllTutorialInfoOfUser = findAllTutorialInfoOfUser;
 module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
+module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
