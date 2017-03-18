@@ -1,10 +1,10 @@
-#Naming Branches
+# Naming Branches
 
 Branch names should be formated as such:
 
 `[tag]/[component]/[feature]`
 
-##Tags
+## Tags
 
 | Tag | Description |
 | --- | --- |
@@ -14,9 +14,25 @@ Branch names should be formated as such:
 | ftr | Features to be implemented |
 | test | Testing |
 
-## Database Setup
+
+# Database Setup
 
 ### 1. Install MySQL
+Ubuntu
+
+```
+$bash sudo apt-get install mysql-server
+```
+OSX
+```
+$bash brew install mysql
+$bash mysql.server start
+```
+Windows
+
+Please follow instruction on MySQL official site:
+https://dev.mysql.com/downloads/windows/
+
 
 ### 2. Setup database account
 
@@ -40,12 +56,14 @@ FLUSH PRIVILEGES;
 
 The `sample_username` and `sample_password` are used in the config.json for accessing the database.
 
+
 ### 3. Create database
 
 Create a database with name `sample_database_name`.
 ```
 CREATE DATABASE sample_database_name
 ```
+
 
 ### 4. Add database configuration to `config.json`
 
