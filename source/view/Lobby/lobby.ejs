@@ -17,7 +17,34 @@
 		<div class="container">
 			<div class="row" id="battle-container">
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-6 col-sm-6 col-xs-6" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+					<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+							<div class="row">
+								<h2> Question Composer</h2>
+							</div>
+							<div class="row">
+								<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
+									<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..."></textarea>
+								</div>
+							</div>
+							<div class="row">
+								<div class="groups-list">
+	                                <div class="container-fluid">
+	                                    <div class="row-fluid">
+	                                        <button class="btn select-group" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
+	                                    </div>
+	                                </div>
+								</div>
+							</div>
+							<div class="row">
+								<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
+							</div>
+						</div>
+					</div>
+					<!--
+
+					MCQ version of tutor control
+
+					<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="row">
 							<h2> Question Composer</h2>
 						</div>
@@ -49,10 +76,11 @@
 							<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
 						</div>
 					</div>
+					-->
 				</div>
                 
                 <div ng-controller="studentCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-12 col-sm-12 col-xs-12" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row">
 							<h2> Combat Log </h2>
 						</div>
@@ -195,7 +223,7 @@
 			</div>
 		</div>
 
-		<script type="text/javascript" src="/test.js"></script>
+		<!--<script type="text/javascript" src="/test.js"></script>-->
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
@@ -339,6 +367,11 @@
                 });
             });
 			
+			/*
+				MCQ version of battle system.
+				Kept in for now in case we decide to use it again.
+			*/
+			/*
 			lobbyApp.controller ('tutorCtrl', function($scope, socket) {
 				$scope.socket = socket;
                 $scope.composerQuestion = {
@@ -360,6 +393,42 @@
 						'description' : '',
                     	'options' : []
 					};
+				};
+			});
+			*/
+
+			lobbyApp.controller ('tutorCtrl', function($scope, socket) {
+				$scope.socket = socket;
+				$scope.selectedGroups = [];
+                $scope.composerQuestion = {
+                    'description' : ''
+                };
+
+                $scope.inSelectedGroups = function (index) {
+					return ($scope.selectedGroups.indexOf (index) > -1);
+				};
+
+				$scope.toggleSelectedGroup = function (index) {
+					if ($scope.inSelectedGroups(index)) {
+						delete $scope.selectedGroups[$scope.selectedGroups.indexOf (index)];
+					} else {
+						$scope.selectedGroups.push (index);
+					}
+				};
+
+				$scope.sendQuestion = function () {
+					var groupNames = [];
+					$scope.selectedGroups.forEach (function (value) {
+						groupNames.push ($scope.socket.getSocketGroups()[value]);
+					});
+					socket.emit ('new question', {
+						'question' : $scope.composerQuestion,
+						'groups' : groupNames
+					});
+					$scope.composerQuestion = {
+						'description' : ''
+					};
+					$scope.selectedGroups = [];
 				};
 			});
             

@@ -286,19 +286,10 @@ lobbyio.on ('connection', function (socket) {
             //TODO separate out the different listeners for tutors and students.
             socket.on ('new question', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-                lobby.questions.push (data);
+                console.log (data);
+                lobby.questions.push (data.question);
 
-                //Parse the data and remove the correct indicator, to ensure clients do not have any access to the correct answers.
-                var parsedData = {};
-                parsedData.description = data.description;
-                parsedData.options = [];
-                data.options.forEach (function (option) {
-                    parsedData.options.push ({
-                        'description' : option.description
-                    });
-                });
-
-                socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
+                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
             socket.on ('edit group', function (data) {
