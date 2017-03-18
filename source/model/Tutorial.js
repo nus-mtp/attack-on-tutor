@@ -190,6 +190,56 @@ var findAndCountAllUsersInTutorial = function(tid){
 	});
 };
 
+
+/**
+ * Find tutorial ids of tutorials under a user
+ * @param uid
+ * @returns {Promise}
+ */
+var findTutorialSession = function (uid) {
+	return userTutorial.findAll ({
+		attributes: ['tutorialId'],
+		where: {
+			userId: uid
+		}
+	});
+};
+
+
+/**
+ * Find tutorial info by tutorial id
+ * @param tid
+ * @returns {Promise}
+ */
+var findTutorialInfo = function (tid) {
+	return tutorial.findAll({
+		where: {
+			id: tid
+		}
+	});
+}
+
+/**
+ * Finds all tutorial info of a user's tutorials
+ * @param uid
+ * @returns {Promise}
+ */
+ var findAllTutorialInfoOfUser = function (uid) {
+ 	
+ 	// SELECT * FROM tutorials INNER JOIN userTutorials ON tutorials.id=userTutorials.tutorialId AND userTutorials.userId='a0127127'
+ 	return tutorial.findAndCountAll({
+ 		include: [{
+ 			model: userTutorial,
+ 			attributes: ['userId', 'tutorialId'],
+ 			where: {
+ 				userId: uid
+ 			}
+ 		}]
+ 	});
+
+ }
+
+
 /**
  * Private function, fetch IVLE user modules, return promise
  * @param token
@@ -313,51 +363,14 @@ var forceSyncIVLE = function (uid) {
 
 };
 
-/**
- * Find tutorial ids of tutorials under a user
- * @param uid
- * @returns {Promise}
- */
-var findTutorialSession = function (uid) {
-	return userTutorial.findAll ({
-		attributes: ['tutorialId'],
-		where: {
-			userId: uid
-		}
-	});
-};
 
-
-/**
- * Find tutorial info by tutorial id
- * @param tid
- * @returns {Promise}
- */
-var findTutorialInfo = function (tid) {
-	return tutorial.findAll({
-		where: {
-			id: tid
-		}
-	});
-}
-
-/**
- * Finds all tutorial info of a user's tutorials
- * @param uid
- * @returns [{tutinfo}, {tutinfo} ...] <- SHOULD RETURN PROMISE
- */
- var findAllTutorialInfoOfUser = function (uid) {
- 	return;
- }
 
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
-module.exports.findTutorial = findTutorial;
-module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findTutorialSession = findTutorialSession;
 module.exports.findTutorialInfo = findTutorialInfo;
+module.exports.findAllTutorialInfoOfUser = findAllTutorialInfoOfUser;
 module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
-module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
-module.exports.findAllTutorialInfoOfUser = findAllTutorialInfoOfUser;
+module.exports.findAndCountAllTutorials = findAndCountAllTutorials;

@@ -61,8 +61,6 @@ var forceSyncIVLE = function (req, res, next) {
  * @param uid
  * @returns JSON
  */
- 
-
 var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
