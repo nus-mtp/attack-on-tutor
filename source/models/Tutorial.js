@@ -1,5 +1,5 @@
 /**
- * @module model/Tutorial
+ * @module models/Tutorial
  * @type {Sequelize|*|exports|module.exports}
  */
 
@@ -319,7 +319,7 @@ var forceSyncIVLE = function (uid) {
  * @returns {Promise}
  */
 var findTutorialSession = function (uid) {
-	return userTutorial.findAll ({
+	return userTutorial.findAll (
 		attributes: ['tutorialId'],
 		where: {
 			userId: uid
@@ -344,11 +344,24 @@ var findTutorialInfo = function (tid) {
 /**
  * Finds all tutorial info of a user's tutorials
  * @param uid
- * @returns [{tutinfo}, {tutinfo} ...] <- SHOULD RETURN PROMISE
+ * @returns {Promise}
  */
+
  var findAllTutorialInfoOfUser = function (uid) {
- 	return;
+ 	
+ 	// SELECT * FROM tutorials INNER JOIN userTutorials ON tutorials.id=userTutorials.tutorialId AND userTutorials.userId='a0127127'
+ 	return tutorial.findAndCountAll({
+ 		include: [{
+ 			model: userTutorial,
+ 			attributes: ['userId', 'tutorialId'],
+ 			where: {
+ 				userId: uid
+ 			}
+ 		}]
+ 	});
+
  }
+
 
 
 module.exports = tutorial;
