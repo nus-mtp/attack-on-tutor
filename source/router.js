@@ -24,6 +24,6 @@ router.get ('/dashboard', auth.ensureAuth, dashboard.get);
 router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSyncIVLE);
 router.post('/api/dashboard/getTutorials', auth.ensureAuth, dashboard.getTutorials);
 
-router.get('/api/lobby/enterLobby', auth.ensureAuth, lobby.enterLobby);
+router.post('/api/lobby/enterLobby', auth.ensureAuth, lobby.enterLobby);
 
 module.exports = router;

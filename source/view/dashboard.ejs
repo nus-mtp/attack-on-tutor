@@ -57,9 +57,10 @@ User is: <%= user.name %>
         });
     }
 
-    function showTutorials(tutorials) {
-        for (i = 0; i < tutorials.count; i++) {
-            var tut = tutorials.rows[i];
+    function showTutorials(tuts) {
+        for (i = 0; i < tuts.count; i++) {
+            var tut = tuts.rows[i];
+            tutorials.push(tut);
             $('#tutorials').append("<li>" + tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='" + i + "'> Join Class </button></li>");
         }
     }
@@ -67,19 +68,16 @@ User is: <%= user.name %>
     //syncIVLE();
     getTutorials();
 
-    function joinLobby(index) {
-        var tut = tutorials[index];
-    }
-
     $(document).on('click', '#lobby-button', function () {
         var tut = tutorials[$(this).attr('data-id')];
         $.ajax({
-            method: 'GET',
+            method: 'POST',
             url: '/api/lobby/enterLobby',
-            data: {
-
-            },
             dataType: 'json',
+            data: {
+                courseId: tut.courseid,
+                tutorialId: tut.id
+            },
             success: function(data) {
                 console.log(data);
             }
