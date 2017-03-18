@@ -440,6 +440,8 @@
 
 				//Receives questions received from other users.
                 socket.on ('add question', function (data) {
+                	console.log (data);
+                	/*
 					data.answered = false;
 					data.submitted = false;
 					data.remarks = "";
@@ -447,6 +449,7 @@
 						option.selected = false;
 					});
 					$scope.questions.push (data);
+					*/
                 });
 
                 //Receives questions received from other users.

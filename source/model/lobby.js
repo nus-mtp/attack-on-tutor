@@ -240,18 +240,18 @@ lobbyio.on ('connection', function (socket) {
         
         //Update the client that login is successful.
         socket.emit ('login', {
-            userType: socket.userType,
-            username: socket.username,
-            numUsers: lobby.numUsers,
-            defaultGroup: lobby.namespace
+            'userType': socket.userType,
+            'username': socket.username,
+            'numUsers': lobby.numUsers,
+            'defaultGroup': lobby.namespace
         });
 
         updateUsers (lobby, socket);
         
         //Update all clients whenever a user successfully joins the lobby.
         socket.broadcast.to(socket.namespace).emit ('user joined', {
-            username: socket.username,
-            numUsers: lobby.numUsers
+            'username': socket.username,
+            'numUsers': lobby.numUsers
         });
 
         //Initialise the socket
@@ -261,24 +261,24 @@ lobbyio.on ('connection', function (socket) {
                 // we tell the client to execute 'new message'
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
                 lobby.broadcastToGroup (socket, data.group, 'new message', {
-                    username: socket.username,
-                    message: data.message,
-                    group: data.group
+                    'username': socket.username,
+                    'message': data.message,
+                    'group': data.group
                 });
             });
 
             //Broadcast that the client is typing a message to other clients connected.
             socket.on ('typing', function (data) {
                 socket.broadcast.to(socket.namespace).emit ('typing', {
-                    username: socket.username,
-                    group: data
+                    'username': socket.username,
+                    'group': data
                 });
             });
 
             //Broadcast when the client stops typing a message to other clients connected.
             socket.on ('stop typing', function () {
                 socket.broadcast.to(socket.namespace).emit ('stop typing', {
-                    username: socket.username
+                    'username': socket.username
                 });
             });
             
@@ -286,9 +286,14 @@ lobbyio.on ('connection', function (socket) {
             //TODO separate out the different listeners for tutors and students.
             socket.on ('new question', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-                console.log (data);
                 lobby.questions.push (data.question);
-
+                data.groups.forEach (function (groupName, i) {
+                    lobby.broadcastToGroup (socket, groupName, 'add question', {
+                        'sourceId': socket.id,
+                        'username': socket.username,
+                        'question': data.question
+                    });
+                });
                 //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
