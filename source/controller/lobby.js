@@ -71,7 +71,7 @@ var enterLobby = function (req, res, next) {
 }
 
 /**
- * Checks if user is allowed to enter lobby.
+ * Middleware if user is allowed to enter lobby.
  * @param  req
  * @param  res
  * @param  next
@@ -80,6 +80,8 @@ var canEnterLobby = function (req, res, next) {
 
 	var user = req.body.auth.decoded;
 	var userId = user.id;
+
+	console.log(req.params);
 	
 	var tut = req.body.tutorial;
 	var courseId = tut.courseid;
@@ -122,6 +124,37 @@ var userIsTutorOfClass = function (uid, tid) {
 	});
 
 }
+
+/**
+ * Gets users in tutorial
+ * @param  res
+ * @oaram  req
+ * @param  next
+ */
+var getUsersInTutorial = function (res, req, next) {
+
+	var tid = res.params.tutorialId;
+	var users = {}
+	var tutorId = '';
+	Tutorial.findTutorialTutorID(tid).then(function (data) {
+		tutorId = data.dataValues.userId;
+		Tutorial.findAndCountAllUsersInTutorial(tid).then(function (data) {
+			for (i = 0; i < data.rows.length; i++) {
+				var user = data.rows[i].dataValues;
+				var role = (user.id != tutorId) ? 'student' : 'tutor';
+				var userObj = {
+					username: user.name,
+					userType: role
+				}
+				users[user.id] = userObj;
+			}
+			res.json({success: true, users: users});
+		});
+	});
+
+}
+
+getUsersInTutorial('test1');
 
 module.exports.get = get;
 module.exports.enterLobby = enterLobby;
