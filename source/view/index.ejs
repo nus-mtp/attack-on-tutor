@@ -26,16 +26,13 @@
             <h1>
                 <i>E-Tutorial</i>
             </h1>
-            <h2>
-                <i>- A Leap Towards Better Tutorial Experiences -</i>
-            </h2>
             <% if(user){ %>
                 <h2 class="welcomeMessage">
-                    Welcome back, <%= user.name %>!
+                    Welcome back, <%= user.name %>! <br>
+                    <a href="/dashboard"> Dashboard </a>
                 </h2>
-                <a href="/dashboard"> <img class="proceed-button" src="/images/UIElements/proceedButton.png"> </a>
             <% } else{ %>
-                <img class="login-button" src="/images/UIElements/loginButton.png">
+                <h2><a href="/login">Login</a></h2>
             <% } %>
 
         </div>
