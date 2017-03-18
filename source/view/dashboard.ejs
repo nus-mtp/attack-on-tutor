@@ -15,24 +15,29 @@
 User is: <%= user.name %>
 <br>
 <h3>Modules</h3>
-<div id="tutorials"></div>
+<ul id="tutorials"></ul>
+
+
+</body>
+</html>
+
 
 <script type="application/javascript">
 
+    var tutorials = [];
+
     function syncIVLE() {
         $.ajax({
-            type:'POST',
+            method:'POST',
             url:'/api/dashboard/forceSyncIVLE',
-            data:{
-                //'token':$('#token').val()
-            },
             dataType:'json',
             success: function(data){
                 if (data.success){
                     console.log("sync success");
+                    getTutorials();
                 }
                 else {  
-                    console.log('sync failed, err: ' +data.message);
+                    console.log('sync failed, err: ' + data.message);
                 }
 
             }
@@ -44,43 +49,41 @@ User is: <%= user.name %>
         $.ajax({
             type: 'POST',
             url: '/api/dashboard/getTutorials',
-            data: { },
             dataType: 'json',
             success: function(data) {
-                showTutorials(data.data);
+                tutorials = data.data;
+                showTutorials(tutorials);
             }
         });
     }
 
     function showTutorials(tutorials) {
-        console.log(tutorials.toString());
         for (i = 0; i < tutorials.length; i++) {
-            $('#tutorials').append(tutorials[i].coursecode + "<br>");
+            var tut = tutorials[i];
+            $('#tutorials').append("<li>" + tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='" + i + "'> Join Class </button></li>");
         }
     }
-    
-    /*
-    $('#sync-ivle').click(function() {
-        syncIVLE();
+
+    function joinLobby(index) {
+        var tut = tutorials[index];
+    }
+
+    $(document).on('click', '#lobby-button', function () {
+        var tut = tutorials[$(this).attr('data-id')];
+        $.ajax({
+            method: 'GET',
+            url: '/api/lobby/enterLobby',
+            data: {
+
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
     });
 
-    $('#get-mods').click(function() {
-        getTutorials();
-    });
-    */
-
-    syncIVLE();
+    //syncIVLE();
     getTutorials();
-    showTutorials();
-
-
 
 </script> 
-
-
-</body>
-</html>
-
-<style>
-
-</style>
