@@ -6,7 +6,27 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
     <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 </head>
-<body>
+<body ng-app="Todo"> <!-- Initialise the View (2) -->
+	<div class="page-container" ng-controller="TodoCtrl"> <!-- Tell the View about the Controller (5) -->
+		<!-- <input type="text" ng-model="message" />
+		<span> {{ "Hehe" }} </> <!-- Bind Data to the Page (6) -->
+		<!-- <span> {{ message }} </> -->
+		
+		<h2>Todo</h2>
+		<ul class="todo-list" ng-repeat="todo in todos track by $index">
+			<li>
+				<span>{{ todo }}</span>
+				<button class="bt bt-achieve" ng-click="done(todo)">Done</button>
+			</li>
+		</ul>
+		
+		<ul class="add-todo">
+			<li>
+				<input type="text" class="txt" placeholder="New Todo"
+					 ng-model="newTodo" ng-keyup="add($event)" />
+			</li>
+		</ul>
+	</div>
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -22,9 +42,34 @@ User is: <%= user.name %>
 </body>
 </html>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script type="application/javascript">
-
+	var app = angular.module('Todo', []); // Create the Module (1)
+	app.controller('TodoCtrl', function($scope) { // Create the Controller (3) + Set up $scope (4)
+		$scope.message = 'Angular is pretty cool.';
+		$scope.newTodo = '';
+		
+		$scope.todos = [
+			'Learn Sketch', 
+			'Look at Dribbble and feel inferior',
+			'Actually learn how to use the Pen tool'
+		];
+		
+		$scope.done = function(todo) {
+			var indexOf = $scope.todos.indexOf(todo);
+			if (indexOf !== -1) {
+				$scope.todos.splice(indexOf, 1);
+			}
+		};
+		
+		$scope.add = function(e) {
+			if (e.which && e.which === 13) {
+				$scope.todos.push($scope.newTodo);
+				$scope.newTodo = '';
+			}
+		};
+	});
+	
     var tutorials = [];
 
     function syncIVLE() {
@@ -84,6 +129,4 @@ User is: <%= user.name %>
             }
         });
     });
-
-
-</script> 
+</script>
