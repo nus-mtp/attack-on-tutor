@@ -62,7 +62,9 @@ var enterLobby = function (req, res, next) {
  */
 var userBelongsToTutorialClass = function (uid, tid) {
 
-	return true;
+	Tutorial.checkIfInTutorialUserList(uid, tid).then(function (data) {
+		return data == null ? false : true;
+	});
 
 }
 
@@ -75,8 +77,13 @@ var userBelongsToTutorialClass = function (uid, tid) {
  */
 userIsTutorOfClass = function (uid, tid) {
 
-	return false;
-
+	Tutorial.findTutorialTutorID(tid).then(function (data) {
+		if (data !== null) {
+			return uid == data.dataValues.userId;
+		} else {
+			return false;
+		}
+	});
 }
 
 module.exports.get = get;
