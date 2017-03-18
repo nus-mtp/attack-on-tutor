@@ -61,20 +61,17 @@ var forceSyncIVLE = function (req, res, next) {
  * @param uid
  * @returns JSON
  */
- 
-
 var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
 		var tuts = [];
 
-
-		Tutorial.findAllTutorialInfoOfUser(user.id).catch(function (err) {
-			res.json({success: false, message: err});
-		}).then(function (data) {
-			console.log(data);
-			tuts = data;
-			res.json({success: true, message: 'Success', data: tuts});
+		Tutorial.findAndCountAllTutorials(user.id).then(function (data) {
+			for (i = 0; i < data.rows.length; i++) {
+				console.log(data.rows[i].dataValues);
+				tuts.push(data.rows[i].dataValues);
+			}
+			res.json({success: true, message: 'Success', data: data});
 		});
 
 	} else {

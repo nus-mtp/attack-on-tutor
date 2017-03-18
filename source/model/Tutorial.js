@@ -366,8 +366,6 @@ var forceSyncIVLE = function (uid) {
 
 
 
-
-
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.findTutorialSession = findTutorialSession;

@@ -34,7 +34,11 @@ User is: <%= user.name %>
             success: function(data){
                 if (data.success){
                     console.log("sync success");
+<<<<<<< HEAD
                     getTutorials();
+=======
+                    getTutorials(data);
+>>>>>>> master
                 }
                 else {  
                     console.log('sync failed, err: ' + data.message);
@@ -59,10 +63,12 @@ User is: <%= user.name %>
 
     function showTutorials(tutorials) {
         for (i = 0; i < tutorials.length; i++) {
-            var tut = tutorials[i];
+            var tut = tutorials.rows[i];
             $('#tutorials').append("<li>" + tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='" + i + "'> Join Class </button></li>");
         }
     }
+
+    syncIVLE();
 
     function joinLobby(index) {
         var tut = tutorials[index];
