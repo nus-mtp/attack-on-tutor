@@ -50,8 +50,6 @@ function Lobby () {
     
     this.numUsers = 0;
     
-    //var defaultGroup = new Group ('default_group');
-	//this.groups[defaultGroup.groupId] = defaultGroup;
 }
 
 Lobby.prototype.emitToLobby = function (key, value) {
@@ -237,7 +235,6 @@ lobbyio.on ('connection', function (socket) {
 
         //Initialise the socket
         if (addedUser) {
-            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
             socket.on ('new message', function (data) {
                 // we tell the client to execute 'new message'
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
@@ -248,7 +245,6 @@ lobbyio.on ('connection', function (socket) {
                 });
             });
 
-            //Broadcast that the client is typing a message to other clients connected.
             socket.on ('typing', function (data) {
                 socket.broadcast.to(socket.namespace).emit ('typing', {
                     'username': socket.username,
@@ -256,7 +252,6 @@ lobbyio.on ('connection', function (socket) {
                 });
             });
 
-            //Broadcast when the client stops typing a message to other clients connected.
             socket.on ('stop typing', function () {
                 socket.broadcast.to(socket.namespace).emit ('stop typing', {
                     'username': socket.username
@@ -277,7 +272,6 @@ lobbyio.on ('connection', function (socket) {
                     }
                 }
                 updateUsers (lobby, socket);
-                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
             socket.on ('delete group', function (data) {
@@ -289,7 +283,6 @@ lobbyio.on ('connection', function (socket) {
                 });
                 lobby.removeGroup (groupname);
                 updateUsers (lobby, socket);
-                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
             socket.on ('new question', function (data) {
@@ -310,7 +303,6 @@ lobbyio.on ('connection', function (socket) {
                         'question': data.question
                     });
                 });
-                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
             socket.on ('update answer', function (data) {
@@ -356,7 +348,6 @@ lobbyio.on ('connection', function (socket) {
                     }
                 }
 
-                console.log (lobby.questions[questionUuid])
                 if (question) {
                     question.groups.forEach (function (groupName, i) {
                         lobby.emitToGroup (groupName, 'update answer', {
