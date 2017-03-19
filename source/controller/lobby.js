@@ -35,7 +35,7 @@ var get = function (req, res, next)
 };
 
 /**
- * Checks if user is allowed to enter lobby.
+ * Middleware to check if user is allowed to enter lobby.
  * @param  req
  * @param  res
  * @param  next
@@ -45,65 +45,34 @@ var enterLobby = function (req, res, next) {
 	var user = req.body.auth.decoded;
 	var userId = user.id;
 
+	var tutorialId = req.body['tut-id'];
 
-	console.log(req.body);
+	if (tutorialId != null) {
+	// TODO: fix naming in lobby.ejs to match database. 
+		// Checks if user is in user list
+		Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
+			if (data !== null) {
+				Tutorial.findTutorialInfo(tutorialId).then( // Get tutorial info
+					function(data) {
+						var tut = data[0].dataValues;
+						var courseId = tut.courseid;
+						var moduleId = tut.coursecode;
+						var tutorialId = tut.name;
+						req.body.tut = tut;
+						return next();
 
-	var courseId = req.body.courseid;
-	var tutorialId = req.body.id;
-	var moduleId = req.body.coursecode;
-	var tutorialName = req.body.name; // TODO: fix naming in lobby.ejs to match database. 
-	// Checks if user is in user list
-	Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
-		if (data !== null) {
-			res.json({ success: true })
-			res.render ('lobby/lobby', {
-				title: 'Lobby UI',
-				userId: userId,
-				courseId: courseId,
-				tutId: tutorialId,
-				moduleId: moduleId,
-				tutorialId: tutorialName
-			});
-		} else {
-			res.json({ success: false, message: 'Permission denied.'});
-		}
-	});
-}
+					});
+				
+			} else {
+				res.json({ success: false, message: 'You are not a member of this tutorial.'});
+			}
+		});
 
-/**
- * Middleware if user is allowed to enter lobby.
- * @param  req
- * @param  res
- * @param  next
- */
-var canEnterLobby = function (req, res, next) {
+	} else {
 
-	var user = req.body.auth.decoded;
-	var userId = user.id;
+		res.json({success: false, message: 'Please access lobby from dashboard because we suck at coding'});
 
-	console.log(req.params);
-	
-	var tut = req.body.tutorial;
-	var courseId = tut.courseid;
-	var tutorialId = tut.id;
-	var moduleId = tut.coursecode;
-	var tutorialName = tut.name; // TODO: fix naming in lobby.ejs to match database. 
-
-	// Checks if user is in user list
-	Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
-		if (data !== null) {
-			res.render ('lobby/lobby', {
-				title: 'Lobby UI',
-				userId: userId,
-				courseId: courseId,
-				tutId: tutorialId,
-				moduleId: moduleId,
-				tutorialId: tutorialName
-			});
-		} else {
-			res.json({ success: false, message: 'Permission denied.'});
-		}
-	});
+	}
 }
 
 
@@ -131,9 +100,9 @@ var userIsTutorOfClass = function (uid, tid) {
  * @oaram  req
  * @param  next
  */
-var getUsersInTutorial = function (res, req, next) {
+var getUsersInTutorial = function (req, res, next) {
 
-	var tid = res.params.tutorialId;
+	var tid = req.body.tutorialId;
 	var users = {}
 	var tutorId = '';
 	Tutorial.findTutorialTutorID(tid).then(function (data) {
@@ -148,14 +117,17 @@ var getUsersInTutorial = function (res, req, next) {
 				}
 				users[user.id] = userObj;
 			}
-			res.json({success: true, users: users});
+			return next();	
+			//res.json({success: true, users: users, tutorialId: tid});
+		}).catch(function (err) {
+			res.json({success: false, message: 'Could not find users in tutorial'});
 		});
 	});
 
 }
 
-getUsersInTutorial('test1');
+
 
 module.exports.get = get;
 module.exports.enterLobby = enterLobby;
-module.exports.canEnterLobby = canEnterLobby;
+module.exports.getUsersInTutorial = getUsersInTutorial;

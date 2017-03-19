@@ -65,7 +65,6 @@ var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
 		var tuts = [];
-
 		Tutorial.findAndCountAllTutorials(user.id).then(function (data) {
 			for (i = 0; i < data.rows.length; i++) {
 				console.log(data.rows[i].dataValues);

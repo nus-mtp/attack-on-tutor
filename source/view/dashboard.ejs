@@ -16,8 +16,9 @@ User is: <%= user.name %>
 <br>
 <h3>Modules</h3>
 
+<form id='form' style='display: hidden' action='' method='POST'>
 <ul id="tutorials"></ul>
-
+</form>
 
 </body>
 </html>
@@ -61,29 +62,18 @@ User is: <%= user.name %>
         for (i = 0; i < tuts.count; i++) {
             var tut = tuts.rows[i];
             tutorials.push(tut);
-            $('#tutorials').append("<li>" + tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='" + i + "'> Join Class </button></li>");
+            $('#tutorials').append("<li>" + tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='"+i+"' name='tut-id' value=''> Join Class </button></li>");
         }
     }
 
-    //syncIVLE();
-    getTutorials();
+    syncIVLE(); // Uncomment this when pushing
+    //getTutorials(); // Comment this out when pushing
 
     $(document).on('click', '#lobby-button', function () {
-        var tut = tutorials[$(this).attr('data-id')];
-        $.ajax({
-            method: 'POST',
-            url: '/api/lobby/enterLobby',
-            dataType: 'json',
-            data: {
-                id: tut.id,
-                name: tut.name,
-                coursecode: tut.coursecode,
-                courseid: tut.courseid
-            },
-            success: function (data) {
-                window.location = 'http://127.0.0.1:8081/lobby/'+$('#uid').val()+'/'+tut.coursecode+'/'+tut.name;
-            }
-        });
+        var index = $(this).attr('data-id');
+        var tut = tutorials[index];
+        $(this).attr('value', tut.id);
+        $('#form').attr('action', 'lobby/'+$('#uid').val()+'/'+tut.coursecode+'/'+tut.name);
     });
 
 
