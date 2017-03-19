@@ -107,7 +107,6 @@ Lobby.prototype.getRoomName = function (group) {
     } else if (this.namespace == group) {
         return this.namespace;
     }
-
 }
 
 Lobby.prototype.getUsersInRoom = function (roomName) {
@@ -246,6 +245,8 @@ lobbyio.on ('connection', function (socket) {
             'defaultGroup': lobby.namespace
         });
 
+        console.log (lobby.questions);
+
         updateUsers (lobby, socket);
         
         //Update all clients whenever a user successfully joins the lobby.
@@ -286,11 +287,13 @@ lobbyio.on ('connection', function (socket) {
             //TODO separate out the different listeners for tutors and students.
             socket.on ('new question', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                data.question.completed = false;
+                data.question.graded = false;
                 lobby.questions.push (data.question);
                 data.groups.forEach (function (groupName, i) {
                     lobby.broadcastToGroup (socket, groupName, 'add question', {
-                        'sourceId': socket.id,
                         'username': socket.username,
+                        'groupmates': lobby.getUsersInRoom (groupName),
                         'question': data.question
                     });
                 });
