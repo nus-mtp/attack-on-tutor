@@ -33,14 +33,14 @@
 
 	<div class="container">
 		<div class="row">
-			<div class="col-md-6" style="background-color:#141311">	
+			<!--<div class="col-md-6" style="background-color:#141311">	
 				<h2>Avatar Wardrobe</h2>
 				<div class="avatarWardrobe">
-					<!--<img src="https://aquelia.files.wordpress.com/2013/08/p4_characterscreen.jpg" alt="Avatar Wardrobe">-->
+					<img src="https://aquelia.files.wordpress.com/2013/08/p4_characterscreen.jpg" alt="Avatar Wardrobe">
 				</div>
-			</div>
+			</div>-->
 			
-			<div class="col-md-6" style="background-color:#141311">
+			<div class="col-md-12" style="background-color:#141311">
 				<h2>Modules</h2>
 				<div class="moduleList">
 					<!--<img src="https://www.w3schools.com/css/trolltunga.jpg" alt="Troll Tunga" height="200" width="550">
@@ -94,6 +94,7 @@
         for (i = 0; i < tuts.count; i++) {
             var tut = tuts.rows[i];
             tutorials.push(tut);
+			
             $('#tutorials').append(tut.coursecode + " " + tut.coursename + " <button class='btn btn-primary' data-id='" + i + "'> Join Class </button>");
         }
     }
@@ -169,7 +170,7 @@
 		text-align: center;
 	}
 	
-	.col-md-6 {
+	.col-md-12 {
 		margin-top: 3.5%;
 		height: 80vh;
 	}
