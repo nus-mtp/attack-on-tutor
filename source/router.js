@@ -27,6 +27,6 @@ router.post('/api/dashboard/getTutorials', auth.ensureAuth, dashboard.getTutoria
 router.post('/api/lobby/enterLobby', auth.ensureAuth, lobby.enterLobby);
 router.post('/api/lobby/getUsersInTutorial', auth.ensureAuth, lobby.getUsersInTutorial);
 
-router.get('/test', auth.ensureAuth, test.makeTestModules);
+router.get('/test', auth.ensureAuth, test.get);
 
 module.exports = router;
