@@ -528,7 +528,6 @@
 
                 //Update answers composed by other users.
                 socket.on ('update answer', function (data) {
-                	console.log (data);
                 	updateAnswerCounts (data.questionUuid, data.selectedCount);
                 	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
                 });
