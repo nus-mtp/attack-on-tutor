@@ -17,7 +17,12 @@ var get = function(req, res, next) {
 		console.log('Test mode is active.');
 		makeTestModules();
 		makeTestStudents();
-		// TODO: Make the current user a tutor of TT1011 and TT2022.
+		// TODO: Make the current user a tutor of TT1011 in a way thats NOT LIKE THIS, OMG.
+		sequelize.query("INSERT INTO userTutorials VALUES ('tutor', 'test1', '"+user.id+"', current_timestamp(), current_timestamp())").then(
+			function (data) {
+				console.log(data);
+			}
+		);
 		res.send('Database populated.');
 	} else {
 		console.log('Test mode is inactive.');
@@ -34,7 +39,6 @@ var get = function(req, res, next) {
 var makeTestModules = function () {
 	var modules = makeJSONArray(testModules);
 	Tutorial.bulkCreate(modules, { ignoreDuplicates: true}).then(function (data) {
-		console.log(data);
 	});
 }
 
@@ -45,7 +49,6 @@ var makeTestModules = function () {
 var makeTestStudents = function () {
 	var students = makeJSONArray(testStudents);students
 	User.bulkCreate(students, { ignoreDuplicates: true}).then(function (data) {
-		console.log(data);
 	});
 }
 
@@ -61,8 +64,6 @@ var makeJSONArray = function(items) {
 	}
 	return itemArray;
 }
-
-
 
 module.exports.get = get
 module.exports.makeTestModules = makeTestModules;
