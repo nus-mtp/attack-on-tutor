@@ -53,11 +53,7 @@ User is: <%= user.name %>
             data: { },
             dataType: 'json',
             success: function(data) {
-                if (data.count > 0) {
-                    showTutorials(data.data);
-                } else {
-                    showNoTutorials();
-                }
+                showTutorials(data.data);
             }
         });
     }
@@ -68,10 +64,6 @@ User is: <%= user.name %>
             tutorials.push(tut);
             $('#tutorials').append("<li>" + tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='"+i+"' name='tut-id' value=''> Join Class </button></li>");
         }
-    }
-
-    function showNoTutorials() {
-        $('#tutorials').append("<li>You have no tutorials. What are you doing here?</li>");
     }
 
     syncIVLE(); // Uncomment this when pushing
