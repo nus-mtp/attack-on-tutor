@@ -64,7 +64,7 @@ Lobby.prototype.emitToGroup = function (group, key, value) {
         if (this.groups[group]) {
             lobbyio.in (this.namespace + '/' + group).emit (key, value);
         } else if (this.namespace == group) {
-            this.broadcastToLobby (key, value);
+            this.emitToLobby (key, value);
         }
     }
 }
@@ -299,6 +299,7 @@ lobbyio.on ('connection', function (socket) {
                 data.question.graded = false;
                 data.question.uuid = generateUUID();
                 data.question.groups = data.groups;
+                data.question.selectedAnswers = {};
                 data.question.answers = {};
 
                 lobby.questions[data.question.uuid] = data.question;
@@ -328,12 +329,41 @@ lobbyio.on ('connection', function (socket) {
                     lobby.questions[questionUuid].answers[socket.id].description = ownAnswer.description;
                 }
 
+                //Save the user's selected answer (if any)
+                for (var i = 0; i < answers.length; i++) {
+                    if (answers[i].selected) {
+                        lobby.questions[questionUuid].selectedAnswers[socket.id] = answers[i].student.socketId;
+                        break;
+                    }
+                }
+                
+                //Count the selected answers from each user.
+                var selectedCounts = {};
+                for (var answerSocketId in lobby.questions[questionUuid].answers) {
+                    if (lobby.questions[questionUuid].answers.hasOwnProperty (answerSocketId)) {
+                        //Set the selected count for that specific answer to 0 for recounting.
+                        lobby.questions[questionUuid].answers[answerSocketId].selectedCount = 0;
+
+                        for (var selectedAnswerSocketId in lobby.questions[questionUuid].selectedAnswers) {
+                            if (lobby.questions[questionUuid].selectedAnswers.hasOwnProperty (selectedAnswerSocketId)) {
+                                if (lobby.questions[questionUuid].selectedAnswers[selectedAnswerSocketId] == answerSocketId) {
+                                    lobby.questions[questionUuid].answers[answerSocketId].selectedCount++;
+                                }
+                            }
+                        }
+
+                        selectedCounts[answerSocketId] = lobby.questions[questionUuid].answers[answerSocketId].selectedCount;
+                    }
+                }
+
+                console.log (lobby.questions[questionUuid])
                 if (question) {
                     question.groups.forEach (function (groupName, i) {
-                        lobby.broadcastToGroup (socket, groupName, 'update answer', {
+                        lobby.emitToGroup (groupName, 'update answer', {
                             'socketId': socket.id,
                             'questionUuid': questionUuid,
-                            'answer': ownAnswer.description
+                            'answer': ownAnswer.description,
+                            'selectedCount': selectedCounts
                         });
                     });
                 }

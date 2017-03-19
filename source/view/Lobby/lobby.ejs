@@ -106,11 +106,15 @@
 	                                                	<div ng-click="selectAnswer(uuid, $index)">
                                                    			{{answer.selected}}
                                                			</div>
+                                               			<div>
+                                                   			{{answer.selectedCount}}
+                                               			</div>
 	                                                </div>
 	                                            </div>
 	                                        </div>
 	                                        <div class="row-fluid">
 	                                            <button class="btn btn-success update-answer" ng-click="updateAnswer(uuid)" style="float:right;">Update!</button>
+	                                            <button class="btn btn-success submit-answer" ng-if="hasAllVotes(uuid)" style="float:right;">Submit!</button>
 	                                        </div>
 	                                    </div>
 	                                </li>
@@ -507,7 +511,8 @@
                 				'student' : groupmate,
                 				'description' : '',
                 				'selected' : false,
-                				'owned' : owned
+                				'owned' : owned,
+                				'selectedCount' : 0
                 			});
                 		}
                 	});
@@ -524,7 +529,7 @@
 
                 //Update answers composed by other users.
                 socket.on ('update answer', function (data) {
-                	console.log (data);
+                	updateAnswerCounts (data.questionUuid, data.selectedCount);
                 	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
                 });
 
@@ -554,6 +559,34 @@
 	                		if ($scope.questions[questionUuid].answers[i].student.socketId == socketId) {
 	                			$scope.questions[questionUuid].answers[i].description = answerDescription;
 	                			return true;
+	                		}
+	                	}
+                	}
+                	return false;
+                };
+
+                var updateAnswerCounts = function (questionUuid, selectedCounts) {
+                	if ($scope.questions[questionUuid]) {
+                		for (var answerSocketId in selectedCounts) {
+                			if (selectedCounts.hasOwnProperty (answerSocketId)) {
+                				for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
+			                		if ($scope.questions[questionUuid].answers[i].student.socketId == answerSocketId) {
+			                			$scope.questions[questionUuid].answers[i].selectedCount = selectedCounts[answerSocketId];
+			                		}
+			                	}
+                			}
+                		}	
+                	}
+                };
+
+                $scope.hasAllVotes = function (questionUuid) {
+                	if ($scope.questions[questionUuid]) {
+                		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
+                			//Check own answer if everyone has selected it.
+	                		if ($scope.questions[questionUuid].answers[i].owned) {
+	                			//Currently, this checks if the selected count for this client's answer is equivalent to the number of answers that the group has.
+	                			//As each answer would correspond to a member in the group.
+	                			return $scope.questions[questionUuid].answers[i].selectedCount == $scope.questions[questionUuid].answers.length;
 	                		}
 	                	}
                 	}

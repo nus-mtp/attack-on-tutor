@@ -73,7 +73,7 @@ User is: <%= user.name %>
         var index = $(this).attr('data-id');
         var tut = tutorials[index];
         $(this).attr('value', tut.id);
-        $('#form').attr('action', 'lobby/'+$('#uid').val()+'/'+tut.coursecode+'/'+tut.name);
+        $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name);
     });
 
     
