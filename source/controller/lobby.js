@@ -58,21 +58,24 @@ var enterLobby = function (req, res, next) {
 
 				Tutorial.findTutorialTutorID(tutorialId).then( 						// Get tutor ID
 					function (data) {
-						var tutorId = data.dataValues.userId;
-						var userRole = (tutorId == userId) ? 'tutor' : 'student'; 	// Check if user is tutor
-						Tutorial.findTutorialInfo(tutorialId).then( 				// Get tutorial info
-							function(data) {
-								var tut = data[0].dataValues;
-								// var courseId = tut.courseid;
-								// var moduleId = tut.coursecode;
-								// var tutorialId = tut.name;
-								req.body.tut = tut;
-								req.body.userRole = userRole;
-								return next();
-							});
-					}
-
-				); 
+						console.log(data == null);
+						if (data != null) {
+							var tutorId = data.dataValues.userId;
+							var userRole = (tutorId == userId) ? 'tutor' : 'student'; 	// Check if user is tutor
+							Tutorial.findTutorialInfo(tutorialId).then( 				// Get tutorial info
+								function(data) {
+									var tut = data[0].dataValues;
+									// var courseId = tut.courseid;
+									// var moduleId = tut.coursecode;
+									// var tutorialId = tut.name;
+									req.body.tut = tut;
+									req.body.userRole = userRole;
+									return next();
+								});
+						} else {
+							res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
+						}	
+					}); 
 
 			} else {
 				res.json({ success: false, message: 'You are not a member of this tutorial.'});
@@ -80,9 +83,7 @@ var enterLobby = function (req, res, next) {
 		});
 
 	} else {
-
-		res.json({success: false, message: 'Please access lobby from dashboard because we suck at coding'});
-
+		res.json({success: false, message: 'Please access lobby from dashboard!'});
 	}
 }
 
