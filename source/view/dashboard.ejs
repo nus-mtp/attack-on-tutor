@@ -67,11 +67,11 @@
             dataType:'json',
             success: function(data){
                 if (data.success){
-                    console.log("sync success");
+                    console.log("Successful Sync");
                     getTutorials();
                 }
                 else {  
-                    console.log('sync failed, err: ' + data.message);
+                    console.log('Failed Sync, Error: ' + data.message);
                 }
 
             }
@@ -94,7 +94,7 @@
         for (i = 0; i < tuts.count; i++) {
             var tut = tuts.rows[i];
             tutorials.push(tut);
-            $('#tutorials').append(tut.coursecode + " " + tut.coursename +" <button id='lobby-button' data-id='" + i + "'> Join Class </button></li>");
+            $('#tutorials').append(tut.coursecode + " " + tut.coursename + " <button class='btn btn-primary' data-id='" + i + "'> Join Class </button>");
         }
     }
 
