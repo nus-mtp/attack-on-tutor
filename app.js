@@ -64,3 +64,5 @@ var server = app.listen
 )
 
 lobby.listen (server);
+
+app.set('test', false); // Set to true to populate db with fake modules.

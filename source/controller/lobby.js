@@ -54,10 +54,10 @@ var enterLobby = function (req, res, next) {
 		// Checks if user is in user list
 		Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
 			if (data !== null) {
-
-
+				
 				Tutorial.findTutorialTutorID(tutorialId).then( 						// Get tutor ID
 					function (data) {
+						if (data != null) {
 						var tutorId = data.dataValues.userId;
 						var userRole = (tutorId == userId) ? 'tutor' : 'student'; 	// Check if user is tutor
 						Tutorial.findTutorialInfo(tutorialId).then( 				// Get tutorial info
@@ -70,10 +70,13 @@ var enterLobby = function (req, res, next) {
 								req.body.userRole = userRole;
 								return next();
 							});
+						} else {
+							res.json({ success: false, message: ''});
+						}
 					}
 
 				); 
-
+				res.json({success: false, message: 'The tutor for this module has not been registered in the system.'});
 			} else {
 				res.json({ success: false, message: 'You are not a member of this tutorial.'});
 			}
@@ -81,7 +84,7 @@ var enterLobby = function (req, res, next) {
 
 	} else {
 
-		res.json({success: false, message: 'Please access lobby from dashboard because we suck at coding'});
+		res.json({success: false, message: 'Please access lobby from dashboard!'});
 
 	}
 }
