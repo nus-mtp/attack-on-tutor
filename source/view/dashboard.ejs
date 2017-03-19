@@ -31,6 +31,7 @@
 
 	<input id="uid" type="hidden" value="<%= user.id %>">
 
+
 	<div class="container">
 		<div class="row">
 			<!--<div class="col-md-6" style="background-color:#141311">	
@@ -99,25 +100,16 @@
 		}
     }
 
+
     $(document).on('click', '#lobby-button', function () {
-        var tut = tutorials[$(this).attr('data-id')];
-        $.ajax({
-            method: 'POST',
-            url: '/api/lobby/enterLobby',
-            dataType: 'json',
-            data: {
-                id: tut.id,
-                name: tut.name,
-                coursecode: tut.coursecode,
-                courseid: tut.courseid
-            },
-            success: function (data) {
-                window.location = 'http://127.0.0.1:8081/lobby/'+$('#uid').val()+'/'+tut.coursecode+'/'+tut.name;
-            }
-        });
+        var index = $(this).attr('data-id');
+        var tut = tutorials[index];
+        $(this).attr('value', tut.id);
+        $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name);
     });
 	
 	syncIVLE();
+
 </script>
 
 <style>
