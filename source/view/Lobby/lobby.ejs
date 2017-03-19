@@ -106,6 +106,9 @@
 	                                                	<div ng-click="selectAnswer(uuid, $index)">
                                                    			{{answer.selected}}
                                                			</div>
+                                               			<div>
+                                                   			{{answer.selectedCount}}
+                                               			</div>
 	                                                </div>
 	                                            </div>
 	                                        </div>
@@ -507,7 +510,8 @@
                 				'student' : groupmate,
                 				'description' : '',
                 				'selected' : false,
-                				'owned' : owned
+                				'owned' : owned,
+                				'selectedCount' : 0
                 			});
                 		}
                 	});
@@ -525,6 +529,7 @@
                 //Update answers composed by other users.
                 socket.on ('update answer', function (data) {
                 	console.log (data);
+                	updateAnswerCounts (data.questionUuid, data.selectedCount);
                 	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
                 });
 
@@ -556,6 +561,22 @@
 	                			return true;
 	                		}
 	                	}
+                	}
+                	return false;
+                };
+
+                var updateAnswerCounts = function (questionUuid, selectedCounts) {
+                	if ($scope.questions[questionUuid]) {
+                		for (var answerSocketId in selectedCounts) {
+                			if (selectedCounts.hasOwnProperty (answerSocketId)) {
+                				for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
+			                		if ($scope.questions[questionUuid].answers[i].student.socketId == answerSocketId) {
+			                			$scope.questions[questionUuid].answers[i].selectedCount = selectedCounts[answerSocketId];
+			                		}
+			                	}
+                			}
+                		}
+                		
                 	}
                 	return false;
                 };

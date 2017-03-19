@@ -64,7 +64,7 @@ Lobby.prototype.emitToGroup = function (group, key, value) {
         if (this.groups[group]) {
             lobbyio.in (this.namespace + '/' + group).emit (key, value);
         } else if (this.namespace == group) {
-            this.broadcastToLobby (key, value);
+            this.emitToLobby (key, value);
         }
     }
 }
@@ -359,7 +359,7 @@ lobbyio.on ('connection', function (socket) {
                 console.log (lobby.questions[questionUuid])
                 if (question) {
                     question.groups.forEach (function (groupName, i) {
-                        lobby.broadcastToGroup (socket, groupName, 'update answer', {
+                        lobby.emitToGroup (groupName, 'update answer', {
                             'socketId': socket.id,
                             'questionUuid': questionUuid,
                             'answer': ownAnswer.description,
