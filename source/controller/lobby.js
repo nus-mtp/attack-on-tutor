@@ -54,8 +54,7 @@ var enterLobby = function (req, res, next) {
 		// Checks if user is in user list
 		Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
 			if (data !== null) {
-
-
+				
 				Tutorial.findTutorialTutorID(tutorialId).then( 						// Get tutor ID
 					function (data) {
 						console.log(data == null);
@@ -76,7 +75,7 @@ var enterLobby = function (req, res, next) {
 							res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
 						}	
 					}); 
-
+        
 			} else {
 				res.json({ success: false, message: 'You are not a member of this tutorial.'});
 			}
