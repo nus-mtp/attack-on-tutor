@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>index</title>
+    <title>Attack on Tutor</title>
+
     <script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
-    <!--<link rel='stylesheet' href='/stylesheets/style.css' />-->
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:200italic,300italic,400,400italic,600' rel='stylesheet' type='text/css'>
-</head>
-<body>
 
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Playfair-Display">
+</head>
+
+<body>
     <ul>
-        <li><a class="active" href="/">E-Tutorials</a></li>
-        <li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repo</a></li>
+        <li><a class="active" href="/">Welcome, <%= user.name %></a></li>
+		
         <% if(user){ %>
-            <li style="float:right"><a class="active" id="logout" >Log out</a></li>
+            <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
         <% } %>
+		
+		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
     </ul>
 
-    <div class="logo-containter">
-        <img class="logo" src="/images/UIElements/loginReindeer.png">
+    <div class="logoContainer">
     </div>
 
-    <div class="login-section-containter">
-        <div class="title-containter">
-            <h1>
-                <i>E-Tutorial</i>
-            </h1>
-            <h2>
-                <i>- A Leap Towards Better Tutorial Experiences -</i>
-            </h2>
-            <% if(user){ %>
-                <h2 class="welcomeMessage">
-                    Welcome back, <%= user.name %>!
-                </h2>
-                <a href="/dashboard"> <img class="proceed-button" src="/images/UIElements/proceedButton.png"> </a>
-            <% } else{ %>
-                <img class="login-button" src="/images/UIElements/loginButton.png">
-            <% } %>
-
-        </div>
+    <div class="titleContainer">
+        <h1>
+			Attack on Tutor
+		</h1>
+		
+		<h2>
+			A Fantasy-like Tutorial Experience
+		</h2>
+		
+		<% if(user){ %>
+			<a href="/dashboard"> <div class="dashboardButton"><img src="images/dashboardButton.png"></div> </a>
+		<% } else{ %>
+			<img class="login-button" src="">
+		<% } %>
     </div>
-
-
-
 </body>
+
 </html>
 
 <script>
-    var logoutConfirmation = "Are you sure you want to log out?";
+    var logoutConfirmation = "Would You Like to Log Out?";
 	
     $("#logout").on
 	(
@@ -64,104 +61,73 @@
 		"click",
 		function(event)
 		{
-			console.log ( "Login button pressed." );
+			console.log ( "See You Soon!" );
 		}
 	);
 </script>
 
 <style>
     body {
-        margin:0;
-        background-color: #ffb526;
-        min-width: 1500px;
-        min-height: 800px;
+        background-color: #141311;
     }
-    ul {
-        list-style-type: none;
+    
+	ul {
         margin: 0;
         padding: 0;
         overflow: hidden;
-        background-color: #213045;
+        background-color: #141311;
     }
+	
     li {
         float: left;
     }
+	
     li a {
+		font-family: 'Playfair-Display', serif;
+		font-size: 1.5vw;
+        color: #FFFFFF;
         display: block;
-        color: white;
+        padding: 10px;
         text-align: center;
-        padding: 20px 16px;
         text-decoration: none;
-        font-family: 'Source Sans Pro', sans-serif; font-weight: 400;
-        font-size: 28px;
     }
+	
     li a:hover {
-        background-color: #44767f;
+        background-color: #B7B7B6;
     }
-    #logout {
-        cursor: pointer;
-    }
-    .logo-containter {
-        width: 39%;
-        height: calc(100vh - 78px);
-        display: inline-block;
-    }
-    .login-section-containter {
-        width: 59vw;
-        height: calc(100vh - 78px);
-        display: inline-block;
-        vertical-align: top;
-    }
-    .logo {
-        position: relative;
-        width: 90%;
-        margin-top: 7%;
-        -webkit-animation-name: moveReindeer;
-        -webkit-animation-duration: 2s;
-    }
-    @-webkit-keyframes moveReindeer {
-        from {
-            left:-12%;}
-        to {left:0;}
-    }
-    .login-button {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 25vw;
-        top: 20vh;
-        margin-top: 10vh;
-        cursor: pointer;
-    }
-    .proceed-button {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 25vw;
-        top: 20vh;
-        margin-top: 2vh;
-        cursor: pointer;
-    }
+	
     h1 {
-        font-family: 'Source Sans Pro', sans-serif; font-weight: 200;
-        font-size: 1400%;
-        color: white;
-        text-shadow: 1vh 1vh #dd9a20;
+		font-family: 'Playfair-Display', serif;
+        font-size: 5vw;
+        color: #FFFFFF;
         margin: 0;
         padding: 0;
-        text-align: center;
-        margin-top: 13vh;
+		text-align: center;
+        margin-top: 20vh;
     }
-    h2 {
-        font-family: 'Source Sans Pro', sans-serif; font-weight: 400;
+   
+	h2 {
+        font-family: 'Playfair-Display', serif;
         font-size: 4.5vh;
-        color: white;
+        color: #A2482E;
         margin:0;
         padding:0;
         text-align: center;
+		margin-top: 1vh;
     }
-    .welcomeMessage {
-        margin-top: 10vh;
-        text-align: center;
+	
+	#logout {
+        cursor: pointer;
     }
+	
+	.titleContainer {
+		margin-top: 10%;
+	}
+	
+	.dashboardButton {
+		text-align: center;
+		margin-top: 6.5%;
+		background-color: transparent;
+		outline: none;
+	}
 </style>
