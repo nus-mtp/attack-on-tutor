@@ -16,7 +16,7 @@ var get = function (req, res, next)
 	if (req.body.auth.success) {
 
 		var user = req.body.auth.decoded;
-
+		console.log(req.body);
 	    var userId = user.id;
 	    var moduleId = req.params.moduleId;
 	    var tutorialId = req.params.tutorialId;
@@ -25,7 +25,9 @@ var get = function (req, res, next)
 	        title: 'Lobby UI',
 	        userId: userId,
 	        moduleId: moduleId,
-	        tutorialId: tutorialId
+	        tutorialId: tutorialId,
+	        userRole: req.body.userRole,
+	        username: user.name
 	    });
 
 	} else {
@@ -52,17 +54,26 @@ var enterLobby = function (req, res, next) {
 		// Checks if user is in user list
 		Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
 			if (data !== null) {
-				Tutorial.findTutorialInfo(tutorialId).then( // Get tutorial info
-					function(data) {
-						var tut = data[0].dataValues;
-						var courseId = tut.courseid;
-						var moduleId = tut.coursecode;
-						var tutorialId = tut.name;
-						req.body.tut = tut;
-						return next();
 
-					});
-				
+
+				Tutorial.findTutorialTutorID(tutorialId).then( 						// Get tutor ID
+					function (data) {
+						var tutorId = data.dataValues.userId;
+						var userRole = (tutorId == userId) ? 'tutor' : 'student'; 	// Check if user is tutor
+						Tutorial.findTutorialInfo(tutorialId).then( 				// Get tutorial info
+							function(data) {
+								var tut = data[0].dataValues;
+								// var courseId = tut.courseid;
+								// var moduleId = tut.coursecode;
+								// var tutorialId = tut.name;
+								req.body.tut = tut;
+								req.body.userRole = userRole;
+								return next();
+							});
+					}
+
+				); 
+
 			} else {
 				res.json({ success: false, message: 'You are not a member of this tutorial.'});
 			}
@@ -101,7 +112,6 @@ var userIsTutorOfClass = function (uid, tid) {
  * @param  next
  */
 var getUsersInTutorial = function (req, res, next) {
-
 	var tid = req.body.tutorialId;
 	var users = {}
 	var tutorId = '';
