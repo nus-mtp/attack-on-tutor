@@ -12,13 +12,15 @@
 
 <body>
     <ul>
-        <li><a class="active" href="/">Welcome, <%= user.name %></a></li>
+        <li><a class="active" href="/">Welcome</a></li>
+
+		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
 		
         <% if(user){ %>
             <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
+		<% } else{ %>
+            <li style="float:right"><a class="active" href="/login" >Log In</a></li>
         <% } %>
-		
-		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
     </ul>
 
     <div class="logoContainer">
@@ -43,7 +45,6 @@
 
 </html>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <script>
     var logoutConfirmation = "Would You Like to Log Out?";
 	
