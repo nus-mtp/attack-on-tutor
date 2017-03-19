@@ -67,7 +67,6 @@ var getTutorials = function (req, res, next) {
 		var tuts = [];
 		Tutorial.findAndCountAllTutorials(user.id).then(function (data) {
 			for (i = 0; i < data.rows.length; i++) {
-				console.log(data.rows[i].dataValues);
 				tuts.push(data.rows[i].dataValues);
 			}
 			res.json({success: true, message: 'Success', data: data});

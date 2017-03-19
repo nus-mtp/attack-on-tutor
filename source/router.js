@@ -12,8 +12,8 @@ var login = require ('./controller/login');
 var dashboard = require('./controller/dashboard');
 var test = require('./testing/database/test.js');
 
-router.get ('/lobby/:userId/:moduleId/:tutorialId', auth.ensureAuth, lobby.enterLobby, lobby.get);
-router.post ('/lobby/:userId/:moduleId/:tutorialId', auth.ensureAuth, lobby.enterLobby, lobby.get);
+router.get ('/lobby/:moduleId/:tutorialId', auth.ensureAuth, lobby.enterLobby, lobby.get);
+router.post ('/lobby/:moduleId/:tutorialId', auth.ensureAuth, lobby.enterLobby, lobby.get);
 
 router.get ('/', auth.ensureAuth, index.get);
 router.get ('/login', auth.ensureAuth, login.get);

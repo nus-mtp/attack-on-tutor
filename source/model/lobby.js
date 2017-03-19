@@ -2,21 +2,6 @@ var app = require ('../../app');
 var io = require ('socket.io')();
 var lobbyio = io.of ('/lobby');
 
-var users = {
-    'A0125566B' : {
-        'username' : 'Coral',
-        'userType' : 'tutor'
-    },
-    'A0125566M' : {
-        'username' : 'Melania',
-        'userType' : 'student'
-    },
-    'A0125566C' : {
-        'username' : 'Trumpet',
-        'userType' : 'student'
-    }
-};
-
 var listen = function (server) {
 	io.listen (server);
 	console.log('Server Started and Socket listened on ' + server);
@@ -61,12 +46,10 @@ function Lobby () {
 	this.groupCount = 0;
 	this.groups = {};
 
-    this.questions = [];
+    this.questions = {};
     
     this.numUsers = 0;
     
-    //var defaultGroup = new Group ('default_group');
-	//this.groups[defaultGroup.groupId] = defaultGroup;
 }
 
 Lobby.prototype.emitToLobby = function (key, value) {
@@ -79,7 +62,7 @@ Lobby.prototype.emitToGroup = function (group, key, value) {
         if (this.groups[group]) {
             lobbyio.in (this.namespace + '/' + group).emit (key, value);
         } else if (this.namespace == group) {
-            this.broadcastToLobby (key, value);
+            this.emitToLobby (key, value);
         }
     }
 }
@@ -201,35 +184,30 @@ lobbyio.on ('connection', function (socket) {
 
         var userId = data.userId;
         var lobby;
-        //Temp measure to identify students and tutors.
-        //TODO: Make this connect to the db.
-        if (users[userId]) {
-            if (users[userId].userType == 'tutor') {
-                //Add a lobby to the lobbyList if a tutor connects.
-                lobby = lobbyList.addLobby ({
-                    'tutorialId' : data.tutorialId,
-                    'moduleId' : data.moduleId,
-                    'namespace' : data.moduleId + "/" + data.tutorialId 
-                });
-            } else if (users[userId].userType == 'student') {
-                lobby = lobbyList.getLobby(data.moduleId, data.tutorialId);
-                //The lobby is not open to the student yet.
-                if (!lobby) {
-                    socket.emit ('invalid');
-                    return;
-                }
+
+        //Identify students and tutors.
+        if (data.userRole == 'tutor') {
+            //Add a lobby to the lobbyList if a tutor connects.
+            lobby = lobbyList.addLobby ({
+                'tutorialId' : data.tutorialId,
+                'moduleId' : data.moduleId,
+                'namespace' : data.moduleId + "/" + data.tutorialId 
+            });
+        } else if (data.userRole == 'student') {
+            lobby = lobbyList.getLobby(data.moduleId, data.tutorialId);
+            //The lobby is not open to the student yet.
+            if (!lobby) {
+                socket.emit ('invalid');
+                return;
             }
-        } else {
-            socket.emit ('invalid');
-            return;
         }
         
         socket.tutorialGroup = data.tutorialId;
 		socket.moduleGroup = data.moduleId;
 		socket.namespace = lobby.namespace;
         socket.userId = data.userId;
-        socket.username = users[userId].username;;
-        socket.userType = users[userId].userType;
+        socket.username = data.username;
+        socket.userType = data.userRole;
 
         //Join the main tutorial group room.
         socket.join ( lobby.namespace );
@@ -257,7 +235,6 @@ lobbyio.on ('connection', function (socket) {
 
         //Initialise the socket
         if (addedUser) {
-            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
             socket.on ('new message', function (data) {
                 // we tell the client to execute 'new message'
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
@@ -268,7 +245,6 @@ lobbyio.on ('connection', function (socket) {
                 });
             });
 
-            //Broadcast that the client is typing a message to other clients connected.
             socket.on ('typing', function (data) {
                 socket.broadcast.to(socket.namespace).emit ('typing', {
                     'username': socket.username,
@@ -276,29 +252,13 @@ lobbyio.on ('connection', function (socket) {
                 });
             });
 
-            //Broadcast when the client stops typing a message to other clients connected.
             socket.on ('stop typing', function () {
                 socket.broadcast.to(socket.namespace).emit ('stop typing', {
                     'username': socket.username
                 });
             });
             
-            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
             //TODO separate out the different listeners for tutors and students.
-            socket.on ('new question', function (data) {
-                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-                data.question.completed = false;
-                data.question.graded = false;
-                lobby.questions.push (data.question);
-                data.groups.forEach (function (groupName, i) {
-                    lobby.broadcastToGroup (socket, groupName, 'add question', {
-                        'username': socket.username,
-                        'groupmates': lobby.getUsersInRoom (groupName),
-                        'question': data.question
-                    });
-                });
-                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
-            });
 
             socket.on ('edit group', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
@@ -312,7 +272,6 @@ lobbyio.on ('connection', function (socket) {
                     }
                 }
                 updateUsers (lobby, socket);
-                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
             socket.on ('delete group', function (data) {
@@ -324,23 +283,80 @@ lobbyio.on ('connection', function (socket) {
                 });
                 lobby.removeGroup (groupname);
                 updateUsers (lobby, socket);
-                //socket.broadcast.to(socket.namespace).emit ('add question', parsedData);
             });
 
-            //Listen and execute broadcast of message on receiving 'new message' emission from the client.
-            socket.on ('submit answer', function (data) {
+            socket.on ('new question', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
-                if (data.index >= 0 && data.index < lobby.questions.length) {
-                    var questionToCheck = lobby.questions[data.index];
-                    if (data.options.length == questionToCheck.options.length) {
-                        for (var optionIterator = 0; optionIterator < questionToCheck.options.length; optionIterator++) {
-                            if (data.options[optionIterator].selected != questionToCheck.options[optionIterator].isCorrect) {
-                                socket.emit ('wrong answer', data.index);
-                                return;
+
+                data.question.completed = false;
+                data.question.graded = false;
+                data.question.uuid = generateUUID();
+                data.question.groups = data.groups;
+                data.question.selectedAnswers = {};
+                data.question.answers = {};
+
+                lobby.questions[data.question.uuid] = data.question;
+                data.groups.forEach (function (groupName, i) {
+                    lobby.broadcastToGroup (socket, groupName, 'add question', {
+                        'username': socket.username,
+                        'groupmates': lobby.getUsersInRoom (groupName),
+                        'question': data.question
+                    });
+                });
+            });
+
+            socket.on ('update answer', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                var questionUuid = data.uuid;
+                var question = lobby.questions[questionUuid];
+                var answers = data.answers;
+                var ownAnswer = getOwnAnswers (data.answers);
+
+                //Save the user's answer or update if it already exists.
+                if (!lobby.questions[questionUuid].answers[socket.id]) {
+                    lobby.questions[questionUuid].answers[socket.id] = {
+                        'description' : ownAnswer.description
+                    };
+                } else {
+                    lobby.questions[questionUuid].answers[socket.id].description = ownAnswer.description;
+                }
+
+                //Save the user's selected answer (if any)
+                for (var i = 0; i < answers.length; i++) {
+                    if (answers[i].selected) {
+                        lobby.questions[questionUuid].selectedAnswers[socket.id] = answers[i].student.socketId;
+                        break;
+                    }
+                }
+                
+                //Count the selected answers from each user.
+                var selectedCounts = {};
+                for (var answerSocketId in lobby.questions[questionUuid].answers) {
+                    if (lobby.questions[questionUuid].answers.hasOwnProperty (answerSocketId)) {
+                        //Set the selected count for that specific answer to 0 for recounting.
+                        lobby.questions[questionUuid].answers[answerSocketId].selectedCount = 0;
+
+                        for (var selectedAnswerSocketId in lobby.questions[questionUuid].selectedAnswers) {
+                            if (lobby.questions[questionUuid].selectedAnswers.hasOwnProperty (selectedAnswerSocketId)) {
+                                if (lobby.questions[questionUuid].selectedAnswers[selectedAnswerSocketId] == answerSocketId) {
+                                    lobby.questions[questionUuid].answers[answerSocketId].selectedCount++;
+                                }
                             }
                         }
-                        socket.emit ('correct answer', data.index);
+
+                        selectedCounts[answerSocketId] = lobby.questions[questionUuid].answers[answerSocketId].selectedCount;
                     }
+                }
+
+                if (question) {
+                    question.groups.forEach (function (groupName, i) {
+                        lobby.emitToGroup (groupName, 'update answer', {
+                            'socketId': socket.id,
+                            'questionUuid': questionUuid,
+                            'answer': ownAnswer.description,
+                            'selectedCount': selectedCounts
+                        });
+                    });
                 }
             });
         }
@@ -361,25 +377,15 @@ lobbyio.on ('connection', function (socket) {
             updateUsers (lobby, socket);
         }
     });
-    
-
-    //When the client starts a battle
-    socket.on ('start battle', function () {
-        var gameId = (Math.random()+1).toString(36).slice(2, 18);
-        
-        console.log("Game Created by "+ socket.username + " w/ " + gameId);
-        
-        gameCollection.gameList.gameId = gameId
-        gameCollection.gameList.gameId.playerOne = socket.username;
-        gameCollection.gameList.gameId.open = true;
-        gameCollection.totalGameCount ++;
-
-        socket.broadcast.to(socket.namespace).emit ('battle created', {
-            username: socket.username,
-            gameId: gameId
-        });
-    });
 });
+
+function getOwnAnswers (answers) {
+    for (var i = 0; i < answers.length; i++) {
+        if (answers[i].owned) {
+            return answers[i];
+        }
+    }
+}
 
 function updateUsers (lobby, socket) {
     lobby.emitToLobby ('update users', {
@@ -388,14 +394,16 @@ function updateUsers (lobby, socket) {
     });
 }
 
-//Join a Game
-function joinGame(username, game) {
-    if (game.player2 !== null) {
-        game.player2 = username;
-    } 
-    else {
-        alert ("Game "+game.id+ " Already Has Max Players" )
+function generateUUID () {
+    var d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+        d += performance.now();
     }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
 }
 
 module.exports.listen = listen;
