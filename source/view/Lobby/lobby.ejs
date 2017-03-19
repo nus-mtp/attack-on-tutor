@@ -103,9 +103,7 @@
                                                    		<div style="white-space: pre-wrap;" class="answer-description" ng-show="!answer.owned" ng-bind-html="answer.description"></div>
 	                                                </div>
 	                                                <div class="col-md-2 col-sm-2 col-xs-2">
-	                                                	<div ng-click="selectAnswer(uuid, $index)">
-                                                   			{{answer.selected}}
-                                               			</div>
+	                                                	<button class="btn vote-answer" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:right;">Vote!</button>
                                                			<div>
                                                    			{{answer.selectedCount}}
                                                			</div>
