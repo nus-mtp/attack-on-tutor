@@ -23,9 +23,14 @@ var router = require ('./source/router');
 var lobby = require ('./source/model/lobby.js');
 
 // view engine setup
-app.set ('views', path.join (__dirname, './source/view'));
+app.set ('views', path.join(__dirname, './source/view'));
 app.set ('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
+//app.use(express.static(path.join(__dirname + '/public')));
+
+/*app.set('views', path.join(__dirname + '/public/views'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');*/
 
 // File Limitation
 app.set ('MAX_FILE_SIZE', 30000000); // In Bytes, equals to 30Mb
@@ -40,17 +45,42 @@ app.use (cookieParser ());
 //use router to handle different url request
 app.use (router);
 
-//error handling
-app.use
-(
-	function (req, res, next)
-	{
-		var err = new Error ('Not Found');
-		err.status = 404;
-		next (err);
-	}
-);
+// Use this route for any GET request not already handled
+/*app.get('*', function(req, res, next) {
+	var err = new Error();
+	err.status = 404;
+	next(err);
+});*/
 
+//error handling
+app.use(function (req, res, next) {
+	var err = new Error ('Not Found');
+	err.status = 404;
+	next (err);
+
+	if(err.status!=404) {
+		return next();
+	}
+	
+	console.log('404');
+	//res.status(404);
+	//res.send(err.message || '** no unicorns here **');
+	res.redirect('/login');
+	//res.render('error.html');
+});
+
+/*app.use(function(err, req, res, next) {
+	// Logging a 500 (Internal Server Error)
+	//log.error(err, req);
+ 
+	// Error Printing
+	console.log(err.stack);
+ 
+	// send back a 500 with a generic message
+	res.status(500);
+	res.send('oops! something broke');
+});*/
+	
 var server = app.listen
 (
 	8081,
