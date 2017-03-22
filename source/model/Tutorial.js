@@ -349,9 +349,9 @@ var forceSyncIVLE = function (uid) {
 				if (relation['permission'] === 'M') {
 					role = 'tutor';
 				}
-				
 				return relation['tutorial'].addUser(result.user, {role: role});
 			}));
+
 		}).then(function (result) {
 			if (result) {
 				fulfill (true);
