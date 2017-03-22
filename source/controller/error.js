@@ -14,7 +14,7 @@ var get = function (req, res, next)
 {
 	res.render
 	(
-		'test',
+		'error',
 		{
 			title: 'Error Page'
 		}

@@ -65,7 +65,7 @@ app.use(function (req, res, next) {
 	console.log('404');
 	//res.status(404);
 	//res.send(err.message || '** no unicorns here **');
-	res.redirect('/test');
+	res.redirect('/error');
 	//res.render('error.html');
 });
 
