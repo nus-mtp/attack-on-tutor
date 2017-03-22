@@ -10,6 +10,7 @@ var index = require ('./controller/index');
 var lobby = require ('./controller/lobby');
 var login = require ('./controller/login');
 var dashboard = require('./controller/dashboard');
+var test = require('./controller/test');
 
 router.get ('/lobby/:userId/:moduleId/:tutorialId', auth.ensureAuth, lobby.get);
 
@@ -18,6 +19,7 @@ router.get ('/login', auth.ensureAuth, login.get);
 router.get ('/login/callback', login.callback);
 
 router.get ('/dashboard', auth.ensureAuth, dashboard.get);
+router.get ('/test', test.get);
 
 router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSyncIVLE);
 router.post('/api/dashboard/getTutorials', auth.ensureAuth, dashboard.getTutorials);
