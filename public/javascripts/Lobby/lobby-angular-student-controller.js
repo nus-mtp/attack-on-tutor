@@ -103,13 +103,22 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	return false;
     };
 
+    $scope.submitAnswer = function (questionUuid) {
+        if ($scope.questions[questionUuid]) {
+            var ownAnswer = getOwnAnswer (questionUuid);
+
+            socket.emit ('submit answer', {
+                'uuid' : questionUuid,
+                'answer' : ownAnswer,
+                'socketId' : socket.socketId()
+            });
+        }
+    };
+
     //Private functions.
     var getOwnAnswer = function (uuid) {
-    	for (var i = 0; i < $scope.questions[uuid].answers.length; i++) {
-    		if ($scope.questions[uuid].answers[i].owned) {
-    			return $scope.questions[uuid].answers[i];
-    		}
-    	}
-    	return null;
+    	return $scope.questions[uuid].answers.filter (function (value){
+            return value.owned;
+        });
     };
 });

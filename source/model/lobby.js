@@ -305,6 +305,19 @@ lobbyio.on ('connection', function (socket) {
                 });
             });
 
+            socket.on ('submit answer', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+
+                console.log (data);
+                /*data.groups.forEach (function (groupName, i) {
+                    lobby.broadcastToGroup (socket, groupName, 'add question', {
+                        'username': socket.username,
+                        'groupmates': lobby.getUsersInRoom (groupName),
+                        'question': data.question
+                    });
+                });*/
+            });
+
             socket.on ('update answer', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
                 var questionUuid = data.uuid;
