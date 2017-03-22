@@ -37,13 +37,11 @@
 			<div class="col-md-12" style="background-color:#141311">
 				<h2>Modules</h2>
 				<div class="moduleList">
-					<ul id="tutorials" style="color:cyan"></ul>
-					
 					<!--<img src="https://www.w3schools.com/css/trolltunga.jpg" alt="Troll Tunga" height="200" width="550">
 					<img src="https://www.w3schools.com/css/trolltunga.jpg" alt="Troll Tunga" height="200" width="550">-->
 					
 					<form id='form' style='display: hidden' action='' method='POST'>
-						<ul id="tutorials"></ul>
+						<ul id="tutorials" style="color:cyan"></ul>
 					</form>
 				</div>
 			</div>
@@ -101,12 +99,12 @@
 		}
     }
 
-
     $(document).on('click', '#lobby-button', function () {
         var index = $(this).attr('data-id');
         var tut = tutorials[index];
         $(this).attr('value', tut.id);
         $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name);
+		console.log('Hehe!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     });
 	
 	syncIVLE();
