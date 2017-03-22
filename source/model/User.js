@@ -68,21 +68,29 @@ var changeExp = function (uid, amount) {
 			id: uid
 		}
 	}).then(function (result) {
-
-		result.increment(['exp'], { by: amount }).then(function (result) {
-			console.log(result);
-		});
+		return result.increment(['exp'], { by: amount });
 	});
 }
 
 /**
  * Set avatar
  * @param  uid
- * @param  avatarId 
+ * @param  newAvatarId 
  * @return {Promise}
  */
-var setAvatar = function(uid, avatarId) {
+var setAvatar = function(uid, newAvatarId) {
+	user.findOne({
+		where: {
+			id: uid
+		}
+	}).then(function (result) {
+		return result.update({
+			avatarId: newAvatarId
+		});
+	});
 }
+
+
 module.exports = user;
 module.exports.changeExp = changeExp;
 module.exports.setAvatar = setAvatar;
