@@ -34,13 +34,6 @@
 
 	<div class="container">
 		<div class="row">
-			<!--<div class="col-md-6" style="background-color:#141311">	
-				<h2>Avatar Wardrobe</h2>
-				<div class="avatarWardrobe">
-					<img src="https://aquelia.files.wordpress.com/2013/08/p4_characterscreen.jpg" alt="Avatar Wardrobe">
-				</div>
-			</div>-->
-			
 			<div class="col-md-12" style="background-color:#141311">
 				<h2>Modules</h2>
 				<div class="moduleList">
@@ -48,7 +41,7 @@
 					<img src="https://www.w3schools.com/css/trolltunga.jpg" alt="Troll Tunga" height="200" width="550">-->
 					
 					<form id='form' style='display: hidden' action='' method='POST'>
-						<ul id="tutorials"></ul>
+						<ul id="tutorials" style="color:cyan"></ul>
 					</form>
 				</div>
 			</div>
@@ -105,7 +98,6 @@
             $('#tutorials').append(tut.coursecode + " " + tut.coursename + " <button class='btn btn-primary' id='lobby-button' data-id='" + i + "' value='' name='tut-id'> Join Class </button><br><br>");
 		}
     }
-
 
     $(document).on('click', '#lobby-button', function () {
         var index = $(this).attr('data-id');
