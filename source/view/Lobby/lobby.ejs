@@ -17,96 +17,65 @@
 		<div class="container">
 			<div class="row" id="battle-container">
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
-							<div class="row">
-								<h2> Question Composer</h2>
-							</div>
-							<div class="row">
-								<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
-									<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..."></textarea>
-								</div>
-							</div>
-							<div class="row">
-								<div class="groups-list">
-	                                <div class="container-fluid">
-	                                    <div class="row-fluid">
-	                                        <button class="btn select-group" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
-	                                    </div>
-	                                </div>
-								</div>
-							</div>
-							<div class="row">
-								<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
-							</div>
-						</div>
-					</div>
-					<!--
-
-					MCQ version of tutor control
-
-					<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="row">
 							<h2> Question Composer</h2>
 						</div>
 						<div class="row">
 							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
-								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..."></textarea>
+								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..." type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
 						<div class="row">
-							<div class="question-options-area" style="width:100%; max-height:300px; overflow:auto;">
-								<ul class="options-composed-list">
-	                                <li class="question-option-composed" ng-repeat="option in composerQuestion.options">
-	                                    <div class="container-fluid">
-	                                        <div class="row-fluid">
-	                                            <div class="col-md-8 col-sm-8 col-xs-8">
-	                                                <input class="option-description-input" ng-model="option.description" placeholder="Type option..."></input>
-	                                            </div>
-	                                            <div class="col-md-4 col-sm-4 col-xs-4">
-	                                                <input type="checkbox" ng-model="option.isCorrect"></input>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                            </ul>
+							<div class="groups-list">
+                                <div class="container-fluid">
+                                    <div class="row-fluid">
+                                        <button class="btn select-group" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
+                                    </div>
+                                </div>
 							</div>
 						</div>
 						<div class="row">
-							<button class="btn btn-info add-question-option" ng-click="addOption()">Add Option</button>
 							<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
 						</div>
 					</div>
-					-->
 				</div>
                 
                 <div ng-controller="studentCtrl">
-					<div class="col-md-12 col-sm-12 col-xs-12" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
+                	<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row">
 							<h2> Combat Log </h2>
 						</div>
 						<div class="row">
 							<div class="questions-received-area" style="width:100%; max-height:300px; overflow:auto;">
 								<ul class="questions-received-list">
-	                                <li class="question-received" ng-repeat="question in questions">
+	                                <li class="question-received" ng-repeat="(uuid, question) in questions">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid">
-	                                            <h3>{{question.description}}</h3>
+	                                            <h3 style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
 	                                        </div>
-	                                        <div class="question-received-options">
-	                                            <div ng-repeat="option in question.options" class="row-fluid">
-	                                                <div class="col-md-8 col-sm-8 col-xs-8">
-	                                                    {{ option.description }}
+	                                        <div class="question-received-answers">
+	                                            <div ng-repeat="answer in question.answers" class="row">
+	                                            	<div class="col-md-2 col-sm-2 col-xs-2">
+	                                            		<div>
+                                                   			{{answer.student.username}}
+                                                   		</div>
 	                                                </div>
-	                                                <div class="col-md-4 col-sm-4 col-xs-4">
-	                                                    <input ng-disabled="question.submitted" type="checkbox" ng-model="option.selected"></input>
+	                                                <div class="col-md-8 col-sm-8 col-xs-8">
+                                                   		<textarea class="answer-description-input" style="width:100%;" ng-show="answer.owned" ng-model="answer.description" placeholder="Type answer..." type="text"  ng-trim="false"></textarea>
+                                                   		<div style="white-space: pre-wrap;" class="answer-description" ng-show="!answer.owned" ng-bind-html="answer.description"></div>
+	                                                </div>
+	                                                <div class="col-md-2 col-sm-2 col-xs-2">
+	                                                	<button class="btn vote-answer" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:right;">Vote!</button>
+                                               			<div>
+                                                   			{{answer.selectedCount}}
+                                               			</div>
 	                                                </div>
 	                                            </div>
 	                                        </div>
 	                                        <div class="row-fluid">
-	                                            <button class="btn btn-success submit-answer" ng-if="!question.answered" ng-click="sendAnswer($index)" style="float:right;">Submit!</button>
-	                                            <div ng-if="question.submitted">
-	                                            	{{question.remarks}}
-	                                            </div>
+	                                            <button class="btn btn-success update-answer" ng-click="updateAnswer(uuid)" style="float:right;">Update!</button>
+	                                            <button class="btn btn-success submit-answer" ng-if="hasAllVotes(uuid)" style="float:right;">Submit!</button>
 	                                        </div>
 	                                    </div>
 	                                </li>
@@ -119,7 +88,7 @@
 
 			<div class="row" id="lobby-container">
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-6 col-xs-6" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-8  col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="row">
 							<h2> Messages </h2>
 						</div>
@@ -168,7 +137,7 @@
 					</div>
 				</div>
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-6" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-4 col-sm-6 col-xs-5" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="text-center row">
 							<h2> Active Users </h2>
 						</div>
@@ -228,13 +197,16 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-sanitize.js"></script>
         <script>
 		
 			window.userId = "<%=userId %>";
             window.moduleId = "<%=moduleId %>";
             window.tutorialId = "<%=tutorialId %>";
+            window.username = "<%= username %>";
+            window.userRole = "<%= userRole %>";
 
-			var lobbyApp = angular.module('lobbyApp', []);
+			var lobbyApp = angular.module('lobbyApp', ['ngSanitize']);
 			
 			lobbyApp.factory('socket', function ($rootScope, $window) {
 				var connect = function (namespace) {
@@ -345,11 +317,15 @@
                 //Send this event to notify server of a new connection.
                 socket.on ('connect', function() {
                     var userId = $window.userId;
+                    var username = $window.username;
+                    var userRole = $window.userRole;
                     var moduleId = $window.moduleId;
                     var tutorialId = $window.tutorialId;
                     
                     var data = {
                         'userId' : userId,
+                        'username' : username,
+                        'userRole' : userRole,
                         'moduleId' : moduleId,
                         'tutorialId' : tutorialId
                     };
@@ -366,36 +342,6 @@
                     socket.setConnectionState (socket.CONNECTED());
                 });
             });
-			
-			/*
-				MCQ version of battle system.
-				Kept in for now in case we decide to use it again.
-			*/
-			/*
-			lobbyApp.controller ('tutorCtrl', function($scope, socket) {
-				$scope.socket = socket;
-                $scope.composerQuestion = {
-                    'description' : '',
-                    'options' : []
-                };
-                
-                //Adds an option to the MCQ attack composer.
-				$scope.addOption = function () {
-					$scope.composerQuestion.options.push ({
-						'description' : '',
-						'isCorrect' : false
-					});
-				};
-
-				$scope.sendQuestion = function () {
-					socket.emit ('new question', $scope.composerQuestion);
-					$scope.composerQuestion = {
-						'description' : '',
-                    	'options' : []
-					};
-				};
-			});
-			*/
 
 			lobbyApp.controller ('tutorCtrl', function($scope, socket) {
 				$scope.socket = socket;
@@ -434,42 +380,117 @@
             
             lobbyApp.controller ('studentCtrl', function($scope, socket) {
             	$scope.socket = socket;
-                $scope.questions = [];
+                $scope.questions = {};
                 
                 //Socket events
 
-				//Receives questions received from other users.
+				//Receives questions composed and sent by tutor.
                 socket.on ('add question', function (data) {
-                	console.log (data);
-                	/*
-					data.answered = false;
-					data.submitted = false;
-					data.remarks = "";
-					data.options.forEach ( function (option) {
-						option.selected = false;
-					});
-					$scope.questions.push (data);
-					*/
-                });
-
-                //Receives questions received from other users.
-                socket.on ('wrong answer', function (data) {
-					$scope.questions[data].submitted = true;
-					$scope.questions[data].remarks = "You are wrong!";
-                });
-
-                //Receives questions received from other users.
-                socket.on ('correct answer', function (data) {
-					$scope.questions[data].submitted = true;
-					$scope.questions[data].remarks = "You are correct!";
-                });
-
-                $scope.sendAnswer = function ( index ) {
-                	socket.emit ('submit answer', {
-                		'index' : index,
-                		'options' : $scope.questions[index].options
+                	var answers = [];
+                	var tutors = [];
+                	//Extract the students and tutors in the groupmates list and create separate lists of their data.
+                	data.groupmates.forEach (function (groupmate, i) {
+                		if (groupmate.userType == 'tutor') {
+                			tutors.push (groupmate);
+                		} else if (groupmate.userType == 'student') {
+                			var owned = false;
+                			if (groupmate.socketId == socket.socketId()) {
+                				owned = true;
+                			}
+                			answers.push ({
+                				'student' : groupmate,
+                				'description' : '',
+                				'selected' : false,
+                				'owned' : owned,
+                				'selectedCount' : 0
+                			});
+                		}
                 	});
-                	$scope.questions[index].answered = true;
+
+                	if (!$scope.questions[data.question.uuid]) {
+                		$scope.questions[data.question.uuid] = {
+	                		'description' : data.question.description,
+	                		'answers' : answers,
+	                		'tutors' : tutors,
+	                		'uuid' : data.question.uuid
+                		};
+                	}
+                });
+
+                //Update answers composed by other users.
+                socket.on ('update answer', function (data) {
+                	updateAnswerCounts (data.questionUuid, data.selectedCount);
+                	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
+                });
+
+                //Scope functions.
+
+                $scope.updateAnswer = function (uuid) {
+                	socket.emit ('update answer', {
+                		'uuid' : uuid,
+                		'answers' : $scope.questions[uuid].answers
+                	});
+                };
+
+                $scope.selectAnswer = function (questionUuid, index) {
+                	if ($scope.questions[questionUuid]) {
+                		$scope.questions[questionUuid].answers.forEach (function (answer, i) {
+                			answer.selected = false;
+                		});
+                		if ( $scope.questions[questionUuid].answers[index] ) {
+                			$scope.questions[questionUuid].answers[index].selected = true;
+                		}
+                	}
+                };
+
+                var updateOtherAnswer = function (questionUuid, socketId, answerDescription) {
+                	if ($scope.questions[questionUuid]) {
+                		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
+	                		if ($scope.questions[questionUuid].answers[i].student.socketId == socketId) {
+	                			$scope.questions[questionUuid].answers[i].description = answerDescription;
+	                			return true;
+	                		}
+	                	}
+                	}
+                	return false;
+                };
+
+                var updateAnswerCounts = function (questionUuid, selectedCounts) {
+                	if ($scope.questions[questionUuid]) {
+                		for (var answerSocketId in selectedCounts) {
+                			if (selectedCounts.hasOwnProperty (answerSocketId)) {
+                				for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
+			                		if ($scope.questions[questionUuid].answers[i].student.socketId == answerSocketId) {
+			                			$scope.questions[questionUuid].answers[i].selectedCount = selectedCounts[answerSocketId];
+			                		}
+			                	}
+                			}
+                		}	
+                	}
+                };
+
+                $scope.hasAllVotes = function (questionUuid) {
+                	if ($scope.questions[questionUuid]) {
+                		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
+                			//Check own answer if everyone has selected it.
+	                		if ($scope.questions[questionUuid].answers[i].owned) {
+	                			//Currently, this checks if the selected count for this client's answer is equivalent to the number of answers that the group has.
+	                			//As each answer would correspond to a member in the group.
+	                			return $scope.questions[questionUuid].answers[i].selectedCount == $scope.questions[questionUuid].answers.length;
+	                		}
+	                	}
+                	}
+                	return false;
+                };
+
+                //Private functions.
+                var getOwnAnswer = function (uuid) {
+                	for (var i = 0; i < $scope.questions[uuid].answers.length; i++) {
+                		if ($scope.questions[uuid].answers[i].owned) {
+                			return $scope.questions[uuid].answers[i];
+                		}
+                	}
+                	return null;
                 };
 			});
 			
@@ -631,9 +652,6 @@
                     return $('<div/>').text(input).text();
                 };
 
-                //Adds a message element to the messages and scrolls to the bottom
-                //message          	The message to add to chat { user: '', message:'', type:'log || chat' }
-                //options.prepend   If the element should prepend all other messages (default = false)
                 var logMessage = function (message, groupname) {
                     if (!$scope.messages[groupname]) {
                     	$scope.messages[groupname] = [];
@@ -656,7 +674,6 @@
 					}, $scope.defaultGroup);
                 };
 				
-				//Adds the visual chat message to the message list
                 var addChatMessage = function (data, groupname) {
                     logMessage ({
 						'user' : data.username,
@@ -665,7 +682,6 @@
 					}, groupname);
                 };
 				
-				// Adds the visual chat typing message
                 var addChatTyping = function (data) {
                 	if (socket.getSocketGroups().indexOf (data.group) >= 0) {
                     	$scope.typingMessages.push({
@@ -675,7 +691,6 @@
                     }
                 };
 
-                //Removes the visual chat typing message
                 var removeChatTyping = function (data) {
                 	var indexToRemove = [];
                 	$scope.typingMessages.forEach (function (value, i) {
@@ -700,7 +715,6 @@
                 
                 //Socket events
 
-				// Whenever the server emits 'user joined', log it in the chat body
                 socket.on ('update users', function (data) {
                     $scope.users = data.userList;
                     $scope.socket.setAllSocketGroups (data.groupList);

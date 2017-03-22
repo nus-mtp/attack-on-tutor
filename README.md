@@ -1,21 +1,18 @@
-# Naming Branches
+# Setup
 
-Branch names should be formated as such:
-
-`[tag]/[component]/[feature]`
-
-## Tags
-
-| Tag | Description |
-| --- | --- |
-| wip | Preliminary work |
-| bug | Bug fixing |
-| exp | Experimental/test codes |
-| ftr | Features to be implemented |
-| test | Testing |
+NOTE: Developer mode does not exist at this stage of the project, so multiple student accounts are required to fully test features in the lobby.
 
 
-# Database Setup
+## Installation
+
+1. Clone the repository
+2. In the root directory, ```npm install```
+3. Set up the database (instructions below)
+4. To run the app, ```node app.js``` or ```npm start```
+5. Visit localhost:8081 in your browser to access the application
+
+
+## Database Setup
 
 ### 1. Install MySQL
 Ubuntu
@@ -30,7 +27,7 @@ $bash mysql.server start
 ```
 Windows
 
-Please follow instruction on MySQL official site:
+Follow instructions on MySQL official site:
 https://dev.mysql.com/downloads/windows/
 
 
@@ -84,3 +81,21 @@ config.json
 }
 
 ```
+
+# Development
+
+## Naming Branches
+
+Branch names should be formatted as such:
+
+`[tag]/[component]/[feature]`
+
+### Tags
+
+| Tag | Description |
+| --- | --- |
+| wip | Preliminary work |
+| bug | Bug fixing |
+| exp | Experimental/test codes |
+| ftr | Features to be implemented |
+| test | Testing |
