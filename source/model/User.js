@@ -63,7 +63,7 @@ sequelize.sync({});
  * @return {Promise}
  */
 var changeExp = function (uid, amount) {
-	user.findOne({
+	return user.findOne({
 		where: {
 			id: uid
 		}
@@ -79,7 +79,7 @@ var changeExp = function (uid, amount) {
  * @return {Promise}
  */
 var setAvatar = function(uid, newAvatarId) {
-	user.findOne({
+	return user.findOne({
 		where: {
 			id: uid
 		}
@@ -91,6 +91,38 @@ var setAvatar = function(uid, newAvatarId) {
 }
 
 
+/**
+ * Get exp
+ * @param  uid
+ * @return {Promise}
+ */
+var getExp = function (uid) {
+	return user.findOne({
+		where: {
+			id: uid
+		},
+		attributes: ['exp']
+	})
+
+}
+
+/**
+ * Get avatar id
+ * @param  uid
+ * @return {Promise}
+ */
+var getAvatarId = function (uid) {
+	return user.findOne({
+		where: {
+			id: uid
+		},
+		attributes: ['avatarId']
+	})
+
+}
+
 module.exports = user;
 module.exports.changeExp = changeExp;
 module.exports.setAvatar = setAvatar;
+module.exports.getExp = getExp;
+module.exports.getAvatarId = getAvatarId;
