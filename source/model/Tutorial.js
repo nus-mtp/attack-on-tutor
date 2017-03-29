@@ -364,7 +364,26 @@ var forceSyncIVLE = function (uid) {
 };
 
 
-
+/**
+ * Gets the top n users by EXP from the specified tutorial, used to create
+ * leaderboard.
+ * @param  n  
+ * @param  tid 
+ * @return {Promise}     [description]
+ */
+var findTopNUsersInTutorial = function (n, tid) {
+	return User.findAndCountAll({
+		include:[{
+			model: tutorial,
+			where: {id: tid}
+		}],
+		attributes:['id','name','gender','email','exp'],
+		order: [
+			['exp', 'DESC']
+		],
+		limit: n
+	});
+}
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
