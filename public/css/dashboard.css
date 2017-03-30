@@ -1,0 +1,53 @@
+body {
+	background-color: #E9E9E9;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #141311;
+}
+
+li {
+	float: left;
+}
+
+li a {
+	font-family: 'Lato', serif;
+	font-size: 1.5vw;
+	color: #FFFFFF;
+	display: block;
+	padding: 10px;
+	text-align: center;
+	text-decoration: none;
+}
+
+li a:hover {
+	background-color: #B7B7B6;
+}
+
+h2 {
+	font-family: 'Lato', serif;
+	font-weight: bold;
+	font-size: 24px;
+	text-align: center;
+	color: #A2482E;
+}
+
+#logout {
+	cursor: pointer;
+}
+
+.avatarWardrobe {
+	text-align: center;
+}
+
+.moduleList {
+	text-align: center;
+}
+
+.col-md-12 {
+	margin-top: 3.5%;
+	height: 80vh;
+}
