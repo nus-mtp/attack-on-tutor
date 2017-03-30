@@ -33,6 +33,8 @@
 			</div>
 		</div>
 
+		<p></p>
+		
 		<div class="container">
 			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
@@ -43,7 +45,7 @@
 						</div>
 
 						<div class="row">
-							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;> <!-- Text Box -->
+							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
 								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..." type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
@@ -111,18 +113,25 @@
 			<div class="row" id="battle-screen-container">
 				<!--<div ng-controller="battleScreenCtrl">-->
 					<div class="text-center row">
+					
+						<p></p>
+						
 						<div class="col-md-3">
-						 	<div class="">
-								<h2 style="border: 2px solid #FFFFFF; height: 300px;">Tutor's Avatar</h2>
+						 	<div class="text-center-row" style="border: 2px solid #FFFFFF; height: 300px;">
+								<h2>Tutor's Avatar</h2>
 							</div>
 						</div>
 						
 						<div class="col-md-6">
-						    <h2 style="border: 2px solid #FFFFFF; height: 300px;">Combat Screen</h2>
+						   <div class="text-center-row" style="border: 2px solid #FFFFFF; height: 300px;">
+								<h2>Combat Screen</h2>
+							</div>
 						</div>
 						
 						<div class="col-md-3">
-						    <h2 style="border: 2px solid #FFFFFF; height: 300px;">Tutees' Avatars</h2>
+							<div class="text-center-row" style="border: 2px solid #FFFFFF; height: 300px;">
+								<h2>Tutees' Avatars</h2>
+							</div>
 						</div>
 					</div>
 				<!--</div>-->
@@ -130,8 +139,10 @@
 
 			<div class="row" id="lobby-container">
 
+				<p></p>
+			
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF;">
+					<div class="col-md-8 col-sm-6 col-xs-7" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF;">
 						
 						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
 							<h2> Messages </h2>
@@ -159,7 +170,7 @@
 											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span> 
 											<span class="messageBody" ng-bind="message.message"></span>
 										</div>
-										<div ng-if="message.type == 'log'">
+										<div ng-if="message.type == 'log'" style="color: white";>
 											{{ message.message }}
 										</div>
 									</li>
@@ -189,7 +200,7 @@
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 239px;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 235px;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
 							<h2> Active Users </h2>
 						</div>
@@ -209,7 +220,7 @@
 								<ul class="users-active">
 									<li class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
 	                                    <div class="container-fluid">
-	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'black' : 'red'}">
+	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
 	                                        </div>
 	                                    </div>
@@ -247,8 +258,8 @@
 					
 					</div>
 				</div>
+				
 			</div>
-
 		</div>
 
 <script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
@@ -266,11 +277,12 @@
 
         <script>
 		
-			$(document).ready(function() {
+			/*$(document).ready(function() {
 				var $textarea = $('#messageBox');
-				var scrollHeight = parseInt($textarea.scrollHeight);
-				$textarea.scrollTop(scrollHeight);
-			});
+				var scrollTop = parseInt($textarea.prop('scrollHeight'));
+				$textarea.scrollTop(scrollTop);
+				console.log(scrollTop);
+			});*/
 		
 			/*function chatPermaBot() {
 				//document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
@@ -325,6 +337,10 @@
 			
 			li.header a:hover {
 				background-color: #B7B7B6;
+			}
+			
+			p {
+				height: 30px;
 			}
 		</style>
     </body>
