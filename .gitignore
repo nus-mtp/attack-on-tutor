@@ -69,5 +69,6 @@ npm-debug.log.*
 # Ignore jsdocs
 documentation/jsdoc/
 
-#Ignore procfile
+
+# Ignore heroku procfile
 Procfile

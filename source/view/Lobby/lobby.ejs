@@ -3,40 +3,61 @@
     <head>
         <meta charset="UTF-8">
         <title>E-Tutorial Lobby</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+
+        <script>
+			window.userId = "<%= userId %>";
+            window.moduleId = "<%= moduleId %>";
+            window.tutorialId = "<%= tutorialId %>";
+            window.username = "<%= username %>";
+            window.userRole = "<%= userRole %>";
+        </script>
+
     </head>
 
     <body ng-app="lobbyApp">
-		<div ng-controller="socketCtrl" class="container" id="header-bar">
+	
+		<ul id="header">
+			<li class="header"><a class="active" href="/">Welcome to Attack on Tutor, (<%= username %>) </a></li>
+		
+			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
+			<li class="header" style="float:right"><a class="active" id="logout" >Log Out</a></li>
+		</ul>
+	
+		<div ng-controller="socketCtrl" class="container" id="header-bar" style="background-color:#000;"> <!-- Title Box -->
 			<div class="row">
 				<div class="text-center col-md-12">
 					<h1>Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
 				</div>
 			</div>
 		</div>
+
 		<div class="container">
-			<div class="row" id="battle-container">
+			<div class="row" id="battle-container" style="background-color: #000;"> <!-- Question Composer Outer Box -->
+				
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
-						<div class="row">
+					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'" style="border: 2px solid #FFFFFF;">
+						<div class="text-center row" style="border: 2px solid #000;"> <!-- Question Composer Inner Box -->
 							<h2> Question Composer</h2>
 						</div>
+
 						<div class="row">
-							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
+							<div class="question-area" style="width:100%; max-height:300px; overflow:auto; border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;"> <!-- Text Box -->
 								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..." type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
+						
 						<div class="row">
 							<div class="groups-list">
                                 <div class="container-fluid">
                                     <div class="row-fluid">
                                         <button class="btn select-group" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
+
+                                        <button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
                                     </div>
                                 </div>
 							</div>
-						</div>
-						<div class="row">
-							<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
 						</div>
 					</div>
 				</div>
@@ -84,14 +105,38 @@
 						</div>
 					</div>
 				</div>
+			
+			</div>
+
+			<div class="row" id="battle-screen-container" style="background-color: #000;">
+				<!--<div ng-controller="battleScreenCtrl">-->
+					<div class="text-center row">
+						<div class="col-md-3">
+						 	<div class="">
+								<h2 style="border: 2px solid #FFFFFF; height: 300px;">Tutor's Avatar</h2>
+							</div>
+						</div>
+						
+						<div class="col-md-6">
+						    <h2 style="border: 2px solid #FFFFFF; height: 300px;">Combat Screen</h2>
+						</div>
+						
+						<div class="col-md-3">
+						    <h2 style="border: 2px solid #FFFFFF; height: 300px;">Tutees' Avatars</h2>
+						</div>
+					</div>
+				<!--</div>-->
 			</div>
 
 			<div class="row" id="lobby-container">
+
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8  col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
-						<div class="row">
+					<div class="col-md-8 col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF; background-color: #000;">
+						
+						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
 							<h2> Messages </h2>
 						</div>
+						
 						<div class="row">
 							<div class="groups-list">
                                 <div class="container-fluid">
@@ -101,14 +146,17 @@
                                 </div>
 							</div>
 						</div>
+						
 						<div class="row">
-							<div class="chat-area" style="width:100%; max-height:300px; overflow:auto;">
+							<div class="chat-area" id="messageBox" style="width:100%; height:100px; position:relative; overflow-y: scroll;
+								overflow-x:hidden; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto;">
 								<ul class="messages">
 									<li ng-repeat="message in messages[socket.getSocketGroups()[selectedGroup]]"
 										ng-class="{'log' : message.type=='log', 'message' : message.type=='message'}"
-										data-username="{{message.user}}">
+										data-username="{{message.user}}"
+										>
 										<div ng-if="message.type == 'chat'">
-											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span>
+											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span> 
 											<span class="messageBody" ng-bind="message.message"></span>
 										</div>
 										<div ng-if="message.type == 'log'">
@@ -118,6 +166,7 @@
 								</ul>
 							</div>
 						</div>
+						
 						<div class="row">
 							<div class="typing-message-area" style="width:100%;">
 								<ul class="typing-messages">
@@ -130,17 +179,21 @@
 								</ul>
 							</div>
 						</div>
+						
 						<div class="row">
 							<!-- ng-model within ng-if block must reference the data prepended by $parent -->
 							<input class="inputMessage" style="width:100%;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type here..."/>
 						</div>
+					
 					</div>
 				</div>
+
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-5" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
-						<div class="text-center row">
+					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 239px; background-color: #000;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
 							<h2> Active Users </h2>
 						</div>
+						
 						<div class="row">
 							<div class="groups-list">
                                 <div class="container-fluid">
@@ -150,6 +203,7 @@
                                 </div>
 							</div>
 						</div>
+						
 						<div class="row" ng-if="socket.getUserType() =='tutor'">
 							<div class="users-active-list">
 								<ul class="users-active">
@@ -163,6 +217,7 @@
 								</ul>
 							</div>
 						</div>
+						
 						<div class="row" ng-if="socket.getUserType() == 'student'">
 							<div class="users-active-list">
 								<ul class="users-active">
@@ -176,10 +231,12 @@
 								</ul>
 							</div>
 						</div>
+						
 						<div class="row-fluid" ng-if="socket.getUserType() == 'tutor'">
 							<div class="col-md-6 col-sm-6 col-xs-6">
                             	<input class="input-group-name" style="width:100%;" ng-model="$parent.$parent.newGroupName" placeholder="Group name here..."/>
                         	</div>
+
                         	<div class="col-md-6 col-sm-6 col-xs-6">
                             	<button class="btn btn-success create-group" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right;">Create Group!</button>
                             	<div ng-if="selectedGroup > 0">
@@ -187,598 +244,87 @@
                             	</div>
                         	</div>
                         </div>
+					
 					</div>
 				</div>
 			</div>
+
 		</div>
 
-		<!--<script type="text/javascript" src="/test.js"></script>-->
-        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-sanitize.js"></script>
+<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
+		<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
+		<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
+		<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
+
+        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
+        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
+        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
+        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
+        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
+        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
+
         <script>
 		
-			window.userId = "<%=userId %>";
-            window.moduleId = "<%=moduleId %>";
-            window.tutorialId = "<%=tutorialId %>";
-            window.username = "<%= username %>";
-            window.userRole = "<%= userRole %>";
-
-			var lobbyApp = angular.module('lobbyApp', ['ngSanitize']);
-			
-			lobbyApp.factory('socket', function ($rootScope, $window) {
-				var connect = function (namespace) {
-				    return io.connect(namespace, {
-				       query: 'namespace=' + namespace
-				    });
-				}
-
-				var connectionStates = [
-					'pending',
-					'invalid',
-					'connected'
-				];
-				var connectionState = connectionStates[0];
-
-				var socket = connect('/' + 'lobby');
-				var userType = '';
-
-				var socketGroups = [];
-				var allSocketGroups = [];
-				
-				return {
-					//Connection State functions
-					getConnectionState: function () {
-						return connectionState;
-					},
-					setConnectionState: function (value) {
-						connectionState = value;
-					},
-					PENDING: function() {
-						return connectionStates[0];
-					},
-					INVALID: function() {
-						return connectionStates[1];
-					},
-					CONNECTED: function () {
-						return connectionStates[2];
-					},
-					//User Type functions
-					getUserType: function () {
-						return userType;
-					},
-					setUserType: function (type) {
-						userType = type;
-					},
-					//Socket Group functions
-					addSocketGroup: function (groupName) {
-						socketGroups.push (groupName);
-					},
-					removeSocketGroup: function (groupName) {
-						var index = socketGroups.indexOf (groupName);
-						if (index > -1) {
-							socketGroups.splice(index, 1);
-						}
-					},
-					getSocketGroups: function () {
-						return socketGroups;
-					},
-					setAllSocketGroups: function (allGroups) {
-						allSocketGroups = allGroups;
-					},
-					getAllSocketGroups: function () {
-						return allSocketGroups;
-					},
-					//Wrappers for Socket IO client functions.
-					socketId: function () {
-						return socket.nsp + '#' + socket.id;
-					},
-					on: function (eventName, callback) {
-						socket.on (eventName, function () {  
-							var args = arguments;
-							$rootScope.$apply (function () {
-								callback.apply (socket, args);
-							});
-						});
-					},
-					emit: function (eventName, data, callback) {
-						socket.emit(eventName, data, function () {
-							var args = arguments;
-							$rootScope.$apply (function () {
-								if (callback) {
-									callback.apply (socket, args);
-								}
-							});
-						})
-					}
-				};	
+			$(document).ready(function() {
+				var $textarea = $('#messageBox');
+				var scrollHeight = parseInt($textarea.scrollHeight);
+				$textarea.scrollTop(scrollHeight);
 			});
-			
-			//Directive for calling function on enter key
-			//Usage:
-			//		ng-enter="functionName()"
-			lobbyApp.directive ('ngEnter', function () {
-				return function (scope, element, attrs) {
-					element.bind("keydown keypress", function (event) {
-						if (event.which === 13) {
-							scope.$apply(function (){
-								scope.$eval(attrs.ngEnter);
-							});
-							event.preventDefault();
-						}
-					});
-				};
-			});
-            
-            //Controller for socket events used throughout the page.
-            lobbyApp.controller ('socketCtrl', function ($scope, $window, socket) {
-                //Send this event to notify server of a new connection.
-                socket.on ('connect', function() {
-                    var userId = $window.userId;
-                    var username = $window.username;
-                    var userRole = $window.userRole;
-                    var moduleId = $window.moduleId;
-                    var tutorialId = $window.tutorialId;
-                    
-                    var data = {
-                        'userId' : userId,
-                        'username' : username,
-                        'userRole' : userRole,
-                        'moduleId' : moduleId,
-                        'tutorialId' : tutorialId
-                    };
-                    
-                    socket.emit ('new connection', data);
-                });
+		
+			/*function chatPermaBot() {
+				//document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
+				//var number = parseInt(shoutbox.attr("scrollHeight"));
+				var chatBox = document.getElementById('messageBox');
+				chatBox.scrollTop = chatBox.number;
+				console.log("Hehe");
+			}*/
 
-                socket.on ('invalid', function() {
-                    socket.setConnectionState (socket.INVALID());
-                });
-
-                socket.on ('login', function(data) {
-                	socket.setUserType (data.userType);
-                    socket.setConnectionState (socket.CONNECTED());
-                });
-            });
-
-			lobbyApp.controller ('tutorCtrl', function($scope, socket) {
-				$scope.socket = socket;
-				$scope.selectedGroups = [];
-                $scope.composerQuestion = {
-                    'description' : ''
-                };
-
-                $scope.inSelectedGroups = function (index) {
-					return ($scope.selectedGroups.indexOf (index) > -1);
-				};
-
-				$scope.toggleSelectedGroup = function (index) {
-					if ($scope.inSelectedGroups(index)) {
-						delete $scope.selectedGroups[$scope.selectedGroups.indexOf (index)];
-					} else {
-						$scope.selectedGroups.push (index);
-					}
-				};
-
-				$scope.sendQuestion = function () {
-					var groupNames = [];
-					$scope.selectedGroups.forEach (function (value) {
-						groupNames.push ($scope.socket.getSocketGroups()[value]);
-					});
-					socket.emit ('new question', {
-						'question' : $scope.composerQuestion,
-						'groups' : groupNames
-					});
-					$scope.composerQuestion = {
-						'description' : ''
-					};
-					$scope.selectedGroups = [];
-				};
-			});
-            
-            lobbyApp.controller ('studentCtrl', function($scope, socket) {
-            	$scope.socket = socket;
-                $scope.questions = {};
-                
-                //Socket events
-
-				//Receives questions composed and sent by tutor.
-                socket.on ('add question', function (data) {
-                	var answers = [];
-                	var tutors = [];
-                	//Extract the students and tutors in the groupmates list and create separate lists of their data.
-                	data.groupmates.forEach (function (groupmate, i) {
-                		if (groupmate.userType == 'tutor') {
-                			tutors.push (groupmate);
-                		} else if (groupmate.userType == 'student') {
-                			var owned = false;
-                			if (groupmate.socketId == socket.socketId()) {
-                				owned = true;
-                			}
-                			answers.push ({
-                				'student' : groupmate,
-                				'description' : '',
-                				'selected' : false,
-                				'owned' : owned,
-                				'selectedCount' : 0
-                			});
-                		}
-                	});
-
-                	if (!$scope.questions[data.question.uuid]) {
-                		$scope.questions[data.question.uuid] = {
-	                		'description' : data.question.description,
-	                		'answers' : answers,
-	                		'tutors' : tutors,
-	                		'uuid' : data.question.uuid
-                		};
-                	}
-                });
-
-                //Update answers composed by other users.
-                socket.on ('update answer', function (data) {
-                	updateAnswerCounts (data.questionUuid, data.selectedCount);
-                	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
-                });
-
-                //Scope functions.
-
-                $scope.updateAnswer = function (uuid) {
-                	socket.emit ('update answer', {
-                		'uuid' : uuid,
-                		'answers' : $scope.questions[uuid].answers
-                	});
-                };
-
-                $scope.selectAnswer = function (questionUuid, index) {
-                	if ($scope.questions[questionUuid]) {
-                		$scope.questions[questionUuid].answers.forEach (function (answer, i) {
-                			answer.selected = false;
-                		});
-                		if ( $scope.questions[questionUuid].answers[index] ) {
-                			$scope.questions[questionUuid].answers[index].selected = true;
-                		}
-                	}
-                };
-
-                var updateOtherAnswer = function (questionUuid, socketId, answerDescription) {
-                	if ($scope.questions[questionUuid]) {
-                		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
-	                		if ($scope.questions[questionUuid].answers[i].student.socketId == socketId) {
-	                			$scope.questions[questionUuid].answers[i].description = answerDescription;
-	                			return true;
-	                		}
-	                	}
-                	}
-                	return false;
-                };
-
-                var updateAnswerCounts = function (questionUuid, selectedCounts) {
-                	if ($scope.questions[questionUuid]) {
-                		for (var answerSocketId in selectedCounts) {
-                			if (selectedCounts.hasOwnProperty (answerSocketId)) {
-                				for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
-			                		if ($scope.questions[questionUuid].answers[i].student.socketId == answerSocketId) {
-			                			$scope.questions[questionUuid].answers[i].selectedCount = selectedCounts[answerSocketId];
-			                		}
-			                	}
-                			}
-                		}	
-                	}
-                };
-
-                $scope.hasAllVotes = function (questionUuid) {
-                	if ($scope.questions[questionUuid]) {
-                		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
-                			//Check own answer if everyone has selected it.
-	                		if ($scope.questions[questionUuid].answers[i].owned) {
-	                			//Currently, this checks if the selected count for this client's answer is equivalent to the number of answers that the group has.
-	                			//As each answer would correspond to a member in the group.
-	                			return $scope.questions[questionUuid].answers[i].selectedCount == $scope.questions[questionUuid].answers.length;
-	                		}
-	                	}
-                	}
-                	return false;
-                };
-
-                //Private functions.
-                var getOwnAnswer = function (uuid) {
-                	for (var i = 0; i < $scope.questions[uuid].answers.length; i++) {
-                		if ($scope.questions[uuid].answers[i].owned) {
-                			return $scope.questions[uuid].answers[i];
-                		}
-                	}
-                	return null;
-                };
-			});
-			
-			lobbyApp.controller ('chatCtrl', function ($scope, $window, socket) {
-				$scope.socket = socket;
-
-                $scope.chatMessage = "";
-                $scope.selectedGroup = 0;
-                $scope.defaultGroup = "";
-				$scope.messages = {};
-				$scope.typingMessages = [];
-                
-                var FADE_TIME = 150; // ms
-                var TYPING_TIMER_LENGTH = 400; // ms
-                var COLORS = [
-					'#e21400', '#91580f', '#f8a700', '#f78b00',
-					'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
-					'#3b88eb', '#3824aa', '#a700ff', '#d300e7'
-                ];
-				var lastTypingTime;
-                
-                var typing = false;
-				
-				var username = "<%= userId %>";
-            
-                //Socket listeners
-                
-                //Whenever the server emits 'login', log the login message
-                socket.on ('login', function (data) {
-                    //Display the welcome message
-                    $scope.defaultGroup = data.defaultGroup;
-                    var message = "Welcome to the Lobby ";
-                    logMessage ({
-						'type' : 'log',
-						'message': message
-					}, data.defaultGroup);
-                    addParticipantsMessage (data);
-
-                    username = data.username;
-                });
-
-                //Whenever the server emits 'new message', update the chat body
-                socket.on ('new message', function (data) {
-                    addChatMessage (data, data.group);
-                });
-				
-				// Whenever the server emits 'user joined', log it in the chat body
-                socket.on ('user joined', function (data) {
-                    logMessage ({
-						'type' : 'log',
-						'message' : data.username + ' joined'
-					}, $scope.defaultGroup);
-                    addParticipantsMessage (data);
-                });
-
-                //Whenever the server emits 'user left', log it in the chat body
-                socket.on ('user left', function (data) {
-                    logMessage ({
-						'type' : 'log',
-						'message' : data.username + ' left'
-					}, $scope.defaultGroup);
-                    addParticipantsMessage (data);
-                    removeChatTyping (data);
-                });
-
-                //Whenever the server emits 'typing', show the typing message
-                socket.on ('typing', function (data) {
-                    addChatTyping(data);
-                });
-
-                //Whenever the server emits 'stop typing', kill the typing message
-                socket.on ('stop typing', function (data) {
-                    removeChatTyping(data);
-                });
-
-                socket.on ('update users', function (data) {
-                	if (!$scope.messages[data.groupList[0]]) {
-						$scope.messages[data.groupList[0]] = [];
-                	}
-                    
-                });
-
-                socket.on ('added group', function (data) {
-                	if (!$scope.messages[data]) {
-                		$scope.messages[data] = [];
-                	}
-                });
-
-                socket.on ('deleted group', function (data) {
-                	$scope.selectedGroup = 0;
-                    delete $scope.messages[data];
-                });
-				
-                //Scope functions.
-                $scope.setSelectedGroup = function (index) {
-                	$scope.selectedGroup = index;
-                };
-
-				//Sends a chat message
-                $scope.sendMessage = function () {
-                    var message = $scope.chatMessage;
-                    //Prevent markup from being injected into the message
-                    message = cleanInput(message);
-                    //If there is a non-empty message
-                    if (message) {
-                        $scope.chatMessage="";
-                        
-                        addChatMessage({
-                            'username': username,
-                            'message': message
-                        }, socket.getSocketGroups()[$scope.selectedGroup]);
-                        
-                        //Tell server to execute 'new message' and send along one parameter
-                        socket.emit ('new message', {
-                        	'message' : message,
-                        	'group' : socket.getSocketGroups()[$scope.selectedGroup]
-                        });
-                    }
-					
-					socket.emit('stop typing');
-					typing = false;
-                };
-				
-				//Gets the color of a username through our hash function
-                $scope.getUsernameColor = function (username) {
-                    //Compute hash code
-                    var hash = 7;
-                    for (var i = 0; i < username.length; i++) {
-                        hash = username.charCodeAt(i) + (hash << 5) - hash;
-                    }
-                    
-                    //Calculate color
-                    var index = Math.abs(hash % COLORS.length);
-                    return COLORS[index];
-                };
-				
-				// Updates the typing event
-                $scope.updateTyping = function () {
-                    if (!typing) {
-                        typing = true;
-                        socket.emit ('typing', socket.getSocketGroups()[$scope.selectedGroup]);
-                    }
-                    
-                    lastTypingTime = (new Date()).getTime();
-                    setTimeout(function () {
-                        var typingTimer = (new Date()).getTime();
-                        var timeDiff = typingTimer - lastTypingTime;
-                        if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
-                            socket.emit ('stop typing');
-                            typing = false;
-                        }
-                    }, TYPING_TIMER_LENGTH);
-                };
-				
-				//Private functions.
-				
-				//Prevents input from having injected markup
-                var cleanInput = function (input) {
-                    return $('<div/>').text(input).text();
-                };
-
-                var logMessage = function (message, groupname) {
-                    if (!$scope.messages[groupname]) {
-                    	$scope.messages[groupname] = [];
-                    }
-                    $scope.messages[groupname].push(message);
-
-                    //$('.chat-area')[0].scrollTop = $('.chat-area')[0].scrollHeight;
-                };
-				
-				var addParticipantsMessage = function (data) {
-                    var message = '';
-                    if (data.numUsers === 1) {
-                        message += "It's just you and me, honey bee.";
-                    } else {
-                        message += "There are " + data.numUsers + " players in the Lobby";
-                    }
-                    logMessage ({
-						'type' : 'log',
-						'message' : message
-					}, $scope.defaultGroup);
-                };
-				
-                var addChatMessage = function (data, groupname) {
-                    logMessage ({
-						'user' : data.username,
-						'type' : 'chat',
-						'message' : data.message
-					}, groupname);
-                };
-				
-                var addChatTyping = function (data) {
-                	if (socket.getSocketGroups().indexOf (data.group) >= 0) {
-                    	$scope.typingMessages.push({
-	                    	'user' : data.username,
-	                    	'message' : 'is typing in : ' + data.group
-	                    });
-                    }
-                };
-
-                var removeChatTyping = function (data) {
-                	var indexToRemove = [];
-                	$scope.typingMessages.forEach (function (value, i) {
-				    	if (value.user == data.username) {
-                    		indexToRemove.push (i);
-                    	}
-					});
-					indexToRemove.forEach (function (value, i) {
-				    	$scope.typingMessages.splice (value, 1);
-					});
-                };
-			});
-
-			lobbyApp.controller ('activeUsersCtrl', function($scope, socket) {
-				$scope.socket = socket;
-
-				$scope.newGroupName = '';
-				$scope.selectedGroup = 0;
-				$scope.selectedUsers = [];
-
-                $scope.users = {};
-                
-                //Socket events
-
-                socket.on ('update users', function (data) {
-                    $scope.users = data.userList;
-                    $scope.socket.setAllSocketGroups (data.groupList);
-                    if ( $scope.socket.getSocketGroups().length == 0) {
-                    	$scope.socket.addSocketGroup (data.groupList[0]);
-                    }
-                });
-
-                socket.on ('added group', function (data) {
-                	$scope.socket.addSocketGroup ( data );
-                });
-
-                socket.on ('deleted group', function (data) {
-                	$scope.socket.removeSocketGroup ( data );
-                });
-
-                //Scope Functions
-
-                $scope.setSelectedGroup = function (index) {
-                	$scope.selectedGroup = index;
-                };
-
-                $scope.selectUser = function (socketId) {
-                	var index = $scope.selectedUsers.indexOf (socketId);
-                	if ( index < 0) {
-                		$scope.selectedUsers.push (socketId);
-                	} else {
-                		$scope.selectedUsers.splice (index, 1);
-                	}
-                }
-
-                $scope.isValidGroupParams = function () {
-                	var groupName = cleanInput ($scope.newGroupName);
-                	return (groupName.length > 0 && $scope.selectedUsers.length > 0);
-                }
-
-                $scope.createGroup = function () {
-                	if ($scope.selectedUsers.indexOf (socket.socketId()) < 0) {
-                		$scope.selectedUsers.push (socket.socketId());
-                	}
-                	socket.emit ('edit group', {
-                		'groupname' : cleanInput ($scope.newGroupName),
-                		'socketIds' : $scope.selectedUsers
-                	});
-                	$scope.selectedUsers = [];
-                	$scope.newGroupName = '';
-                };
-
-                $scope.deleteGroup = function () {
-                	//Ensure the group to delete is not the default group.
-                	if ($scope.selectedGroup > 0) {
-                		
-	                	socket.emit ('delete group', {
-	                		'groupname' : cleanInput ($scope.socket.getAllSocketGroups()[$scope.selectedGroup])
-	                	});
-	                	$scope.selectedGroup = 0;
-                	}
-                };
-
-                //Prevents input from having injected markup
-                var cleanInput = function (input) {
-                    return $('<div/>').text(input).text();
-                };
-			});
-        </script>
     </body>
 </html>
+
+<style>
+	body {
+		background-color: #E9E9E9;
+	}
+	
+	h1 {
+		font-family: 'Lato', serif;
+		font-weight: bold;
+		text-align: center;
+		color: #FFFFFF;
+	}
+	
+	h2 {
+		font-family: 'Lato', serif;
+		font-weight: bold;
+		font-size: 24px;
+		text-align: center;
+		color: #A2482E;
+	}
+	
+	ul#header {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #141311;
+    }
+	
+    li.header {
+        float: left;
+    }
+	
+    li.header a {
+		font-family: 'Lato', serif;
+		font-size: 1.5vw;
+        color: #FFFFFF;
+        display: block;
+        padding: 10px;
+        text-align: center;
+		text-decoration: none;
+    }
+	
+    li.header a:hover {
+        background-color: #B7B7B6;
+    }
+</style>
