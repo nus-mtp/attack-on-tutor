@@ -19,13 +19,13 @@
     <body ng-app="lobbyApp">
 	
 		<ul id="header">
-			<li class="header"><a class="active" href="/">Welcome to Attack on Tutor, (<%= username %>) </a></li>
+			<li class="header"><a class="active" href="/">(<%= username %>)</a></li>
 		
-			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
+			<li class="header" style="float:right"><a class="active" href="/dashboard">Dashboard</a></li>
 			<li class="header" style="float:right"><a class="active" id="logout" >Log Out</a></li>
 		</ul>
 	
-		<div ng-controller="socketCtrl" class="container" id="header-bar" style="background-color:#000;"> <!-- Title Box -->
+		<div ng-controller="socketCtrl" class="container" id="header-bar"> <!-- Title Box -->
 			<div class="row">
 				<div class="text-center col-md-12">
 					<h1>Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
@@ -34,16 +34,16 @@
 		</div>
 
 		<div class="container">
-			<div class="row" id="battle-container" style="background-color: #000;"> <!-- Question Composer Outer Box -->
+			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
 				<div ng-controller="tutorCtrl">
 					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'" style="border: 2px solid #FFFFFF;">
-						<div class="text-center row" style="border: 2px solid #000;"> <!-- Question Composer Inner Box -->
+						<div class="text-center row"> <!-- Question Composer Inner Box -->
 							<h2> Question Composer</h2>
 						</div>
 
 						<div class="row">
-							<div class="question-area" style="width:100%; max-height:300px; overflow:auto; border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;"> <!-- Text Box -->
+							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;> <!-- Text Box -->
 								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..." type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
@@ -108,7 +108,7 @@
 			
 			</div>
 
-			<div class="row" id="battle-screen-container" style="background-color: #000;">
+			<div class="row" id="battle-screen-container">
 				<!--<div ng-controller="battleScreenCtrl">-->
 					<div class="text-center row">
 						<div class="col-md-3">
@@ -131,7 +131,7 @@
 			<div class="row" id="lobby-container">
 
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF; background-color: #000;">
+					<div class="col-md-8 col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF;">
 						
 						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
 							<h2> Messages </h2>
@@ -189,7 +189,7 @@
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 239px; background-color: #000;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 239px;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
 							<h2> Active Users </h2>
 						</div>
@@ -279,52 +279,53 @@
 				chatBox.scrollTop = chatBox.number;
 				console.log("Hehe");
 			}*/
-
+		</script>
+		
+		<style>
+			body {
+				background-color: #141311;
+			}
+			
+			h1 {
+				font-family: 'Lato', serif;
+				font-weight: bold;
+				text-align: center;
+				color: #FFFFFF;
+			}
+			
+			h2 {
+				font-family: 'Lato', serif;
+				font-weight: bold;
+				font-size: 24px;
+				text-align: center;
+				color: #A2482E;
+			}
+			
+			ul#header {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background-color: #141311;
+			}
+			
+			li.header {
+				float: left;
+				list-style-type: none;
+			}
+			
+			li.header a {
+				font-family: 'Lato', serif;
+				font-size: 1.5vw;
+				color: #FFFFFF;
+				display: block;
+				padding: 10px;
+				text-align: center;
+				text-decoration: none;
+			}
+			
+			li.header a:hover {
+				background-color: #B7B7B6;
+			}
+		</style>
     </body>
 </html>
-
-<style>
-	body {
-		background-color: #E9E9E9;
-	}
-	
-	h1 {
-		font-family: 'Lato', serif;
-		font-weight: bold;
-		text-align: center;
-		color: #FFFFFF;
-	}
-	
-	h2 {
-		font-family: 'Lato', serif;
-		font-weight: bold;
-		font-size: 24px;
-		text-align: center;
-		color: #A2482E;
-	}
-	
-	ul#header {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #141311;
-    }
-	
-    li.header {
-        float: left;
-    }
-	
-    li.header a {
-		font-family: 'Lato', serif;
-		font-size: 1.5vw;
-        color: #FFFFFF;
-        display: block;
-        padding: 10px;
-        text-align: center;
-		text-decoration: none;
-    }
-	
-    li.header a:hover {
-        background-color: #B7B7B6;
-    }
-</style>
