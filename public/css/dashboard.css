@@ -53,3 +53,7 @@ h2 {
 img {
 	image-rendering: pixelated;
 }
+
+.level-container {
+	color: #FFFFFF;
+}

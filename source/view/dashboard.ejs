@@ -37,6 +37,13 @@
                 <img src="images/avatars/avatar-01.png" style="width: 100%" class="img-responsive" />
                 <h2><%= user.name %></h2>
                 <div class="level-container" ng-controller="userCtrl">
+                    Level: {{ivle.userInfo().level}}
+                    <br>
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" style="width: {{ivle.userInfo().percentage}}%">
+                      </div>
+                    </div>
+                    {{ivle.userInfo().currExp}} / {{ivle.userInfo().totalToNext}}
                 </div>
             </div>
 
@@ -48,13 +55,13 @@
 						<ul id="tutorials">
                             <li ng-repeat="t in ivle.tutorials()">
                                 <div class="container">
-                                    <div>
+                                    <div class="module-container">
                                         <div class="row">
                                             {{t.coursecode}} {{t.coursename}}
                                         </div>
                                         <div class="row">
                                             <button class='btn btn-primary lobby-button' ng-click="redirect(t)" name='tut-id' value='{{t.id}}'> Join Class </button>
-                                            <button class='btn btn-primary'> View Leaderboard </button>
+                                            <button class='btn btn-primary' ng-click="getLeaderboard(t)"> View Leaderboard </button>
                                         </div>
                                     </div>
                                 </div>
@@ -70,4 +77,4 @@
 </body>
 </html>
 
-<script src="js/dashboard.js" type="application/javascript"></script>
+<script src="javascripts/dashboard/dashboard.js" type="application/javascript"></script>

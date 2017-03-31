@@ -84,6 +84,8 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, ivle)
 var setUserLevelInfo = function(user) {
     var constant = 0.1;
     user.level = Math.floor(constant * Math.sqrt(user.exp));
-    user.toNextLevel = Math.floor(Math.pow((user.level + 1)/constant, 2));
+    user.currExp = user.exp - Math.floor(Math.pow((user.level - 1)/constant, 2))
+    user.totalToNext = Math.floor(Math.pow((user.level + 1)/constant, 2)) - Math.floor(Math.pow(user.level/constant, 2));
+    user.percentage = Math.floor(user.currExp/user.totalToNext * 100);
     return user;
 }
