@@ -121,8 +121,23 @@ var getAvatarId = function (uid) {
 
 }
 
+/**
+ * Get exp and avatar id
+ * @param  uid
+ * @return {Promise}
+ */
+var getExpAndAvatar = function (uid) {
+	return user.findOne({
+		where: {
+			id: uid
+		},
+		attributes: ['exp', 'avatarId']
+	});
+}
+
 module.exports = user;
 module.exports.changeExp = changeExp;
 module.exports.setAvatar = setAvatar;
 module.exports.getExp = getExp;
 module.exports.getAvatarId = getAvatarId;
+module.exports.getExpAndAvatar = getExpAndAvatar;
