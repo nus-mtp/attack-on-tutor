@@ -43,6 +43,8 @@ li.header a:hover {
 	background-color: #B7B7B6;
 }
 
-p {
-	height: 30px;
+ul#borderImage {
+	border: 10px solid transparent;
+	padding: 2px;
+	border-image: url("/images/border-image.png") 30 repeat;
 }
