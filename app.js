@@ -5,8 +5,8 @@ var path = require ('path');
 
 
 app.set ('rootPath', __dirname);
+app.set('test', true); // Set to true to populate db with fake modules when /test is visited.
 
-app.set('test', false); // Set to true to populate db with fake modules when /test is visited.
 
 // parse config file
 var config = JSON.parse (fs.readFileSync ('config.json', 'utf8'));
