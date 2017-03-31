@@ -1,0 +1,48 @@
+body {
+	background-color: #141311;
+}
+
+h1 {
+	font-family: 'Lato', serif;
+	font-weight: bold;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+h2 {
+	font-family: 'Lato', serif;
+	font-weight: bold;
+	font-size: 24px;
+	text-align: center;
+	color: #A2482E;
+}
+
+ul#header {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #141311;
+}
+
+li.header {
+	float: left;
+	list-style-type: none;
+}
+
+li.header a {
+	font-family: 'Lato', serif;
+	font-size: 1.5vw;
+	color: #FFFFFF;
+	display: block;
+	padding: 10px;
+	text-align: center;
+	text-decoration: none;
+}
+
+li.header a:hover {
+	background-color: #B7B7B6;
+}
+
+p {
+	height: 30px;
+}

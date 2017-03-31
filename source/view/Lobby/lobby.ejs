@@ -4,8 +4,10 @@
         <meta charset="UTF-8">
         <title>E-Tutorial Lobby</title>
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="css/lobby.css">
+		
         <script>
 			window.userId = "<%= userId %>";
             window.moduleId = "<%= moduleId %>";
@@ -262,7 +264,7 @@
 			</div>
 		</div>
 
-<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
+		<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
 		<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
 		<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
@@ -274,7 +276,7 @@
         <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
         <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
         <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
-
+		<!--<script src="js/lobby.js" type="application/javascript"></script>-->
         <script>
 		
 			/*$(document).ready(function() {
@@ -294,54 +296,54 @@
 		</script>
 		
 		<style>
-			body {
-				background-color: #141311;
-			}
-			
-			h1 {
-				font-family: 'Lato', serif;
-				font-weight: bold;
-				text-align: center;
-				color: #FFFFFF;
-			}
-			
-			h2 {
-				font-family: 'Lato', serif;
-				font-weight: bold;
-				font-size: 24px;
-				text-align: center;
-				color: #A2482E;
-			}
-			
-			ul#header {
-				margin: 0;
-				padding: 0;
-				overflow: hidden;
-				background-color: #141311;
-			}
-			
-			li.header {
-				float: left;
-				list-style-type: none;
-			}
-			
-			li.header a {
-				font-family: 'Lato', serif;
-				font-size: 1.5vw;
-				color: #FFFFFF;
-				display: block;
-				padding: 10px;
-				text-align: center;
-				text-decoration: none;
-			}
-			
-			li.header a:hover {
-				background-color: #B7B7B6;
-			}
-			
-			p {
-				height: 30px;
-			}
+		body {
+			background-color: #141311;
+		}
+
+		h1 {
+			font-family: 'Lato', serif;
+			font-weight: bold;
+			text-align: center;
+			color: #FFFFFF;
+		}
+
+		h2 {
+			font-family: 'Lato', serif;
+			font-weight: bold;
+			font-size: 24px;
+			text-align: center;
+			color: #A2482E;
+		}
+
+		ul#header {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color: #141311;
+		}
+
+		li.header {
+			float: left;
+			list-style-type: none;
+		}
+
+		li.header a {
+			font-family: 'Lato', serif;
+			font-size: 1.5vw;
+			color: #FFFFFF;
+			display: block;
+			padding: 10px;
+			text-align: center;
+			text-decoration: none;
+		}
+
+		li.header a:hover {
+			background-color: #B7B7B6;
+		}
+
+		p {
+			height: 30px;
+		}
 		</style>
-    </body>
+	</body>
 </html>
