@@ -77,6 +77,18 @@ var getTutorials = function (req, res, next) {
 	}
 }
 
+var syncUser = function (req, res, next) {
+	if (req.body.auth.success) {
+		var user = req.body.auth.decoded;
+		User.getExpAndAvatar(user.id).then(function (data) {
+			res.json({success: true, message: 'Success', data: data});
+		});
+	} else {
+		res.send("Permission denied");
+	}
+}
+
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
+module.exports.syncUser = syncUser;

@@ -1,42 +1,75 @@
-var tutorials = [];
+angular.module("dashboardApp", []);
 
-function syncIVLE() {
-    $.ajax({
-        method:'POST',
-        url:'/api/dashboard/forceSyncIVLE',
-        dataType:'json',
-        success: function(data){
-            if (data.success){
-                console.log("Successful Sync");
-                getTutorials();
+angular.module("dashboardApp").factory ('ivle', function ($rootScope) {
+    var tutorials = [];
+
+    var getTutorials = function () {
+        $.ajax({
+            type: 'POST',
+            url: '/api/dashboard/getTutorials',
+            data: { },
+            dataType: 'json',
+            success: function(data) {
+                tutorials = data.data.rows;
+                $rootScope.$apply();
             }
-            else {  
-                console.log('Failed Sync, Error: ' + data.message);
+        });
+    };
+
+    var syncIVLE = function () {
+        $.ajax({
+            method:'POST',
+            url:'/api/dashboard/forceSyncIVLE',
+            dataType:'json',
+            success: function(data){
+                if (data.success){
+                    console.log("Successful Sync");
+                    getTutorials();
+                }
+                else {  
+                    console.log('Failed Sync, Error: ' + data.message);
+                }
             }
+        });
+    };
 
-        }
-    });
-}
-
-function getTutorials() {
-    $.ajax({
-        type: 'POST',
-        url: '/api/dashboard/getTutorials',
-        data: { },
-        dataType: 'json',
-        success: function(data) {
-            showTutorials(data.data);
-        }
-    });
-}
-
-function showTutorials(tuts) {
-    for (i = 0; i < tuts.count; i++) {
-        var tut = tuts.rows[i];
-        tutorials.push(tut);
-        $('#tutorials').append(tut.coursecode + " " + tut.coursename + " <button class='btn btn-primary' id='lobby-button' data-id='" + i + "' value='' name='tut-id'> Join Class </button><br><br>");
+    var syncUser = function() {
+        $.ajax({
+            method: 'POST',
+            url: '/api/dashboard/syncUser',
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    console.log(data);
+                } else {
+                    console.log('Failed Sync, Error: ' + data.message);
+                }
+            }
+        });
     }
-}
+
+    //syncIVLE();
+    getTutorials();
+
+    return {
+        tutorials: function () {
+            return tutorials;
+        }
+    };
+});
+
+angular.module("dashboardApp").controller ('userCtrl', function ($scope, ivle) {
+    
+});
+
+angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, ivle) {
+    $scope.ivle = ivle;
+
+    $scope.redirect = function(tut) {
+        $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name)
+    }
+
+});
 
 
 $(document).on('click', '#lobby-button', function () {
@@ -45,5 +78,3 @@ $(document).on('click', '#lobby-button', function () {
     $(this).attr('value', tut.id);
     $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name);
 });
-
-syncIVLE();
