@@ -73,17 +73,20 @@ var enterLobby = function (req, res, next) {
 									return next();
 								});
 						} else {
-							res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
+							//res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
+							res.redirect('/error');
 						}	
 					}); 
         
 			} else {
-				res.json({ success: false, message: 'You are not a member of this tutorial.'});
+				//res.json({ success: false, message: 'You are not a member of this tutorial.'});
+				res.redirect('/error');
 			}
 		});
 
 	} else {
-		res.json({success: false, message: 'Please access lobby from dashboard!'});
+		//res.json({success: false, message: 'Please access lobby from dashboard!'});
+		res.redirect('/error');
 	}
 }
 
