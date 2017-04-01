@@ -34,16 +34,16 @@
 	<div class="container-fluid" ng-app="dashboardApp">
 		<div class="row">
             <div class="col-md-2">
-                <img src="images/avatars/avatar-01.png" style="width: 100%" class="img-responsive" />
+                <img ng-src="{{userInfo.imgSrc}}" style="width: 100%" class="img-responsive" />
                 <h2><%= user.name %></h2>
                 <div class="level-container" ng-controller="userCtrl">
-                    Level: {{ivle.userInfo().level}}
+                    Level: {{userInfo.level}} {{userInfo.imgSrc}}
                     <br>
                     <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: {{ivle.userInfo().percentage}}%">
+                      <div class="progress-bar" role="progressbar" style="width: {{userInfo.percentage}}%">
                       </div>
                     </div>
-                    {{ivle.userInfo().currExp}} / {{ivle.userInfo().totalToNext}}
+                    {{userInfo.currExp}} / {{userInfo.totalToNext}}
                 </div>
             </div>
 
@@ -53,7 +53,7 @@
 				<div class="list-group" ng-controller="moduleCtrl">
 					<form id="form" style="display: hidden" action="" method='POST'>
 						<ul id="tutorials">
-                            <li ng-repeat="t in ivle.tutorials()">
+                            <li ng-repeat="t in tuts">
                                 <div class="container">
                                     <div class="module-container">
                                         <div class="row">
@@ -69,6 +69,7 @@
                         </ul>
 					</form>
 				</div>
+                
 			</div>
 		</div>
 	</div>
