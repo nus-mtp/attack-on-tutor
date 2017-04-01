@@ -31,8 +31,9 @@ var get = function (req, res, next)
 	    });
 
 	} else {
-		console.log('fail');
-		res.send('Auth unsuccessful.')
+		//console.log('fail');
+		//res.send('Auth unsuccessful.')
+		res.redirect('/error');
 	}
 };
 

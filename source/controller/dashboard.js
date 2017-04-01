@@ -35,7 +35,8 @@ if (!usehttps) {
  			}
  		});
 	} else {
-		res.send('Auth unsuccessful');
+		//res.send('Auth unsuccessful');
+		res.redirect('/error');
 	}
 
 }
