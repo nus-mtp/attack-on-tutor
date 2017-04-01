@@ -34,16 +34,16 @@
 	<div class="container-fluid" ng-app="dashboardApp">
 		<div class="row">
             <div class="col-md-2">
-                <img ng-src="{{userInfo.imgSrc}}" style="width: 100%" class="img-responsive" />
-                <h2><%= user.name %></h2>
                 <div class="level-container" ng-controller="userCtrl">
-                    Level: {{userInfo.level}} {{userInfo.imgSrc}}
-                    <br>
-                    <div class="progress">
-                      <div class="progress-bar" role="progressbar" style="width: {{userInfo.percentage}}%">
-                      </div>
-                    </div>
-                    {{userInfo.currExp}} / {{userInfo.totalToNext}}
+                    <img ng-src="{{userInfo.imgSrc}}" style="width: 100%" class="img-responsive" />
+                    <h2><%= user.name %></h2>
+                        Level: {{userInfo.level}}
+                        <br>
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style="width: {{userInfo.percentage}}%">
+                          </div>
+                        </div>
+                        {{userInfo.currExp}} / {{userInfo.totalToNext}}
                 </div>
             </div>
 

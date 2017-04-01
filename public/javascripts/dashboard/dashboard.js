@@ -116,36 +116,7 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
             tuts = responseArray[1].data.data.rows;
         }
         $scope.tuts = tuts;
-        console.log(tuts);
     });
-
-    // $.ajax({
-    //         type: 'POST',
-    //         url: '/api/dashboard/getTutorials',
-    //         data: { },
-    //         dataType: 'json',
-    //         success: function(data) {
-    //             tutorials = data.data.rows;
-    //             $rootScope.$apply();
-    //         }
-    //     });
-    // 
-    // var syncIVLE = function () {
-    //     $.ajax({
-    //         method:'POST',
-    //         url:'/api/dashboard/forceSyncIVLE',
-    //         dataType:'json',
-    //         success: function(data){
-    //             if (data.success){
-    //                 console.log("Successful Sync");
-    //                 getTutorials();
-    //             }
-    //             else {  
-    //                 console.log('Failed Sync, Error: ' + data.message);
-    //             }
-    //         }
-    //     });
-    // };
 
     $scope.redirect = function(tut) {
         $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name)
