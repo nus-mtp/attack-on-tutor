@@ -141,3 +141,15 @@ var setUserLevelInfo = function(user) {
     user.imgSrc = "images/avatars/" + user.avatarId + ".png"
     return user;
 }
+
+var logoutConfirmation = "Would You Like to Log Out?";
+	
+$("#logout").on
+(
+	"click",
+	function(event)
+	{
+		Cookies.remove('token');
+		location.reload();
+	}
+);
