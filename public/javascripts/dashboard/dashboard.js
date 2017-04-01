@@ -1,69 +1,5 @@
 angular.module("dashboardApp", []);
 
-// angular.module("dashboardApp").factory ('ivle', function ($rootScope) {
-//     var tutorials = [];
-//     var userInfo = {};
-
-//     var syncIVLE = function () {
-//         $.ajax({
-//             method:'POST',
-//             url:'/api/dashboard/forceSyncIVLE',
-//             dataType:'json',
-//             success: function(data){
-//                 if (data.success){
-//                     console.log("Successful Sync");
-//                     getTutorials();
-//                 }
-//                 else {  
-//                     console.log('Failed Sync, Error: ' + data.message);
-//                 }
-//             }
-//         });
-//     };
-
-//     var getTutorials = function () {
-//         $.ajax({
-//             type: 'POST',
-//             url: '/api/dashboard/getTutorials',
-//             data: { },
-//             dataType: 'json',
-//             success: function(data) {
-//                 tutorials = data.data.rows;
-//                 $rootScope.$apply();
-//             }
-//         });
-//     };
-
-//     var syncUser = function() {
-//         $.ajax({
-//             method: 'POST',
-//             url: '/api/dashboard/syncUser',
-//             dataType: 'json',
-//             success: function(data) {
-//                 if (data.success) {
-//                     userInfo = setUserLevelInfo(data.data);
-//                     $rootScope.$apply();
-//                 } else {
-//                     console.log('Failed Sync, Error: ' + data.message);
-//                 }
-//             }
-//         });
-//     }
-
-//     //syncIVLE();
-//     getTutorials();
-//     syncUser();
-
-//     return {
-//         tutorials: function () {
-//             return tutorials;
-//         },
-//         userInfo: function() {
-//             return userInfo;
-//         }
-//     };
-// });
-
 angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) {
 
     var userInfo = {};
@@ -87,16 +23,16 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     var tuts = [];
 
 
-    // promises.push($http({
+    promises.push($http({
 
-    //     method: 'POST',
-    //     url: '/api/dashboard/forceSyncIVLE'
+        method: 'POST',
+        url: '/api/dashboard/forceSyncIVLE'
 
-    // }).then(function successCallback(response) {
+    }).then(function successCallback(response) {
 
-    // }, function errorCallback(response) {
-    //     console.log('Error: ' + response.message);
-    // }));
+    }, function errorCallback(response) {
+        console.log('Error: ' + response.message);
+    }));
 
     promises.push(
         $http({
@@ -110,7 +46,7 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     );
 
     $q.all(promises).then(function (responseArray) {
-        if (responseArray.length == 1) {
+        if (responseArray.length == 1) { // if we aren't syncing with ivle
             tuts = responseArray[0].data.data.rows;
         } else {
             tuts = responseArray[1].data.data.rows;

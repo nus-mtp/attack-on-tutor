@@ -80,6 +80,9 @@ var userTutorial = sequelize.define ('userTutorial', {
 			model: User,
 			key: 'id'
 		}
+	},
+	exp: {
+		type: Sequelize.INTEGER
 	}
 }, {
 	indexes: [
@@ -93,7 +96,6 @@ var userTutorial = sequelize.define ('userTutorial', {
 		}
 	]
 });
-
 
 User.belongsToMany (tutorial, {
 	foreignKey: 'userId',
@@ -330,6 +332,7 @@ var forceSyncIVLE = function (uid) {
 				reject ('Sync Failed: ' + err.stack);
 			})
 		}).then(function (result) {
+
 			// Create user-tutorial relation
 			var tutorials = result.tutorials;
 			var groups = result.groups;	
@@ -349,7 +352,20 @@ var forceSyncIVLE = function (uid) {
 				if (relation['permission'] === 'M') {
 					role = 'tutor';
 				}
-				return relation['tutorial'].addUser(result.user, {role: role});
+				console.log(relation);
+				return userTutorial.findOrCreate({
+					where: {
+						userId: result.user.id,
+						tutorialId: relation['tutorial'].dataValues.id
+					},
+					defaults: {
+						role: role,
+						tutorialId: relation['tutorial'].dataValues.id,
+						userId: result.user.id,
+						exp: 0
+					}
+				});
+				//return relation['tutorial'].addUser(result.user, {role: role, exp: 0});
 			}));
 
 		}).then(function (result) {
