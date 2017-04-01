@@ -352,7 +352,7 @@ var forceSyncIVLE = function (uid) {
 				if (relation['permission'] === 'M') {
 					role = 'tutor';
 				}
-				console.log(relation);
+				//console.log(relation);
 				return userTutorial.findOrCreate({
 					where: {
 						userId: result.user.id,
@@ -365,7 +365,7 @@ var forceSyncIVLE = function (uid) {
 						exp: 0
 					}
 				});
-				//return relation['tutorial'].addUser(result.user, {role: role, exp: 0});
+
 			}));
 
 		}).then(function (result) {
