@@ -34,14 +34,12 @@
 				</div>
 			</div>
 		</div>
-
-		<ul id="borderImage">Bla Bla Black Sheep, Have You Any Wool?</ul>
 		
 		<div class="container">
 			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'" style="border: 2px solid #FFFFFF;">
+					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="text-center row"> <!-- Question Composer Inner Box -->
 							<h2> Question Composer</h2>
 						</div>
@@ -119,19 +117,19 @@
 						<p></p>
 						
 						<div class="col-md-3">
-						 	<div class="text-center-row" style="border: 2px solid #FFFFFF; height: 300px;">
+						 	<div class="text-center-row">
 								<h2>Tutor's Avatar</h2>
 							</div>
 						</div>
 						
 						<div class="col-md-6">
-						   <div class="text-center-row" style="border: 2px solid #FFFFFF; height: 300px;">
+						   <div class="text-center-row">
 								<h2>Combat Screen</h2>
 							</div>
 						</div>
 						
 						<div class="col-md-3">
-							<div class="text-center-row" style="border: 2px solid #FFFFFF; height: 300px;">
+							<div class="text-center-row">
 								<h2>Tutees' Avatars</h2>
 							</div>
 						</div>
@@ -144,9 +142,9 @@
 				<p></p>
 			
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-6 col-xs-7" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF;">
+					<div class="col-md-8 col-sm-6 col-xs-7" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						
-						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
+						<div class="text-center row">
 							<h2> Messages </h2>
 						</div>
 						
@@ -202,8 +200,8 @@
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 235px;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
-						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
+					<div class="col-md-4 col-sm-6 col-xs-5" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+						<div class="text-center row">
 							<h2> Active Users </h2>
 						</div>
 						

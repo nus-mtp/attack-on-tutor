@@ -43,8 +43,30 @@ li.header a:hover {
 	background-color: #B7B7B6;
 }
 
-ul#borderImage {
+div#question-list-container {
 	border: 10px solid transparent;
 	padding: 2px;
 	border-image: url("/images/border-image.png") 30 repeat;
+	padding: 20px;
+}
+
+div.text-center-row {
+	border: 10px solid transparent;
+	padding: 2px;
+	border-image: url("/images/border-image.png") 30 repeat;
+	height: 300px;
+}
+
+div#chat-container {
+	border: 10px solid transparent;
+	padding: 2px;
+	border-image: url("/images/border-image.png") 30 repeat;
+	padding: 20px;
+}
+
+div#userlist-container {
+	border: 10px solid transparent;
+	padding: 2px;
+	border-image: url("/images/border-image.png") 30 repeat;
+	height: 286px;
 }
