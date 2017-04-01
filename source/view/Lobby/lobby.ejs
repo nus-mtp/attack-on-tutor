@@ -25,10 +25,7 @@
 			<li class="header"><a class="active" href="/"><%= username %></a></li>
 		
 			<li class="header" style="float:right"><a class="active" href="/dashboard">Dashboard</a></li>
-
-			<% if(user){ %>
-				<li style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>
-			<% } %>		
+			<!--<li class="header" style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>-->
 		</ul>
 	
 		<div ng-controller="socketCtrl" class="container" id="header-bar"> <!-- Title Box -->
@@ -264,21 +261,7 @@
 				</div>
 				
 			</div>
-		</div>
-
-		<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
-		<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
-		<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
-		<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
-
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
-			
+		</div>			
         <!--<script>
 		
 			/*$(document).ready(function() {
@@ -299,19 +282,20 @@
 	</body>
 </html>
 
-<script>
-	var logoutConfirmation = "Would You Like to Log Out?";
+<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
+<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
+<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
+<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
 
-	$("#logout").on
-	(
-		"click",
-		function(event)
-		{
-			Cookies.remove('token');
-			location.reload();
-		}
-	);
-</script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
+
+<script src="js/lobby.js" type="application/javascript"></script>
 
 <style>
 </style>
