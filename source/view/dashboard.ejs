@@ -19,14 +19,12 @@
 
 	
 	<ul id="header">
-			<li class="header"><a class="active" href="/">Welcome to Attack on Tutor, (<%= user.name %>) </a></li>
+			<li class="header"><a class="active" href="/"><%= user.name %></a></li>
 		
 			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/e-tutorial">GitHub Repository</a></li>
 			
 			<% if(user){ %>
-				<li class="header" style="float:right"><a class="active" id="logout" >Log Out</a></li>
-			<% } else{ %>
-				<li class="header" style="float:right"><a class="active" href="/login" >Log In</a></li>
+				<li style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>
 			<% } %>
 	</ul>
 	

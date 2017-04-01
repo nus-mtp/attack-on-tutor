@@ -22,10 +22,13 @@
     <body ng-app="lobbyApp">
 	
 		<ul id="header">
-			<li class="header"><a class="active" href="/">(<%= username %>)</a></li>
+			<li class="header"><a class="active" href="/"><%= username %></a></li>
 		
 			<li class="header" style="float:right"><a class="active" href="/dashboard">Dashboard</a></li>
-			<li class="header" style="float:right"><a class="active" id="logout" >Log Out</a></li>
+
+			<% if(user){ %>
+				<li style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>
+			<% } %>		
 		</ul>
 	
 		<div ng-controller="socketCtrl" class="container" id="header-bar"> <!-- Title Box -->
@@ -275,7 +278,7 @@
         <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
         <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
         <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
-		
+			
         <!--<script>
 		
 			/*$(document).ready(function() {
@@ -293,8 +296,22 @@
 				console.log("Hehe");
 			}*/
 		</script> -->
-		
-		<style>
-		</style>
 	</body>
 </html>
+
+<script>
+	var logoutConfirmation = "Would You Like to Log Out?";
+
+	$("#logout").on
+	(
+		"click",
+		function(event)
+		{
+			Cookies.remove('token');
+			location.reload();
+		}
+	);
+</script>
+
+<style>
+</style>
