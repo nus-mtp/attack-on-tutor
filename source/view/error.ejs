@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Error Page</title>
+	<title></title>
     
 	<script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
@@ -19,15 +19,15 @@
         <li><a class="active" href="/">Error! Click here to return!</a></li>
 	</ul>	
 	
+	<h2>Error Message</h2>
+	<p><%=errorMessage%></p>
+	
 </body>
 </html>
 
-<script>
-</script>
-
 <style>
 	body {
-		background-color: #E0FFFF;
+		background-color: #FFFFFF;
 	}
 	
 	ul {
@@ -54,4 +54,6 @@
     li a:hover {
         background-color: #B7B7B6;
     }
+	
+	
 </style>
