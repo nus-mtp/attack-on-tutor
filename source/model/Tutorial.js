@@ -227,8 +227,6 @@ var findTutorialInfo = function (tid) {
  * @returns {Promise}
  */
  var findAllTutorialInfoOfUser = function (uid) {
- 	
- 	// SELECT * FROM tutorials INNER JOIN userTutorials ON tutorials.id=userTutorials.tutorialId AND userTutorials.userId='a0127127'
  	return tutorial.findAndCountAll({
  		include: [{
  			model: userTutorial,
@@ -381,25 +379,46 @@ var forceSyncIVLE = function (uid) {
 
 
 /**
- * Gets the top n users by EXP from the specified tutorial, used to create
+ * Gets the top users by EXP from the specified tutorial, used to create
  * leaderboard.
  * @param  n  
  * @param  tid 
  * @return {Promise}     [description]
  */
-var findTopNUsersInTutorial = function (n, tid) {
-	return User.findAndCountAll({
-		include:[{
-			model: tutorial,
-			where: {id: tid}
-		}],
-		attributes:['id','name','gender','email','exp'],
+var findTopUsersInTutorial = function (tid) {
+	return userTutorial.findAndCountAll({
+		where:{
+			tutorialId: tid
+		},
 		order: [
-			['exp', 'DESC']
-		],
-		limit: n
+			['exp','DESC']
+		]
 	});
 }
+
+
+
+var findAllTutorialExpOfUser = function (uid) {
+	return User.findAndCountAll({
+		include: [{
+			model: tutorial
+		}]
+	});
+}
+
+var processUserTutorialsForExpDisplay = function (result) {
+	var userTuts = {}
+	var tuts = result.rows[0].dataValues.tutorials;
+	for (i = 0; i < tuts.length; i++) {
+		var tut = tuts[i];
+		userTuts[tut.coursecode] = {
+			coursename: tut.coursename,
+			exp: tut.userTutorial.exp
+		};
+	}
+	return userTuts;
+}
+
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
@@ -410,3 +429,5 @@ module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
+module.exports.findTopUsersInTutorial = findTopUsersInTutorial;
+module.exports.findAllTutorialExpOfUser = findAllTutorialExpOfUser;
