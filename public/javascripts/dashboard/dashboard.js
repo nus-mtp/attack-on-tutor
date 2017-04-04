@@ -112,3 +112,15 @@ var calculateExp = function (level) {
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
+
+var logoutConfirmation = "Would You Like to Log Out?";
+	
+$("#logout").on
+(
+	"click",
+	function(event)
+	{
+		Cookies.remove('token');
+		location.reload();
+	}
+);

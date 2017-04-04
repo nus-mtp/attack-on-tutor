@@ -10,6 +10,7 @@ var app = require('../../app');
  * @param res
  * @param next
  */
+ 
 var get = function (req, res, next)
 {
 
@@ -31,8 +32,14 @@ var get = function (req, res, next)
 	    });
 
 	} else {
-		console.log('fail');
-		res.send('Auth unsuccessful.')
+		//console.log('fail');
+		res.send('Auth unsuccessful 2.');
+		
+		/*var errorMessage = "Auth unsuccessful";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});*/
 	}
 };
 
@@ -72,7 +79,14 @@ var enterLobby = function (req, res, next) {
 									return next();
 								});
 						} else {
-							res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
+							//res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
+							//res.redirect('/error');
+							
+							var errorMessage = "Auth unsuccessful 3";
+		
+							res.render('error.ejs', {
+								errorMessage: errorMessage
+							});
 						}	
 					}); 
         
@@ -91,6 +105,7 @@ var enterLobby = function (req, res, next) {
  * Check if user is a tutor of class.
  * @param  uid
  * @param  tid
+ 
  * @return boolean
  */
 var userIsTutorOfClass = function (uid, tid) {

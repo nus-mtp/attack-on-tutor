@@ -12,23 +12,18 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">	
 </head>
 
 <body>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-   
-	<ul>
-        <li><a class="active" href="/">Attack on Tutor</a></li>
-		
-		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/e-tutorial">GitHub Repository</a></li>
-		
-        <% if(user){ %>
-            <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
-		<% } else{ %>
-            <li style="float:right"><a class="active" href="/login" >Log In</a></li>
-        <% } %>
-    </ul>
-
+	<ul id="header">
+			<li class="header"><a class="active" href="/"><%= user.name %></a></li>
+			
+			<% if(user){ %>
+				<li class="header" style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>
+			<% } %>
+	</ul>
+	
 	<input id="uid" type="hidden" value="<%= user.id %>">
 
 	<div class="container-fluid" ng-app="dashboardApp">
@@ -90,5 +85,6 @@
 </body>
 </html>
 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
 <script src="javascripts/dashboard/dashboard.js" type="application/javascript"></script>
-s

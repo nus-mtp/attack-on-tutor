@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Error Page</title>
+	<title></title>
     
 	<script type='text/javascript' src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js'></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
@@ -16,18 +16,46 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	
 	<ul>
-        <li><a class="active" href="/">Error! Click here to return!</a></li>
+		<li></li>
 	</ul>	
+	
+	<% if(errorMessage){ %>
+		<h1>Error!</h1>
+		<h2><%=errorMessage%></h2>
+	<% } %>
+	
+	<a href="/">
+		<div class="errorButton"><img src="images/errorButton.png"></div> 
+	</a>
 	
 </body>
 </html>
 
 <script>
+	 var errorMessage = "";
 </script>
 
 <style>
 	body {
-		background-color: #E0FFFF;
+		background-color: #141311;
+	}
+	
+	h1 {
+		font-family: 'Lato', serif;
+		font-size: 5vw;
+		color: #FFFFFF;
+		margin: 0;
+		padding: 2%;
+		text-align: center;
+		margin-top: 20vh;
+	}
+	
+	h2 {
+		font-family: 'Lato', serif;
+		font-weight: bold;
+		font-size: 24px;
+		text-align: center;
+		color: #A2482E;
 	}
 	
 	ul {
@@ -54,4 +82,11 @@
     li a:hover {
         background-color: #B7B7B6;
     }
+	
+	.errorButton {
+		text-align: center;
+		margin-top: 12%;
+		background-color: transparent;
+		outline: none;
+	}	
 </style>
