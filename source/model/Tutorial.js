@@ -396,9 +396,12 @@ var findTopUsersInTutorial = function (tid) {
 	});
 }
 
-
-
-var findAllTutorialExpOfUser = function (uid) {
+/**
+ * Gets tutorials user is a part of 
+ * @param  uid
+ * @return Promise
+ */
+var getUserTutorials = function (uid) {
 	return User.findAndCountAll({
 		include: [{
 			model: tutorial
@@ -406,17 +409,19 @@ var findAllTutorialExpOfUser = function (uid) {
 	});
 }
 
-var processUserTutorialsForExpDisplay = function (result) {
-	var userTuts = {}
-	var tuts = result.rows[0].dataValues.tutorials;
-	for (i = 0; i < tuts.length; i++) {
-		var tut = tuts[i];
-		userTuts[tut.coursecode] = {
-			coursename: tut.coursename,
-			exp: tut.userTutorial.exp
-		};
-	}
-	return userTuts;
+
+
+/**
+ * Gets user info by uid
+ * @param  uid
+ * @return Promise
+ */
+var getUserInfo = function (uid) {
+	return User.findOne({
+		where: {
+			id: uid
+		}
+	});
 }
 
 
@@ -430,4 +435,5 @@ module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
 module.exports.findTopUsersInTutorial = findTopUsersInTutorial;
-module.exports.findAllTutorialExpOfUser = findAllTutorialExpOfUser;
+module.exports.getUserTutorials = getUserTutorials;
+module.exports.getUserInfo = getUserInfo;

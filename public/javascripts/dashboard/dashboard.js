@@ -2,14 +2,13 @@ angular.module("dashboardApp", []);
 
 angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) {
 
-    var userInfo = {};
-
     $http({
         method: 'POST',
-        url: '/api/dashboard/syncUser'
+        url: '/api/dashboard/getUserInfo'
     }).then(function successCallback(response) {
-        console.log(1);
-        userInfo = setUserLevelInfo(response.data.data);
+        var userInfo = response.data.data;
+        userInfo.tutorials = setLevelInfo(userInfo.tutorials);
+        userInfo.name = toTitleCase(userInfo.name)
         $scope.userInfo = userInfo;
     }, function errorCallback(response) {
         console.log(response);
@@ -21,7 +20,6 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
 
     var promises = [];
     var tuts = [];
-
 
     promises.push($http({
 
@@ -68,12 +66,26 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
  * @param  user
  * @return user
  */
-var setUserLevelInfo = function(user) {
+var setLevelInfo = function(tutArray) {
     var constant = 0.1;
-    user.level = Math.floor(constant * Math.sqrt(user.exp));
-    user.currExp = user.exp - Math.floor(Math.pow((user.level - 1)/constant, 2))
-    user.totalToNext = Math.floor(Math.pow((user.level + 1)/constant, 2)) - Math.floor(Math.pow(user.level/constant, 2));
-    user.percentage = Math.floor(user.currExp/user.totalToNext * 100);
-    user.imgSrc = "images/avatars/" + user.avatarId + ".png"
-    return user;
+    for (i = 0; i < tutArray.length; i++) {
+        var tutObj = tutArray[i];
+        var exp = tutObj.exp;
+        tutObj.level = Math.floor(constant * Math.sqrt(exp));
+        tutObj.currExp = exp - Math.floor(Math.pow((tutObj.level - 1)/constant, 2))
+        tutObj.totalToNext = Math.floor(Math.pow((tutObj.level + 1)/constant, 2)) - Math.floor(Math.pow(tutObj.level/constant, 2));
+        tutObj.percentage = Math.floor(tutObj.currExp/tutObj.totalToNext * 100);
+    }
+    return tutArray;
+}
+
+
+/**
+ * Capitalization function
+ * @param  {String}
+ * @return {String}
+ */
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
