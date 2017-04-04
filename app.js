@@ -57,7 +57,7 @@ app.use(function (req, res, next) {
 	//res.send(err.message || '** no unicorns here **');
 	//res.redirect('/error');
 	
-	var errorMessage = "Auth unsuccessful 4";
+	var errorMessage = "Unsuccesful Authentication (E1B)";
 		
 	res.render('error.ejs', {
 		errorMessage: errorMessage

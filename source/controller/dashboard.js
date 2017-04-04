@@ -38,7 +38,7 @@ if (!usehttps) {
  			}
  		});
 	} else {
-		res.send('Auth unsuccessful');
+		//res.send('Unsuccessful Authentication');
 		//res.render('\error', {title: '404: File Not Found'});
 		//res.redirect('/error');
 		
@@ -50,12 +50,11 @@ if (!usehttps) {
 		];
 		var tagline = "Any code of your own that you haven't looked at for six or more months might as well have been written by someone else.";*/
 
-		/*res.render('error.ejs', {
-			errorMessage: errorMessage
-			//drinks: drinks,
-			//tagline: tagline
-		});*/
+		errorMessage = "Unsuccessful Authentication (E1)";
 		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});		
 	}
 
 }
@@ -70,13 +69,13 @@ var forceSyncIVLE = function (req, res, next) {
 			res.json({success: true, result: 'Synchronization Complete'});
 		}); 
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
 		
-		/*errorMessage = "Permission denied.";
+		errorMessage = "Permission Denied (E2)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 }
 
@@ -99,13 +98,13 @@ var getTutorials = function (req, res, next) {
 		});
 
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
 		
-		/*errorMessage = "Permission denied.";
+		errorMessage = "Permission Denied (E2B)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 }
 
@@ -116,13 +115,13 @@ var syncUser = function (req, res, next) {
 			res.json({success: true, message: 'Success', data: data});
 		});
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
 		
-		/*errorMessage = "Permission denied.";
+		errorMessage = "Permission Denied (E2C)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 }
 
