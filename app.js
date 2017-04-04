@@ -55,8 +55,13 @@ app.use(function (req, res, next) {
 	console.log('404');
 	//res.status(404);
 	//res.send(err.message || '** no unicorns here **');
-	res.redirect('/error');
-	//res.render('error.html');
+	//res.redirect('/error');
+	
+	var errorMessage = "Auth unsuccessful 4";
+		
+	res.render('error.ejs', {
+		errorMessage: errorMessage
+	});
 });
 
 /*app.use(function(err, req, res, next) {

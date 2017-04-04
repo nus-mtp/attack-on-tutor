@@ -16,18 +16,43 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	
 	<ul>
-        <li><a class="active" href="/">Error! Click here to return!</a></li>
+		<li></li>
 	</ul>	
 	
-	<h2>Error Message</h2>
-	<p><%=errorMessage%></p>
+	<h1><a class="active" href="/">Error! Click here to return!</a></h1>
+	
+	<% if(errorMessage){ %>
+		<h1>Error Message</h1>
+		<h2><%=errorMessage%></h2>
+	<% } %>
 	
 </body>
 </html>
 
+<script>
+</script>
+
 <style>
 	body {
-		background-color: #FFFFFF;
+		background-color: #141311;
+	}
+	
+	h1 {
+		font-family: 'Lato', serif;
+		font-size: 5vw;
+		color: #FFFFFF;
+		margin: 0;
+		padding: 0;
+		text-align: center;
+		margin-top: 20vh;
+	}
+	
+	h2 {
+		font-family: 'Lato', serif;
+		font-weight: bold;
+		font-size: 24px;
+		text-align: center;
+		color: #A2482E;
 	}
 	
 	ul {
