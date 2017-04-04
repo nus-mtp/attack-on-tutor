@@ -77,6 +77,61 @@ var getTutorials = function (req, res, next) {
 	}
 }
 
+var syncUser = function (req, res, next) {
+	if (req.body.auth.success) {
+		var user = req.body.auth.decoded;
+		Tutorial.getUserInfo(user.id).then(function (data) {
+			res.json({success: true, message: 'Success', data: data});
+		});
+	} else {
+		res.send("Permission denied");
+	}
+}
+
+var getUserInfo = function (req, res, next) {
+	if (req.body.auth.success) {
+		var user = req.body.auth.decoded;
+		Tutorial.getUserTutorials(user.id).then(function (result) {
+			userTuts = processUserInfo(result);
+			console.log(userTuts);
+			res.json({success: true, message: 'Success', data: userTuts});
+		});
+	} else {
+		res.send("Permission denied");
+	}
+}
+
+/**
+ * Processes the user info object for use in UI
+ * @param  result
+ * @return JSON
+ */
+var processUserInfo = function (result) {
+	var user = result.rows[0].dataValues;
+	var returnObject = {}
+	returnObject.name = user.name;
+	returnObject.avatarId = user.avatarId;
+	returnObject.imgSrc = "images/avatars/" + user.avatarId + ".png";
+	var tuts = user.tutorials;
+	var tutArray = [];
+	for (i = 0; i < tuts.length; i++) {
+		var tut = tuts[i];
+		if (tut.userTutorial.role == "student") {
+			tutArray.push ({
+				coursecode: tut.coursecode,
+				coursename: tut.coursename,
+				exp: tut.userTutorial.exp
+			});
+		}
+	}
+	console.log(tutArray);
+	returnObject.tutorials = tutArray;
+	return returnObject;
+}
+
+
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
+module.exports.syncUser = syncUser;
+module.exports.getUserInfo = getUserInfo;

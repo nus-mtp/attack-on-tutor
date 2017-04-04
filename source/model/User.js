@@ -39,9 +39,6 @@ var user = sequelize.define('user', {
 	},
 	avatarId: {
 		type: Sequelize.STRING
-	},
-	exp: {
-		type: Sequelize.INTEGER
 	}
 
 }, {
@@ -92,21 +89,6 @@ var setAvatar = function(uid, newAvatarId) {
 
 
 /**
- * Get exp
- * @param  uid
- * @return {Promise}
- */
-var getExp = function (uid) {
-	return user.findOne({
-		where: {
-			id: uid
-		},
-		attributes: ['exp']
-	})
-
-}
-
-/**
  * Get avatar id
  * @param  uid
  * @return {Promise}
@@ -121,8 +103,9 @@ var getAvatarId = function (uid) {
 
 }
 
+
+
 module.exports = user;
 module.exports.changeExp = changeExp;
 module.exports.setAvatar = setAvatar;
-module.exports.getExp = getExp;
 module.exports.getAvatarId = getAvatarId;

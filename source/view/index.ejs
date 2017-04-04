@@ -12,15 +12,16 @@
 
 <body>
     <ul>
-        <li><a class="active" href="/">Welcome</a></li>
+        <!--<li><a class="active" href="/">Attack on Tutor</a></li>-->
 
 		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
 		
         <% if(user){ %>
             <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
-		<% } else{ %>
-            <li style="float:right"><a class="active" href="/login" >Log In</a></li>
-        <% } %>
+		<% } %>
+		
+		<!--else{ %>
+            <li style="float:right"><a class="active" href="/login" >Log In</a></li> -->
     </ul>
 
     <div class="logoContainer">
@@ -36,9 +37,17 @@
 		</h2>
 		
 		<% if(user){ %>
-			<a href="/dashboard"> <div class="dashboardButton"><img src="images/dashboardButton.png"></div> </a>
+			<!--<h2 id="welcomeText" onclick="createWelcomeText()">Test</h2>-->
+			<h2 id="welcomeText">Welcome, <%= user.name %>!</h2>
+			<a href="/dashboard">
+				<div class="dashboardButton"><img src="images/dashboardButton.png"></div> 
+			</a>
 		<% } else{ %>
-			<img class="login-button" src="">
+			<h2 class="hiddenText">-</h2>
+			<a href="/login"> 
+				<div class="dashboardButton"><img src="images/dashboardButton.png"></div> 
+			</a>
+			<!--<img class="login-button" src="">-->
 		<% } %>
     </div>
 </body>
@@ -46,6 +55,17 @@
 </html>
 
 <script>
+	/*function capitalizeEachWord(str) {
+		return str.replace(/\w\S*/ /*g, function(txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
+	}
+	
+	function createWelcomeText() {
+		var userNameCap = capitalizeEachWord(userName);
+		document.getElementById("welcomeText").innerHTML = "Welcome, " + userNameCap + "!";
+	}*/
+
     var logoutConfirmation = "Would You Like to Log Out?";
 	
     $("#logout").on
@@ -58,14 +78,16 @@
 		}
 	);
 	
-    $(".login-button").on
+    /*$(".login-button").on
 	(
 		"click",
 		function(event)
 		{
 			console.log ( "See You Soon!" );
 		}
-	);
+	);*/
+	
+	//createWelcomeText();
 </script>
 
 <style>
@@ -126,9 +148,20 @@
 		margin-top: 10%;
 	}
 	
+	#welcomeText {
+		margin-top: 8%;
+	}
+	
+	.hiddenText {
+		margin-top: 8%;
+		text-indent: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+	
 	.dashboardButton {
 		text-align: center;
-		margin-top: 6.5%;
+		margin-top: 2%;
 		background-color: transparent;
 		outline: none;
 	}

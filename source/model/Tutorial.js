@@ -80,6 +80,9 @@ var userTutorial = sequelize.define ('userTutorial', {
 			model: User,
 			key: 'id'
 		}
+	},
+	exp: {
+		type: Sequelize.INTEGER
 	}
 }, {
 	indexes: [
@@ -93,7 +96,6 @@ var userTutorial = sequelize.define ('userTutorial', {
 		}
 	]
 });
-
 
 User.belongsToMany (tutorial, {
 	foreignKey: 'userId',
@@ -225,8 +227,6 @@ var findTutorialInfo = function (tid) {
  * @returns {Promise}
  */
  var findAllTutorialInfoOfUser = function (uid) {
- 	
- 	// SELECT * FROM tutorials INNER JOIN userTutorials ON tutorials.id=userTutorials.tutorialId AND userTutorials.userId='a0127127'
  	return tutorial.findAndCountAll({
  		include: [{
  			model: userTutorial,
@@ -330,6 +330,7 @@ var forceSyncIVLE = function (uid) {
 				reject ('Sync Failed: ' + err.stack);
 			})
 		}).then(function (result) {
+
 			// Create user-tutorial relation
 			var tutorials = result.tutorials;
 			var groups = result.groups;	
@@ -349,7 +350,20 @@ var forceSyncIVLE = function (uid) {
 				if (relation['permission'] === 'M') {
 					role = 'tutor';
 				}
-				return relation['tutorial'].addUser(result.user, {role: role});
+				//console.log(relation);
+				return userTutorial.findOrCreate({
+					where: {
+						userId: result.user.id,
+						tutorialId: relation['tutorial'].dataValues.id
+					},
+					defaults: {
+						role: role,
+						tutorialId: relation['tutorial'].dataValues.id,
+						userId: result.user.id,
+						exp: 0
+					}
+				});
+
 			}));
 
 		}).then(function (result) {
@@ -365,25 +379,51 @@ var forceSyncIVLE = function (uid) {
 
 
 /**
- * Gets the top n users by EXP from the specified tutorial, used to create
+ * Gets the top users by EXP from the specified tutorial, used to create
  * leaderboard.
  * @param  n  
  * @param  tid 
  * @return {Promise}     [description]
  */
-var findTopNUsersInTutorial = function (n, tid) {
-	return User.findAndCountAll({
-		include:[{
-			model: tutorial,
-			where: {id: tid}
-		}],
-		attributes:['id','name','gender','email','exp'],
+var findTopUsersInTutorial = function (tid) {
+	return userTutorial.findAndCountAll({
+		where:{
+			tutorialId: tid
+		},
 		order: [
-			['exp', 'DESC']
-		],
-		limit: n
+			['exp','DESC']
+		]
 	});
 }
+
+/**
+ * Gets tutorials user is a part of 
+ * @param  uid
+ * @return Promise
+ */
+var getUserTutorials = function (uid) {
+	return User.findAndCountAll({
+		include: [{
+			model: tutorial
+		}]
+	});
+}
+
+
+
+/**
+ * Gets user info by uid
+ * @param  uid
+ * @return Promise
+ */
+var getUserInfo = function (uid) {
+	return User.findOne({
+		where: {
+			id: uid
+		}
+	});
+}
+
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
@@ -394,3 +434,6 @@ module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
+module.exports.findTopUsersInTutorial = findTopUsersInTutorial;
+module.exports.getUserTutorials = getUserTutorials;
+module.exports.getUserInfo = getUserInfo;
