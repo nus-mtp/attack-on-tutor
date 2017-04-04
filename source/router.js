@@ -21,7 +21,16 @@ router.get ('/login', auth.ensureAuth, login.get);
 router.get ('/login/callback', login.callback);
 
 router.get ('/dashboard', auth.ensureAuth, dashboard.get);
-router.get ('/error', error.get);
+router.get ('/error',
+	function (req, res, next)
+	{
+		var errorMessage = "You Cannot Just Access the Error Page Manually!";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});
+	}
+);
 
 router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSyncIVLE);
 router.post('/api/dashboard/getTutorials', auth.ensureAuth, dashboard.getTutorials);
