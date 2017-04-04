@@ -35,6 +35,7 @@ router.get ('/error',
 router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSyncIVLE);
 router.post('/api/dashboard/getTutorials', auth.ensureAuth, dashboard.getTutorials);
 router.post('/api/dashboard/syncUser', auth.ensureAuth, dashboard.syncUser);
+router.post('/api/dashboard/getUserInfo', auth.ensureAuth, dashboard.getUserInfo);
 
 router.post('/api/lobby/enterLobby', auth.ensureAuth, lobby.enterLobby);
 router.post('/api/lobby/getUsersInTutorial', auth.ensureAuth, lobby.getUsersInTutorial);

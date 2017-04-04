@@ -1,79 +1,14 @@
 angular.module("dashboardApp", []);
 
-// angular.module("dashboardApp").factory ('ivle', function ($rootScope) {
-//     var tutorials = [];
-//     var userInfo = {};
-
-//     var syncIVLE = function () {
-//         $.ajax({
-//             method:'POST',
-//             url:'/api/dashboard/forceSyncIVLE',
-//             dataType:'json',
-//             success: function(data){
-//                 if (data.success){
-//                     console.log("Successful Sync");
-//                     getTutorials();
-//                 }
-//                 else {  
-//                     console.log('Failed Sync, Error: ' + data.message);
-//                 }
-//             }
-//         });
-//     };
-
-//     var getTutorials = function () {
-//         $.ajax({
-//             type: 'POST',
-//             url: '/api/dashboard/getTutorials',
-//             data: { },
-//             dataType: 'json',
-//             success: function(data) {
-//                 tutorials = data.data.rows;
-//                 $rootScope.$apply();
-//             }
-//         });
-//     };
-
-//     var syncUser = function() {
-//         $.ajax({
-//             method: 'POST',
-//             url: '/api/dashboard/syncUser',
-//             dataType: 'json',
-//             success: function(data) {
-//                 if (data.success) {
-//                     userInfo = setUserLevelInfo(data.data);
-//                     $rootScope.$apply();
-//                 } else {
-//                     console.log('Failed Sync, Error: ' + data.message);
-//                 }
-//             }
-//         });
-//     }
-
-//     //syncIVLE();
-//     getTutorials();
-//     syncUser();
-
-//     return {
-//         tutorials: function () {
-//             return tutorials;
-//         },
-//         userInfo: function() {
-//             return userInfo;
-//         }
-//     };
-// });
-
 angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) {
-
-    var userInfo = {};
 
     $http({
         method: 'POST',
-        url: '/api/dashboard/syncUser'
+        url: '/api/dashboard/getUserInfo'
     }).then(function successCallback(response) {
-        console.log(1);
-        userInfo = setUserLevelInfo(response.data.data);
+        var userInfo = response.data.data;
+        userInfo.tutorials = setLevelInfo(userInfo.tutorials);
+        userInfo.name = toTitleCase(userInfo.name)
         $scope.userInfo = userInfo;
     }, function errorCallback(response) {
         console.log(response);
@@ -86,17 +21,16 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     var promises = [];
     var tuts = [];
 
+    promises.push($http({
 
-    // promises.push($http({
+        method: 'POST',
+        url: '/api/dashboard/forceSyncIVLE'
 
-    //     method: 'POST',
-    //     url: '/api/dashboard/forceSyncIVLE'
+    }).then(function successCallback(response) {
 
-    // }).then(function successCallback(response) {
-
-    // }, function errorCallback(response) {
-    //     console.log('Error: ' + response.message);
-    // }));
+    }, function errorCallback(response) {
+        console.log('Error: ' + response.message);
+    }));
 
     promises.push(
         $http({
@@ -110,7 +44,7 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     );
 
     $q.all(promises).then(function (responseArray) {
-        if (responseArray.length == 1) {
+        if (responseArray.length == 1) { // if we aren't syncing with ivle
             tuts = responseArray[0].data.data.rows;
         } else {
             tuts = responseArray[1].data.data.rows;
@@ -118,11 +52,14 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
         $scope.tuts = tuts;
     });
 
+    $scope.leaderboardIsVisible = false;
+
     $scope.redirect = function(tut) {
         $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name)
     }
 
-    $scope.getLeaderboard = function(tut) {
+    $scope.toggleLeaderboard = function(tut) {
+        $scope.leaderboardIsVisible = !$scope.leaderboardIsVisible;
     }
 
 });
@@ -132,14 +69,48 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
  * @param  user
  * @return user
  */
-var setUserLevelInfo = function(user) {
+var setLevelInfo = function(tutArray) {
     var constant = 0.1;
-    user.level = Math.floor(constant * Math.sqrt(user.exp));
-    user.currExp = user.exp - Math.floor(Math.pow((user.level - 1)/constant, 2))
-    user.totalToNext = Math.floor(Math.pow((user.level + 1)/constant, 2)) - Math.floor(Math.pow(user.level/constant, 2));
-    user.percentage = Math.floor(user.currExp/user.totalToNext * 100);
-    user.imgSrc = "images/avatars/" + user.avatarId + ".png"
-    return user;
+    for (i = 0; i < tutArray.length; i++) {
+        var tutObj = tutArray[i];
+        var exp = tutObj.exp;
+        tutObj.level = calculateLevel(exp);
+        tutObj.currExp = exp - calculateExp(tutObj.level - 1);
+        tutObj.totalToNext = calculateExp(tutObj.level + 1); - calculateExp(tutObj.level);
+        tutObj.percentage = Math.floor(tutObj.currExp/tutObj.totalToNext * 100);
+    }
+    return tutArray;
+}
+
+var constant = 0.1;
+
+/**
+ * Calculates level based on exp
+ * @param  {Integer} exp 
+ * @return {Integer} level
+ */
+var calculateLevel = function (exp) {
+    // Level = Constant * Sqrt(EXP)
+    return Math.floor(constant * Math.sqrt(exp)) + 1;
+}
+
+/**
+ * Calculates total exp needed to reach this level
+ * @param  {Integer} level 
+ * @return {Integer}       
+ */
+var calculateExp = function (level) {
+    return Math.floor(Math.pow(level/constant, 2));
+}
+
+
+/**
+ * Capitalization function
+ * @param  {String}
+ * @return {String}
+ */
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
 var logoutConfirmation = "Would You Like to Log Out?";
