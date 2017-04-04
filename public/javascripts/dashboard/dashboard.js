@@ -52,11 +52,14 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
         $scope.tuts = tuts;
     });
 
+    $scope.leaderboardIsVisible = false;
+
     $scope.redirect = function(tut) {
         $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name)
     }
 
-    $scope.getLeaderboard = function(tut) {
+    $scope.toggleLeaderboard = function(tut) {
+        $scope.leaderboardIsVisible = !$scope.leaderboardIsVisible;
     }
 
 });

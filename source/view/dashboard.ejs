@@ -67,10 +67,12 @@
                                         </div>
                                         <div class="row">
                                             <button class="btn btn-primary lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
-                                            <button class="btn btn-primary" ng-click="showLeaderboard(t)"> View Leaderboard </button>
+                                            <button class="btn btn-primary" ng-click="toggleLeaderboard()"> View Leaderboard </button>
                                         </div>
                                         <div class="row">
-                                            <table class="table">
+                                            <table class="table" ng-repeat="s in students" ng-Show="leaderboardIsVisible">
+                                                <th>Name</th>
+                                                <th>Level</th>
                                             </table>
                                         </div>
                                     </div>
