@@ -1,0 +1,25 @@
+ul#header {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #141311;
+}
+
+li.header {
+	float: left;
+	list-style-type: none;
+}
+
+li.header a {
+	font-family: 'Lato', serif;
+	font-size: 1.5vw;
+	color: #FFFFFF;
+	display: block;
+	padding: 10px;
+	text-align: center;
+	text-decoration: none;
+}
+
+li.header a:hover {
+	background-color: #B7B7B6;
+}

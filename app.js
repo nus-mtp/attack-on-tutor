@@ -5,8 +5,8 @@ var path = require ('path');
 
 
 app.set ('rootPath', __dirname);
+app.set('test', true); // Set to true to populate db with fake modules when /test is visited.
 
-app.set('test', false); // Set to true to populate db with fake modules when /test is visited.
 
 // parse config file
 var config = JSON.parse (fs.readFileSync ('config.json', 'utf8'));
@@ -55,8 +55,13 @@ app.use(function (req, res, next) {
 	console.log('404');
 	//res.status(404);
 	//res.send(err.message || '** no unicorns here **');
-	res.redirect('/error');
-	//res.render('error.html');
+	//res.redirect('/error');
+	
+	var errorMessage = "Auth unsuccessful 4";
+		
+	res.render('error.ejs', {
+		errorMessage: errorMessage
+	});
 });
 
 /*app.use(function(err, req, res, next) {

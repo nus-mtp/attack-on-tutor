@@ -1,5 +1,5 @@
 body {
-	background-color: #E9E9E9;
+	background-color: #141311;
 }
 
 ul {
@@ -11,6 +11,7 @@ ul {
 
 li {
 	float: left;
+	color: #FFFFFF;
 }
 
 li a {
@@ -31,7 +32,7 @@ h2 {
 	font-family: 'Lato', serif;
 	font-weight: bold;
 	font-size: 24px;
-	text-align: center;
+	text-align: left;
 	color: #A2482E;
 }
 
@@ -43,11 +44,16 @@ h2 {
 	text-align: center;
 }
 
-.moduleList {
-	text-align: center;
-}
-
 .col-md-12 {
 	margin-top: 3.5%;
 	height: 80vh;
+}
+
+
+img {
+	image-rendering: pixelated;
+}
+
+.level-container {
+	color: #FFFFFF;
 }

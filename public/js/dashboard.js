@@ -46,4 +46,16 @@ $(document).on('click', '#lobby-button', function () {
     $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name);
 });
 
+var logoutConfirmation = "Would You Like to Log Out?";
+	
+$("#logout").on
+(
+	"click",
+	function(event)
+	{
+		Cookies.remove('token');
+		location.reload();
+	}
+);
+
 syncIVLE();

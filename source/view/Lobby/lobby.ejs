@@ -1,11 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>E-Tutorial Lobby</title>
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
-        <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="/css/lobby.css">
+		<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">
+		
         <script>
 			window.userId = "<%= userId %>";
             window.moduleId = "<%= moduleId %>";
@@ -19,31 +22,31 @@
     <body ng-app="lobbyApp">
 	
 		<ul id="header">
-			<li class="header"><a class="active" href="/">Welcome to Attack on Tutor, (<%= username %>) </a></li>
+			<li class="header"><a class="active" href="/"><%= username %></a></li>
 		
-			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
-			<li class="header" style="float:right"><a class="active" id="logout" >Log Out</a></li>
+			<li class="header" style="float:right"><a class="active" href="/dashboard">Dashboard</a></li>
+			<!--<li class="header" style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>-->
 		</ul>
 	
-		<div ng-controller="socketCtrl" class="container" id="header-bar" style="background-color:#000;"> <!-- Title Box -->
+		<div ng-controller="socketCtrl" class="container" id="header-bar"> <!-- Title Box -->
 			<div class="row">
 				<div class="text-center col-md-12">
 					<h1>Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
 				</div>
 			</div>
 		</div>
-
+		
 		<div class="container">
-			<div class="row" id="battle-container" style="background-color: #000;"> <!-- Question Composer Outer Box -->
+			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'" style="border: 2px solid #FFFFFF;">
-						<div class="text-center row" style="border: 2px solid #000;"> <!-- Question Composer Inner Box -->
+					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+						<div class="text-center row"> <!-- Question Composer Inner Box -->
 							<h2> Question Composer</h2>
 						</div>
 
 						<div class="row">
-							<div class="question-area" style="width:100%; max-height:300px; overflow:auto; border-left: 2px solid #000; border-right: 2px solid #000; border-bottom: 2px solid #000;"> <!-- Text Box -->
+							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
 								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..." type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
@@ -108,21 +111,28 @@
 			
 			</div>
 
-			<div class="row" id="battle-screen-container" style="background-color: #000;">
+			<div class="row" id="battle-screen-container">
 				<!--<div ng-controller="battleScreenCtrl">-->
 					<div class="text-center row">
+					
+						<p></p>
+						
 						<div class="col-md-3">
-						 	<div class="">
-								<h2 style="border: 2px solid #FFFFFF; height: 300px;">Tutor's Avatar</h2>
+						 	<div class="text-center-row">
+								<h2>Tutor's Avatar</h2>
 							</div>
 						</div>
 						
 						<div class="col-md-6">
-						    <h2 style="border: 2px solid #FFFFFF; height: 300px;">Combat Screen</h2>
+						   <div class="text-center-row">
+								<h2>Combat Screen</h2>
+							</div>
 						</div>
 						
 						<div class="col-md-3">
-						    <h2 style="border: 2px solid #FFFFFF; height: 300px;">Tutees' Avatars</h2>
+							<div class="text-center-row">
+								<h2>Tutees' Avatars</h2>
+							</div>
 						</div>
 					</div>
 				<!--</div>-->
@@ -130,10 +140,12 @@
 
 			<div class="row" id="lobby-container">
 
+				<p></p>
+			
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-6 col-sm-offset-0 col-xs-5 col-xs-offset-1" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()" style="border: 2px solid #FFFFFF; background-color: #000;">
+					<div class="col-md-8 col-sm-6 col-xs-7" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						
-						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
+						<div class="text-center row">
 							<h2> Messages </h2>
 						</div>
 						
@@ -159,7 +171,7 @@
 											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span> 
 											<span class="messageBody" ng-bind="message.message"></span>
 										</div>
-										<div ng-if="message.type == 'log'">
+										<div ng-if="message.type == 'log'" style="color: white";>
 											{{ message.message }}
 										</div>
 									</li>
@@ -189,8 +201,8 @@
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-5" style="border: 2px solid #FFFFFF; height: 239px; background-color: #000;" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
-						<div class="text-center row" style="border-bottom: 2px solid #FFFFFF;">
+					<div class="col-md-4 col-sm-6 col-xs-5" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+						<div class="text-center row">
 							<h2> Active Users </h2>
 						</div>
 						
@@ -209,7 +221,7 @@
 								<ul class="users-active">
 									<li class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
 	                                    <div class="container-fluid">
-	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'black' : 'red'}">
+	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
 	                                        </div>
 	                                    </div>
@@ -247,30 +259,17 @@
 					
 					</div>
 				</div>
+				
 			</div>
-
-		</div>
-
-<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
-		<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
-		<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
-		<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
-
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
-        <script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
-
-        <script>
+		</div>			
+        <!--<script>
 		
-			$(document).ready(function() {
+			/*$(document).ready(function() {
 				var $textarea = $('#messageBox');
-				var scrollHeight = parseInt($textarea.scrollHeight);
-				$textarea.scrollTop(scrollHeight);
-			});
+				var scrollTop = parseInt($textarea.prop('scrollHeight'));
+				$textarea.scrollTop(scrollTop);
+				console.log(scrollTop);
+			});*/
 		
 			/*function chatPermaBot() {
 				//document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
@@ -279,52 +278,24 @@
 				chatBox.scrollTop = chatBox.number;
 				console.log("Hehe");
 			}*/
-
-    </body>
+		</script> -->
+	</body>
 </html>
 
+<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
+<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
+<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
+<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
+
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
+<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
+
+<script src="js/lobby.js" type="application/javascript"></script>
+
 <style>
-	body {
-		background-color: #E9E9E9;
-	}
-	
-	h1 {
-		font-family: 'Lato', serif;
-		font-weight: bold;
-		text-align: center;
-		color: #FFFFFF;
-	}
-	
-	h2 {
-		font-family: 'Lato', serif;
-		font-weight: bold;
-		font-size: 24px;
-		text-align: center;
-		color: #A2482E;
-	}
-	
-	ul#header {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #141311;
-    }
-	
-    li.header {
-        float: left;
-    }
-	
-    li.header a {
-		font-family: 'Lato', serif;
-		font-size: 1.5vw;
-        color: #FFFFFF;
-        display: block;
-        padding: 10px;
-        text-align: center;
-		text-decoration: none;
-    }
-	
-    li.header a:hover {
-        background-color: #B7B7B6;
-    }
 </style>

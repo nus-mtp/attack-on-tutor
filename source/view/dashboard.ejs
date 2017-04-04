@@ -12,35 +12,59 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">	
 </head>
 
 <body>
-
+	<ul id="header">
+			<li class="header"><a class="active" href="/"><%= user.name %></a></li>
+			
+			<% if(user){ %>
+				<li class="header" style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>
+			<% } %>
+	</ul>
 	
-	<ul>
-        <li><a class="active" href="/">Welcome to Attack on Tutor, (<%= user.name %>) </a></li>
-		
-		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/e-tutorial">GitHub Repository</a></li>
-		
-        <% if(user){ %>
-            <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
-		<% } else{ %>
-            <li style="float:right"><a class="active" href="/login" >Log In</a></li>
-        <% } %>
-    </ul>
-
 	<input id="uid" type="hidden" value="<%= user.id %>">
 
-
-	<div class="container">
+	<div class="container-fluid" ng-app="dashboardApp">
 		<div class="row">
-			<div class="col-md-12" style="background-color:#141311">
+            <div class="col-md-2">
+                <div class="level-container" ng-controller="userCtrl">
+                    <img ng-src="{{userInfo.imgSrc}}" style="width: 100%" class="img-responsive" />
+                    <h2><%= user.name %></h2>
+                        Level: {{userInfo.level}}
+                        <br>
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style="width: {{userInfo.percentage}}%">
+                          </div>
+                        </div>
+                        {{userInfo.currExp}} / {{userInfo.totalToNext}}
+                </div>
+            </div>
+
+			<div class="col-md-10">
+
 				<h2>Modules</h2>
-				<div class="moduleList">
-					<form id='form' style='display: hidden' action='' method='POST'>
-						<ul id="tutorials" style="color:cyan"></ul>
+				<div class="list-group" ng-controller="moduleCtrl">
+					<form id="form" style="display: hidden" action="" method='POST'>
+						<ul id="tutorials">
+                            <li ng-repeat="t in tuts">
+                                <div class="container">
+                                    <div class="module-container">
+                                        <div class="row">
+                                            {{t.coursecode}} {{t.coursename}}
+                                        </div>
+                                        <div class="row">
+                                            <button class='btn btn-primary lobby-button' ng-click="redirect(t)" name='tut-id' value='{{t.id}}'> Join Class </button>
+                                            <button class='btn btn-primary' ng-click="getLeaderboard(t)"> View Leaderboard </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
 					</form>
 				</div>
+                
 			</div>
 		</div>
 	</div>
@@ -51,4 +75,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 
-<script src="js/dashboard.js" type="application/javascript"></script>
+<script src="javascripts/dashboard/dashboard.js" type="application/javascript"></script>
+
+<style>
+</style>

@@ -8,18 +8,22 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">	
 </head>
 
 <body>
     <ul>
+		<ul id="header">
+			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
+		
+			<% if(user){ %>
+				<li style="float:right"><a class="active" id="logout" >Log Out</a></li>
+			<% } %>
+		</ul>
+	
         <!--<li><a class="active" href="/">Attack on Tutor</a></li>-->
-
-		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
-		
-        <% if(user){ %>
-            <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
-		<% } %>
-		
 		<!--else{ %>
             <li style="float:right"><a class="active" href="/login" >Log In</a></li> -->
     </ul>
@@ -91,78 +95,4 @@
 </script>
 
 <style>
-    body {
-        background-color: #141311;
-    }
-    
-	ul {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #141311;
-    }
-	
-    li {
-        float: left;
-    }
-	
-    li a {
-		font-family: 'Lato', serif;
-		font-size: 1.5vw;
-        color: #FFFFFF;
-        display: block;
-        padding: 10px;
-        text-align: center;
-        text-decoration: none;
-    }
-	
-    li a:hover {
-        background-color: #B7B7B6;
-    }
-	
-    h1 {
-		font-family: 'Lato', serif;
-        font-size: 5vw;
-        color: #FFFFFF;
-        margin: 0;
-        padding: 0;
-		text-align: center;
-        margin-top: 20vh;
-    }
-   
-	h2 {
-        font-family: 'Lato', serif;
-        font-size: 4.5vh;
-        color: #A2482E;
-        margin:0;
-        padding:0;
-        text-align: center;
-		margin-top: 1vh;
-    }
-	
-	#logout {
-        cursor: pointer;
-    }
-	
-	.titleContainer {
-		margin-top: 10%;
-	}
-	
-	#welcomeText {
-		margin-top: 8%;
-	}
-	
-	.hiddenText {
-		margin-top: 8%;
-		text-indent: 100%;
-		white-space: nowrap;
-		overflow: hidden;
-	}
-	
-	.dashboardButton {
-		text-align: center;
-		margin-top: 2%;
-		background-color: transparent;
-		outline: none;
-	}
 </style>

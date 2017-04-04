@@ -19,6 +19,9 @@ if (!usehttps) {
  * @param res
  * @param next
  */
+ 
+ var errorMessage = "";
+ 
  var get = function (req, res, next) {
 
  	if (req.body.auth.success) {
@@ -36,6 +39,23 @@ if (!usehttps) {
  		});
 	} else {
 		res.send('Auth unsuccessful');
+		//res.render('\error', {title: '404: File Not Found'});
+		//res.redirect('/error');
+		
+		//errorMessage = "Failure to Authenticate";
+		/*var drinks = [
+			{ name: 'Bloody Mary', drunkness: 3 },
+			{ name: 'Martini', drunkness: 5 },
+			{ name: 'Scotch', drunkness: 10 }
+		];
+		var tagline = "Any code of your own that you haven't looked at for six or more months might as well have been written by someone else.";*/
+
+		/*res.render('error.ejs', {
+			errorMessage: errorMessage
+			//drinks: drinks,
+			//tagline: tagline
+		});*/
+		
 	}
 
 }
@@ -51,6 +71,12 @@ var forceSyncIVLE = function (req, res, next) {
 		}); 
 	} else {
 		res.send("Permission denied");
+		
+		/*errorMessage = "Permission denied.";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});*/
 	}
 }
 
@@ -74,9 +100,33 @@ var getTutorials = function (req, res, next) {
 
 	} else {
 		res.send("Permission denied");
+		
+		/*errorMessage = "Permission denied.";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});*/
+	}
+}
+
+var syncUser = function (req, res, next) {
+	if (req.body.auth.success) {
+		var user = req.body.auth.decoded;
+		User.getExpAndAvatar(user.id).then(function (data) {
+			res.json({success: true, message: 'Success', data: data});
+		});
+	} else {
+		res.send("Permission denied");
+		
+		/*errorMessage = "Permission denied.";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});*/
 	}
 }
 
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
+module.exports.syncUser = syncUser;
