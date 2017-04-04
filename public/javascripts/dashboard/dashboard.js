@@ -71,12 +71,33 @@ var setLevelInfo = function(tutArray) {
     for (i = 0; i < tutArray.length; i++) {
         var tutObj = tutArray[i];
         var exp = tutObj.exp;
-        tutObj.level = Math.floor(constant * Math.sqrt(exp));
-        tutObj.currExp = exp - Math.floor(Math.pow((tutObj.level - 1)/constant, 2))
-        tutObj.totalToNext = Math.floor(Math.pow((tutObj.level + 1)/constant, 2)) - Math.floor(Math.pow(tutObj.level/constant, 2));
+        tutObj.level = calculateLevel(exp);
+        tutObj.currExp = exp - calculateExp(tutObj.level - 1);
+        tutObj.totalToNext = calculateExp(tutObj.level + 1); - calculateExp(tutObj.level);
         tutObj.percentage = Math.floor(tutObj.currExp/tutObj.totalToNext * 100);
     }
     return tutArray;
+}
+
+var constant = 0.1;
+
+/**
+ * Calculates level based on exp
+ * @param  {Integer} exp 
+ * @return {Integer} level
+ */
+var calculateLevel = function (exp) {
+    // Level = Constant * Sqrt(EXP)
+    return Math.floor(constant * Math.sqrt(exp)) + 1;
+}
+
+/**
+ * Calculates total exp needed to reach this level
+ * @param  {Integer} level 
+ * @return {Integer}       
+ */
+var calculateExp = function (level) {
+    return Math.floor(Math.pow(level/constant, 2));
 }
 
 
@@ -85,7 +106,6 @@ var setLevelInfo = function(tutArray) {
  * @param  {String}
  * @return {String}
  */
-function toTitleCase(str)
-{
+function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
