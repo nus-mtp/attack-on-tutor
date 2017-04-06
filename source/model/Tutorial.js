@@ -403,6 +403,9 @@ var findTopUsersInTutorial = function (tid) {
  */
 var getUserTutorials = function (uid) {
 	return User.findAndCountAll({
+		where: {
+			id: uid
+		},
 		include: [{
 			model: tutorial
 		}]
