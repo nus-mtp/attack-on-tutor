@@ -33,13 +33,13 @@ var get = function (req, res, next)
 
 	} else {
 		//console.log('fail');
-		res.send('Auth unsuccessful 2.');
+		//res.send('Auth unsuccessful 2.');
 		
-		/*var errorMessage = "Auth unsuccessful";
+		var errorMessage = "Unsuccessful Authentication (E1C)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 };
 
@@ -82,7 +82,7 @@ var enterLobby = function (req, res, next) {
 							//res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
 							//res.redirect('/error');
 							
-							var errorMessage = "Auth unsuccessful 3";
+							var errorMessage = "Unregistered Tutor (E4)";
 		
 							res.render('error.ejs', {
 								errorMessage: errorMessage
@@ -91,12 +91,24 @@ var enterLobby = function (req, res, next) {
 					}); 
         
 			} else {
-				res.json({ success: false, message: 'You are not a member of this tutorial.'});
+				//res.json({ success: false, message: 'You are not a member of this tutorial.'});
+				
+				var errorMessage = "Not a Member of this Tutorial (E5)";
+		
+				res.render('error.ejs', {
+					errorMessage: errorMessage
+				});
 			}
 		});
 
 	} else {
-		res.json({success: false, message: 'Please access lobby from dashboard!'});
+		//res.json({success: false, message: 'Please access lobby from dashboard!'});
+		
+		var errorMessage = "Please Access Lobby from Dashboard (E6)";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});
 	}
 }
 
@@ -145,13 +157,17 @@ var getUsersInTutorial = function (req, res, next) {
 			return next();	
 			//res.json({success: true, users: users, tutorialId: tid});
 		}).catch(function (err) {
-			res.json({success: false, message: 'Could not find users in tutorial'});
+			//res.json({success: false, message: 'Could not find users in tutorial'});
+			
+			var errorMessage = "Could Not Find Users in Tutorial (E7)";
+		
+			res.render('error.ejs', {
+				errorMessage: errorMessage
+			});
 		});
 	});
 
 }
-
-
 
 module.exports.get = get;
 module.exports.enterLobby = enterLobby;

@@ -26,7 +26,7 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
     socket.on ('login', function (data) {
         //Display the welcome message
         $scope.defaultGroup = data.defaultGroup;
-        var message = "Welcome to the Lobby ";
+        var message = "Welcome to the lobby!";
         logMessage ({
 			'type' : 'log',
 			'message': message
@@ -168,9 +168,9 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
 	var addParticipantsMessage = function (data) {
         var message = '';
         if (data.numUsers === 1) {
-            message += "It's just you and me, honey bee.";
+            message += "This is a lonely place.";
         } else {
-            message += "There are " + data.numUsers + " players in the Lobby";
+            message += "There are " + data.numUsers + " players in the lobby";
         }
         logMessage ({
 			'type' : 'log',

@@ -38,24 +38,13 @@ if (!usehttps) {
  			}
  		});
 	} else {
-		res.send('Auth unsuccessful');
-		//res.render('\error', {title: '404: File Not Found'});
-		//res.redirect('/error');
+		//res.send('Auth unsuccessful');
 		
-		//errorMessage = "Failure to Authenticate";
-		/*var drinks = [
-			{ name: 'Bloody Mary', drunkness: 3 },
-			{ name: 'Martini', drunkness: 5 },
-			{ name: 'Scotch', drunkness: 10 }
-		];
-		var tagline = "Any code of your own that you haven't looked at for six or more months might as well have been written by someone else.";*/
-
-		/*res.render('error.ejs', {
+		var errorMessage = "Unsuccessful Authentication (E1B)";
+		
+		res.render('error.ejs', {
 			errorMessage: errorMessage
-			//drinks: drinks,
-			//tagline: tagline
-		});*/
-		
+		});
 	}
 
 }
@@ -70,13 +59,13 @@ var forceSyncIVLE = function (req, res, next) {
 			res.json({success: true, result: 'Synchronization Complete'});
 		}); 
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
 		
-		/*errorMessage = "Permission denied.";
+		var errorMessage = "Permission Denied (E2)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 }
 
@@ -99,13 +88,13 @@ var getTutorials = function (req, res, next) {
 		});
 
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
 		
-		/*errorMessage = "Permission denied.";
+		var errorMessage = "Permission Denied (E2B)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 }
 
@@ -116,13 +105,13 @@ var syncUser = function (req, res, next) {
 			res.json({success: true, message: 'Success', data: data});
 		});
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
 		
-		/*errorMessage = "Permission denied.";
+		var errorMessage = "Permission Denied (E2C)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 }
 
@@ -135,7 +124,13 @@ var getUserInfo = function (req, res, next) {
 			res.json({success: true, message: 'Success', data: userTuts});
 		});
 	} else {
-		res.send("Permission denied");
+		//res.send("Permission denied");
+		
+		var errorMessage = "Permission Denied (E2D)";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});
 	}
 }
 
@@ -166,7 +161,6 @@ var processUserInfo = function (result) {
 	returnObject.tutorials = tutArray;
 	return returnObject;
 }
-
 
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
