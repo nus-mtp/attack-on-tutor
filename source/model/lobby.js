@@ -163,12 +163,14 @@ Lobby.prototype.getAllGroupsInLobby = function () {
 Lobby.prototype.addSocketToGroup = function (socket, group) {
     if (this.groups[group]) {
         socket.join (this.namespace + '/' + group);
+        socket.group = group;
     }
 }
 
 Lobby.prototype.removeSocketFromGroup = function (socket, group) {
     if (this.groups[group]) {
         socket.leave (this.namespace + '/' + group);
+        socket.group = "";
     }
 }
 
@@ -208,9 +210,11 @@ lobbyio.on ('connection', function (socket) {
         socket.userId = data.userId;
         socket.username = data.username;
         socket.userType = data.userRole;
+        socket.group = "";
 
         //Join the main tutorial group room.
         socket.join ( lobby.namespace );
+        socket.namespace = lobby.namespace;
 
         lobby.numUsers++;
         addedUser = true;
@@ -294,8 +298,14 @@ lobbyio.on ('connection', function (socket) {
                 data.question.groups = data.groups;
                 data.question.selectedAnswers = {};
                 data.question.answers = {};
+                data.question.sourceSocket = socket.id;
 
                 lobby.questions[data.question.uuid] = data.question;
+
+                socket.emit ('log question', {
+                    'question' : data.question
+                });
+
                 data.groups.forEach (function (groupName, i) {
                     lobby.broadcastToGroup (socket, groupName, 'add question', {
                         'username': socket.username,
@@ -305,10 +315,38 @@ lobbyio.on ('connection', function (socket) {
                 });
             });
 
+            socket.on ('grade question', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                lobby.questions[data.uuid]['groupAnswers'] = data.groupAnswers;
+
+                lobby.questions[data.uuid].groups.forEach (function (groupName, i) {
+                    lobby.broadcastToGroup (socket, groupName, 'grade question', {
+                        'username': socket.username,
+                        'questionUuid': data.uuid,
+                        'groupNames' : lobby.questions[data.uuid].groups,
+                        'gradedAnswers': lobby.questions[data.uuid].groupAnswers
+                    });
+                });
+
+                console.log (lobby.questions);
+                console.log ("COMPARE AND CONTRAST");
+                console.log (data);
+            });
+
             socket.on ('submit answer', function (data) {
                 var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                var question = lobby.questions[data.uuid];
 
-                console.log (data);
+                data.answer['groupName'] = socket.namespace;
+                if (socket.group.length > 0) {
+                    var groupIndex = question.groups.indexOf (socket.group);
+                    if (groupIndex > -1) {
+                        data.answer['groupName'] = socket.group;
+                    }
+                }
+                //lobbyio.to(question.sourceSocket).emit('submit answer', data);
+                lobby.emitToGroup (data.answer['groupName'], 'submit answer', data);
+                
                 /*data.groups.forEach (function (groupName, i) {
                     lobby.broadcastToGroup (socket, groupName, 'add question', {
                         'username': socket.username,
