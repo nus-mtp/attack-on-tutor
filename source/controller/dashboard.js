@@ -131,7 +131,6 @@ var getUserInfo = function (req, res, next) {
 		var user = req.body.auth.decoded;
 		Tutorial.getUserTutorials(user.id).then(function (result) {
 			userTuts = processUserInfo(result);
-			console.log(userTuts);
 			res.json({success: true, message: 'Success', data: userTuts});
 		});
 	} else {
@@ -163,13 +162,93 @@ var processUserInfo = function (result) {
 		}
 	}
 	console.log(tutArray);
-	returnObject.tutorials = tutArray;
+	returnObject.tutorials = setLevelInfo(tutArray);
 	return returnObject;
 }
 
+
+var getTopUsers = function (req, res, next) {
+	var tid = req.body.tid;
+	Tutorial.findAndCountAllUsersInTutorial(tid).then(function (result) {
+		var result = processTopUsers(result);
+		res.json({success: true, message: 'Success', data: result});
+	});
+}
+
+var processTopUsers = function (data) {
+	var userArray = [];
+	for (i = 0; i < data.rows.length; i++) {
+		var user = data.rows[i];
+		var exp = user.dataValues.tutorials[0].userTutorial.exp;
+		userArray.push({
+			name: user.dataValues.name,
+			exp: exp,
+			level: calculateLevel(exp)
+		});
+	}
+	userArray.sort(sort_by('exp', true, parseInt));
+	return userArray;
+}
+
+/**
+ * Calculates level-related user info
+ * @param  user
+ * @return user
+ */
+var setLevelInfo = function(tutArray) {
+    var constant = 0.1;
+    for (i = 0; i < tutArray.length; i++) {
+        var tutObj = tutArray[i];
+        var exp = tutObj.exp;
+        tutObj.level = calculateLevel(exp);
+        tutObj.currExp = exp - calculateExp(tutObj.level - 1);
+        tutObj.totalToNext = calculateExp(tutObj.level + 1); - calculateExp(tutObj.level);
+        tutObj.percentage = Math.floor(tutObj.currExp/tutObj.totalToNext * 100);
+    }
+    return tutArray;
+}
+
+var constant = 0.1;
+
+/**
+ * Calculates level based on exp
+ * @param  {Integer} exp 
+ * @return {Integer} level
+ */
+var calculateLevel = function (exp) {
+    // Level = Constant * Sqrt(EXP)
+    return Math.floor(constant * Math.sqrt(exp)) + 1;
+}
+
+/**
+ * Calculates total exp needed to reach this level
+ * @param  {Integer} level 
+ * @return {Integer}       
+ */
+var calculateExp = function (level) {
+    return Math.floor(Math.pow(level/constant, 2));
+}
+
+
+/**
+ * JSON object sorting function
+ */
+var sort_by = function(field, reverse, primer){
+
+   var key = primer ? 
+       function(x) {return primer(x[field])} : 
+       function(x) {return x[field]};
+
+   reverse = !reverse ? 1 : -1;
+
+   return function (a, b) {
+       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+     } 
+}
 
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
 module.exports.syncUser = syncUser;
 module.exports.getUserInfo = getUserInfo;
+module.exports.getTopUsers = getTopUsers;

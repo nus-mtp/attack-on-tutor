@@ -386,12 +386,13 @@ var forceSyncIVLE = function (uid) {
  * @return {Promise}     [description]
  */
 var findTopUsersInTutorial = function (tid) {
-	return userTutorial.findAndCountAll({
-		where:{
-			tutorialId: tid
-		},
+	return User.findAndCountAll({
+		include: [{
+			model: tutorial,
+			where: { id: tid }
+		}],
 		order: [
-			['exp','DESC']
+			[tutorial, 'exp', 'DESC']
 		]
 	});
 }
@@ -411,8 +412,6 @@ var getUserTutorials = function (uid) {
 		}]
 	});
 }
-
-
 
 /**
  * Gets user info by uid
@@ -442,6 +441,24 @@ var getTutorialByCoursecodeAndName = function (coursecode, name) {
 		}
 	});
 }
+
+/**
+ * Change user EXP
+ * @param  uid
+ * @param {int} amount [Amount of points to increase/decrease by]
+ * @return {Promise}
+ */
+var changeExp = function (uid, tid, amount) {
+	return userTutorial.findOne({
+		where: {
+			userId: uid,
+			tutorialId: tid
+		}
+	}).then(function (result) {
+		return result.increment(['exp'], { by: amount });
+	});
+}
+
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;

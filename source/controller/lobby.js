@@ -21,6 +21,7 @@ var get = function (req, res, next)
 	    var userId = user.id;
 	    var moduleId = req.params.moduleId;
 	    var tutorialId = req.params.tutorialId;
+	    var tid = req.body.tut.id;
 	    
 	    res.render ('lobby/lobby', {
 	        title: 'Lobby UI',

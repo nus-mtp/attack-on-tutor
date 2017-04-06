@@ -52,29 +52,33 @@
 
 				<h2>Modules</h2>
 				<div class="list-group" ng-controller="moduleCtrl">
-					<form id="form" style="display: hidden" action="" method='POST'>
-						<ul id="tutorials">
-                            <li ng-repeat="t in tuts">
-                                <div class="container">
-                                    <div class="module-container">
-                                        <div class="row">
-                                            {{t.coursecode}} {{t.coursename}}
-                                        </div>
-                                        <div class="row">
-                                            <button class="btn btn-primary lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
-                                            <button class="btn btn-primary" ng-click="toggleLeaderboard()"> View Leaderboard </button>
-                                        </div>
-                                        <div class="row">
-                                            <table class="table" ng-repeat="s in students" ng-Show="leaderboardIsVisible">
-                                                <th>Name</th>
-                                                <th>Level</th>
-                                            </table>
-                                        </div>
-                                    </div>
+                  <ul id="tutorials">
+                    <li ng-repeat="t in tuts">
+                        <div class="container">
+                            <div class="module-container">
+                                <div class="row">
+                                    {{t.coursecode}} {{t.coursename}}
                                 </div>
-                            </li>
-                        </ul>
-					</form>
+                                <div class="row">
+                                    <button class="btn btn-primary lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
+                                    <button class="btn btn-primary" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
+                                </div>
+                                <div class="row">
+                                    <table class="table" ng-show="t.leaderboardIsVisible">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Level</th>
+                                        </tr>
+                                        <tr ng-repeat="s in t.students">
+                                            <td>{{ s.name }}</td>
+                                            <td>{{ s.level }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
 				</div>
                 
 			</div>
