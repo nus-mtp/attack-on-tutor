@@ -32,7 +32,8 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
         		'description' : data.question.description,
         		'answers' : answers,
         		'tutors' : tutors,
-        		'uuid' : data.question.uuid
+        		'uuid' : data.question.uuid,
+                'submitted' : false
     		};
     	}
     });
@@ -41,6 +42,25 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     socket.on ('update answer', function (data) {
     	updateAnswerCounts (data.questionUuid, data.selectedCount);
     	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
+    });
+
+    //Someone has submitted the answer.
+    socket.on ('submit answer', function (data) {
+        console.log (data);
+        $scope.questions[data.uuid].submitted = true;
+    });
+
+    //Someone has submitted the answer.
+    socket.on ('grade question', function (data) {
+        console.log (data);
+        var question = $scope.questions[data.questionUuid];
+
+        question.graded = true;
+        question.groupNames = data.groupNames;
+        question.groupAnswers = data.gradedAnswers;
+        question.selectedGroup = data.groupNames[0];
+
+        console.log ($scope.questions);
     });
 
     //Scope functions.
@@ -103,13 +123,26 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	return false;
     };
 
+    $scope.submitAnswer = function (questionUuid) {
+        if ($scope.questions[questionUuid]) {
+            var ownAnswer = getOwnAnswer (questionUuid);
+
+            socket.emit ('submit answer', {
+                'uuid' : questionUuid,
+                'answer' : ownAnswer,
+                'socketId' : socket.socketId()
+            });
+
+            $scope.questions[questionUuid].submitted = true;
+        }
+    };
+
     //Private functions.
     var getOwnAnswer = function (uuid) {
-    	for (var i = 0; i < $scope.questions[uuid].answers.length; i++) {
-    		if ($scope.questions[uuid].answers[i].owned) {
-    			return $scope.questions[uuid].answers[i];
-    		}
-    	}
-    	return null;
+    	var ownedAnswer =  $scope.questions[uuid].answers.filter (function (value){
+            return value.owned;
+        });
+
+        return ownedAnswer[0];
     };
 });
