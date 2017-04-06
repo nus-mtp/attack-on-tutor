@@ -69,7 +69,7 @@ var callback = function (req, res, next) {
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
 						res.cookie('token', authToken);
-						return res.redirect('/');
+						return res.redirect('/error.ejs');
 
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
