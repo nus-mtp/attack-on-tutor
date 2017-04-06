@@ -162,7 +162,7 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
         }
         $scope.messages[groupname].push(message);
 
-        //$('.chat-area')[0].scrollTop = $('.chat-area')[0].scrollHeight;
+        $('.chat-area')[0].scrollTop = $('.chat-area')[0].scrollHeight;
     };
 	
 	var addParticipantsMessage = function (data) {
