@@ -424,6 +424,21 @@ var getUserInfo = function (uid) {
 	});
 }
 
+/**
+ * Gets tutorial by coursecode and name
+ * @param  {String} coursecode 
+ * @param  {String} name    
+ * @return Promise   
+ */
+var getTutorialByCoursecodeAndName = function (coursecode, name) {
+	return tutorial.findOne({
+		attributes: ['id'],
+		where: {
+			coursecode: coursecode,
+			name: name
+		}
+	});
+}
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;
@@ -436,4 +451,5 @@ module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
 module.exports.findTopUsersInTutorial = findTopUsersInTutorial;
 module.exports.getUserTutorials = getUserTutorials;
+module.exports.getTutorialByCoursecodeAndName = getTutorialByCoursecodeAndName;
 module.exports.getUserInfo = getUserInfo;
