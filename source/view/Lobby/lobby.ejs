@@ -140,11 +140,9 @@
 			</div>
 
 			<div class="row" id="lobby-container">
-
-				<p></p>
 			
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-6 col-xs-7" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-8 col-sm-7 col-xs-6" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						
 						<div class="text-center row">
 							<h2> Messages </h2>
@@ -161,8 +159,8 @@
 						</div>
 						
 						<div class="row">
-							<div class="chat-area" id="messageBox" style="width:100%; height:100px; position:relative; overflow-y: scroll;
-								overflow-x:hidden; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto;">
+							<div class="chat-area" id="messageBox" style="width:95%; height:200px; position:relative; overflow-y: scroll;
+								overflow-x:hidden; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border:2px solid #FFFFFF; margin-left:20px; margin-top:10px;">
 								<ul class="messages">
 									<li ng-repeat="message in messages[socket.getSocketGroups()[selectedGroup]]"
 										ng-class="{'log' : message.type=='log', 'message' : message.type=='message'}"
@@ -195,14 +193,14 @@
 						
 						<div class="row">
 							<!-- ng-model within ng-if block must reference the data prepended by $parent -->
-							<input class="inputMessage" style="width:100%;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type Your Message Here!"/>
+							<input class="inputMessage" style="width:95%; margin-left:20px;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type Your Message Here!"/>
 						</div>
 					
 					</div>
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-6 col-xs-5" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-4 col-sm-5 col-xs-6" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="text-center row">
 							<h2> Active Users </h2>
 						</div>
@@ -219,15 +217,15 @@
 						
 						<div class="row" ng-if="socket.getUserType() =='tutor'">
 							<div class="users-active-list">
-								<ul class="users-active">
-									<li class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
+								<div class="users-active">
+									<div class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]" style="border:2px solid #FFFFFF; width:90%; margin-left:20px; margin-top:8px;">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
 	                                        </div>
 	                                    </div>
-	                                </li>
-								</ul>
+	                                </div>
+								</div>
 							</div>
 						</div>
 						
@@ -246,12 +244,12 @@
 						</div>
 						
 						<div class="row-fluid" ng-if="socket.getUserType() == 'tutor'">
-							<div class="col-md-6 col-sm-6 col-xs-6">
-                            	<input class="input-group-name" style="width:100%;" ng-model="$parent.$parent.newGroupName" placeholder="Group name here..."/>
+							<div class="col-md-8 col-sm-8 col-xs-8">
+                            	<input class="input-group-name" style="width:100%; margin-top:20px;" ng-model="$parent.$parent.newGroupName" placeholder="Type Your Group Name Here!"/>
                         	</div>
 
-                        	<div class="col-md-6 col-sm-6 col-xs-6">
-                            	<button class="btn btn-success create-group" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right;">Create Group!</button>
+                        	<div class="col-md-4 col-sm-4 col-xs-4">
+                            	<button class="btn btn-success create-group" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
                             	<div ng-if="selectedGroup > 0">
                             		<button class="btn btn-warning delete-group" ng-click="deleteGroup()" style="float:right;">Delete Group</button>
                             	</div>

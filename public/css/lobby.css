@@ -66,19 +66,22 @@ div.text-center-row {
 	border: 10px solid transparent;
 	padding: 2px;
 	border-image: url("/images/border-image.png") 30 repeat;
-	height: 300px;
+	height: 200px;
 }
 
 div#chat-container {
 	border: 10px solid transparent;
 	padding: 2px;
 	border-image: url("/images/border-image.png") 30 repeat;
-	padding: 20px;
 }
 
 div#userlist-container {
 	border: 10px solid transparent;
 	padding: 2px;
 	border-image: url("/images/border-image.png") 30 repeat;
-	height: 286px;
+	height: 360px;
+}
+
+div#inputMessageID {
+	padding: 20px;
 }
