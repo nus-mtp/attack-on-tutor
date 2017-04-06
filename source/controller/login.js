@@ -50,7 +50,6 @@ var callback = function (req, res, next) {
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
-						// Link to dashboard
 						res.cookie('token', authToken);
 						return res.redirect('/');
 					}).catch(function(err){
@@ -68,6 +67,7 @@ var callback = function (req, res, next) {
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
+						// Link to Dashboard
 						res.cookie('token', authToken);
 						return res.redirect('/error.ejs');
 
