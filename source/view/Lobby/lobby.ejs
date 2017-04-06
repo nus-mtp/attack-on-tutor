@@ -161,20 +161,20 @@
 						<div class="row">
 							<div class="chat-area" id="messageBox" style="width:95%; height:200px; position:relative; overflow-y: scroll;
 								overflow-x:hidden; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; border:2px solid #FFFFFF; margin-left:20px; margin-top:10px;">
-								<ul class="messages">
-									<li ng-repeat="message in messages[socket.getSocketGroups()[selectedGroup]]"
+								<div class="messages">
+									<div ng-repeat="message in messages[socket.getSocketGroups()[selectedGroup]]"
 										ng-class="{'log' : message.type=='log', 'message' : message.type=='message'}"
-										data-username="{{message.user}}"
+										data-username="{{message.user}}" style="margin-left:10px;"
 										>
 										<div ng-if="message.type == 'chat'">
 											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span> 
-											<span class="messageBody" ng-bind="message.message"></span>
+											<span class="messageBody" ng-bind="message.message" style="color:white;"></span>
 										</div>
-										<div ng-if="message.type == 'log'" style="color: white";>
+										<div ng-if="message.type == 'log'" style="color:white;">
 											{{ message.message }}
 										</div>
-									</li>
-								</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						
