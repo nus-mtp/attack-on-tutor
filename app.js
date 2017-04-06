@@ -5,8 +5,8 @@ var path = require ('path');
 
 
 app.set ('rootPath', __dirname);
+app.set('test', true); // Set to true to populate db with fake modules when /test is visited.
 
-app.set('test', false); // Set to true to populate db with fake modules when /test is visited.
 
 // parse config file
 var config = JSON.parse (fs.readFileSync ('config.json', 'utf8'));
@@ -25,7 +25,7 @@ var router = require ('./source/router');
 var lobby = require ('./source/model/lobby.js');
 
 // view engine setup
-app.set ('views', path.join (__dirname, './source/view'));
+app.set ('views', path.join(__dirname, './source/view'));
 app.set ('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
@@ -43,16 +43,39 @@ app.use (cookieParser ());
 app.use (router);
 
 //error handling
-app.use
-(
-	function (req, res, next)
-	{
-		var err = new Error ('Not Found');
-		err.status = 404;
-		next (err);
-	}
-);
+app.use(function (req, res, next) {
+	var err = new Error ('Not Found');
+	err.status = 404;
+	next (err);
 
+	if(err.status!=404) {
+		return next();
+	}
+	
+	console.log('404');
+	//res.status(404);
+	//res.send(err.message || '** no unicorns here **');
+	//res.redirect('/error');
+	
+	var errorMessage = "Auth unsuccessful 4";
+		
+	res.render('error.ejs', {
+		errorMessage: errorMessage
+	});
+});
+
+/*app.use(function(err, req, res, next) {
+	// Logging a 500 (Internal Server Error)
+	//log.error(err, req);
+ 
+	// Error Printing
+	console.log(err.stack);
+ 
+	// send back a 500 with a generic message
+	res.status(500);
+	res.send('oops! something broke');
+});*/
+	
 var server = app.listen
 (
 	8081,

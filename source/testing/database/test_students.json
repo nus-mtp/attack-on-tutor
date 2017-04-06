@@ -1,47 +1,48 @@
 {
-	"0": {
+	"students": [{
 		"id": "b0123456",
 		"name": "HAPPY STUDENT",
 		"email": "happy@student.com",
 		"gender": "Male",
 		"token": "fake-token-1",
+		"avatarId": "avatar-01",
 		"createdAt": null,
 		"updatedAt": null
-	},
-	"2": {
+	}, {
 		"id": "c0123456",
 		"name": "SAD STUDENT",
 		"email": "sad@student.com",
 		"gender": "Female",
 		"token": "fake-token-2",
+		"avatarId": "avatar-01",
 		"createdAt": null,
 		"updatedAt": null
-	},
-	"2": {
+	}, {
 		"id": "d0123456",
 		"name": "SMART STUDENT",
 		"email": "smart@student.com",
 		"gender": "Male",
 		"token": "fake-token-3",
+		"avatarId": "avatar-01",
 		"createdAt": null,
 		"updatedAt": null
-	},
-	"3": {
+	}, {
 		"id": "f0123456",
 		"name": "BRIGHT STUDENT",
 		"email": "bright@student.com",
 		"gender": "Male",
 		"token": "fake-token-4",
+		"avatarId": "avatar-01",
 		"createdAt": null,
 		"updatedAt": null
-	},
-	"4": {
+	}, {
 		"id": "g0123456",
 		"name": "FUN STUDENT",
 		"email": "fun@student.com",
 		"gender": "Female",
 		"token": "fake-token-5",
+		"avatarId": "avatar-01",
 		"createdAt": null,
 		"updatedAt": null
-	}
+	}]
 }

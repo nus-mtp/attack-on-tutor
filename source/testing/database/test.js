@@ -37,7 +37,7 @@ var get = function(req, res, next) {
  * @return none
  */
 var makeTestModules = function () {
-	var modules = makeJSONArray(testModules);
+	var modules = testModules.modules;
 	Tutorial.bulkCreate(modules, { ignoreDuplicates: true}).then(function (data) {
 	});
 }
@@ -47,22 +47,9 @@ var makeTestModules = function () {
  * @return none
  */
 var makeTestStudents = function () {
-	var students = makeJSONArray(testStudents);students
+	var students = testStudents.students;
 	User.bulkCreate(students, { ignoreDuplicates: true}).then(function (data) {
 	});
-}
-
-/**
- * Makes JSON into array
- * @param  JSON
- * @return JSON[]
- */
-var makeJSONArray = function(items) {
-	var itemArray = [];
-	for (i = 0; i < Object.keys(items).length; i++) {
-		itemArray.push(items[i]);
-	}
-	return itemArray;
 }
 
 module.exports.get = get

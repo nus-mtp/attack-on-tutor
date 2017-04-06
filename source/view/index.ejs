@@ -8,19 +8,24 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">	
 </head>
 
 <body>
     <ul>
-        <li><a class="active" href="/">Welcome</a></li>
-
-		<li style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
+		<ul id="header">
+			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
 		
-        <% if(user){ %>
-            <li style="float:right"><a class="active" id="logout" >Log Out</a></li>
-		<% } else{ %>
-            <li style="float:right"><a class="active" href="/login" >Log In</a></li>
-        <% } %>
+			<% if(user){ %>
+				<li style="float:right"><a class="active" id="logout" >Log Out</a></li>
+			<% } %>
+		</ul>
+	
+        <!--<li><a class="active" href="/">Attack on Tutor</a></li>-->
+		<!--else{ %>
+            <li style="float:right"><a class="active" href="/login" >Log In</a></li> -->
     </ul>
 
     <div class="logoContainer">
@@ -36,9 +41,17 @@
 		</h2>
 		
 		<% if(user){ %>
-			<a href="/dashboard"> <div class="dashboardButton"><img src="images/dashboardButton.png"></div> </a>
+			<!--<h2 id="welcomeText" onclick="createWelcomeText()">Test</h2>-->
+			<h2 id="welcomeText">Welcome, <%= user.name %>!</h2>
+			<a href="/dashboard">
+				<div class="dashboardButton"><img src="images/dashboardButton.png"></div> 
+			</a>
 		<% } else{ %>
-			<img class="login-button" src="">
+			<h2 class="hiddenText">-</h2>
+			<a href="/login"> 
+				<div class="dashboardButton"><img src="images/dashboardButton.png"></div> 
+			</a>
+			<!--<img class="login-button" src="">-->
 		<% } %>
     </div>
 </body>
@@ -46,6 +59,17 @@
 </html>
 
 <script>
+	/*function capitalizeEachWord(str) {
+		return str.replace(/\w\S*/ /*g, function(txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
+	}
+	
+	function createWelcomeText() {
+		var userNameCap = capitalizeEachWord(userName);
+		document.getElementById("welcomeText").innerHTML = "Welcome, " + userNameCap + "!";
+	}*/
+
     var logoutConfirmation = "Would You Like to Log Out?";
 	
     $("#logout").on
@@ -58,78 +82,17 @@
 		}
 	);
 	
-    $(".login-button").on
+    /*$(".login-button").on
 	(
 		"click",
 		function(event)
 		{
 			console.log ( "See You Soon!" );
 		}
-	);
+	);*/
+	
+	//createWelcomeText();
 </script>
 
 <style>
-    body {
-        background-color: #141311;
-    }
-    
-	ul {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #141311;
-    }
-	
-    li {
-        float: left;
-    }
-	
-    li a {
-		font-family: 'Lato', serif;
-		font-size: 1.5vw;
-        color: #FFFFFF;
-        display: block;
-        padding: 10px;
-        text-align: center;
-        text-decoration: none;
-    }
-	
-    li a:hover {
-        background-color: #B7B7B6;
-    }
-	
-    h1 {
-		font-family: 'Lato', serif;
-        font-size: 5vw;
-        color: #FFFFFF;
-        margin: 0;
-        padding: 0;
-		text-align: center;
-        margin-top: 20vh;
-    }
-   
-	h2 {
-        font-family: 'Lato', serif;
-        font-size: 4.5vh;
-        color: #A2482E;
-        margin:0;
-        padding:0;
-        text-align: center;
-		margin-top: 1vh;
-    }
-	
-	#logout {
-        cursor: pointer;
-    }
-	
-	.titleContainer {
-		margin-top: 10%;
-	}
-	
-	.dashboardButton {
-		text-align: center;
-		margin-top: 6.5%;
-		background-color: transparent;
-		outline: none;
-	}
 </style>
