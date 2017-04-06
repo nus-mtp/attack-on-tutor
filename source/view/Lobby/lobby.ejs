@@ -47,13 +47,14 @@
 
 						<div class="row">
 							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
-								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type question..." type="text"  ng-trim="false"></textarea>
+								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type Your Question Here!" type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
 						
 						<div class="row">
 							<div class="groups-list">
                                 <div class="container-fluid">
+									<h3>Groups To Send To:</h3>
                                     <div class="row-fluid">
                                         <button class="btn select-group" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
 
@@ -194,7 +195,7 @@
 						
 						<div class="row">
 							<!-- ng-model within ng-if block must reference the data prepended by $parent -->
-							<input class="inputMessage" style="width:100%;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type here..."/>
+							<input class="inputMessage" style="width:100%;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type Your Message Here!"/>
 						</div>
 					
 					</div>

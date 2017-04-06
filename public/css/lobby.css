@@ -17,11 +17,23 @@ h2 {
 	color: #A2482E;
 }
 
+h3 {
+	font-family: 'Lato', serif;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: left;
+	color: #A2482E;
+}
+
 ul#header {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
 	background-color: #141311;
+}
+
+li {
+	list-style-type: none;
 }
 
 li.header {
