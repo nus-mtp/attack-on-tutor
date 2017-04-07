@@ -24,7 +24,7 @@ router.get ('/dashboard', auth.ensureAuth, dashboard.get);
 router.get ('/error',
 	function (req, res, next)
 	{
-		var errorMessage = "You Cannot Just Access the Error Page Manually!";
+		var errorMessage = "You Cannot Just Access the Error Page Manually! (E3)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
@@ -36,6 +36,7 @@ router.post('/api/dashboard/forceSyncIVLE', auth.ensureAuth, dashboard.forceSync
 router.post('/api/dashboard/getTutorials', auth.ensureAuth, dashboard.getTutorials);
 router.post('/api/dashboard/syncUser', auth.ensureAuth, dashboard.syncUser);
 router.post('/api/dashboard/getUserInfo', auth.ensureAuth, dashboard.getUserInfo);
+router.post('/api/dashboard/getTopUsers', auth.ensureAuth, dashboard.getTopUsers);
 
 router.post('/api/lobby/enterLobby', auth.ensureAuth, lobby.enterLobby);
 router.post('/api/lobby/getUsersInTutorial', auth.ensureAuth, lobby.getUsersInTutorial);

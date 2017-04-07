@@ -7,7 +7,6 @@ angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) 
         url: '/api/dashboard/getUserInfo'
     }).then(function successCallback(response) {
         var userInfo = response.data.data;
-        userInfo.tutorials = setLevelInfo(userInfo.tutorials);
         userInfo.name = toTitleCase(userInfo.name)
         $scope.userInfo = userInfo;
     }, function errorCallback(response) {
@@ -16,28 +15,28 @@ angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) 
 
 });
 
-angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http, $q) {
+angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http, $q, $window) {
 
     var promises = [];
     var tuts = [];
 
-    promises.push($http({
+    // promises.push($http({
 
-        method: 'POST',
-        url: '/api/dashboard/forceSyncIVLE'
+    //     method: 'POST',
+    //     url: '/api/dashboard/forceSyncIVLE'
 
-    }).then(function successCallback(response) {
+    // }).then(function successCallback(response) {
 
-    }, function errorCallback(response) {
-        console.log('Error: ' + response.message);
-    }));
+    // }, function errorCallback(response) {
+    //     console.log('Error: ' + response.message);
+    // }));
 
     promises.push(
         $http({
-            method: 'POST',
+            method: 'POST', 
             url: '/api/dashboard/getTutorials'
         }, function successCallback(response) {
-            console.log(response);
+            //console.log(response);
         }, function errorCallback(response) {
             console.log('Error: ' + response.message);
         })
@@ -49,59 +48,40 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
         } else {
             tuts = responseArray[1].data.data.rows;
         }
+        for (i = 0; i < tuts.length; i++) { // set leaderboard visibility to false
+            tuts[i].leaderboardIsVisible = false;
+            tuts[i].index = i;
+        }
         $scope.tuts = tuts;
     });
 
-    $scope.leaderboardIsVisible = false;
-
     $scope.redirect = function(tut) {
-        $('#form').attr('action', 'lobby/'+tut.coursecode+'/'+tut.name)
+        $window.location.href = 'lobby/'+tut.coursecode+'/'+tut.name;
     }
 
     $scope.toggleLeaderboard = function(tut) {
-        $scope.leaderboardIsVisible = !$scope.leaderboardIsVisible;
+        if (!$scope.tuts[tut.index].leaderboardIsVisible) {
+            getTopStudents(tut);
+        }
+        $scope.tuts[tut.index].leaderboardIsVisible = !$scope.tuts[tut.index].leaderboardIsVisible;
+    }
+
+    var getTopStudents = function(tut) {
+        $http({
+                method: 'POST',
+                url: '/api/dashboard/getTopUsers',
+                data: { tid: tut.id }
+        }).then( function successCallback(response) {
+                $scope.tuts[tut.index].students = response.data.data;
+                console.log(tuts[tut.index]);   
+                console.log($scope.tuts[tut.index].students);
+            }, function errorCallback(response) {
+                console.log('Error: ' + response.message);
+            });
     }
 
 });
 
-/**
- * Calculates level-related user info
- * @param  user
- * @return user
- */
-var setLevelInfo = function(tutArray) {
-    var constant = 0.1;
-    for (i = 0; i < tutArray.length; i++) {
-        var tutObj = tutArray[i];
-        var exp = tutObj.exp;
-        tutObj.level = calculateLevel(exp);
-        tutObj.currExp = exp - calculateExp(tutObj.level - 1);
-        tutObj.totalToNext = calculateExp(tutObj.level + 1); - calculateExp(tutObj.level);
-        tutObj.percentage = Math.floor(tutObj.currExp/tutObj.totalToNext * 100);
-    }
-    return tutArray;
-}
-
-var constant = 0.1;
-
-/**
- * Calculates level based on exp
- * @param  {Integer} exp 
- * @return {Integer} level
- */
-var calculateLevel = function (exp) {
-    // Level = Constant * Sqrt(EXP)
-    return Math.floor(constant * Math.sqrt(exp)) + 1;
-}
-
-/**
- * Calculates total exp needed to reach this level
- * @param  {Integer} level 
- * @return {Integer}       
- */
-var calculateExp = function (level) {
-    return Math.floor(Math.pow(level/constant, 2));
-}
 
 
 /**
