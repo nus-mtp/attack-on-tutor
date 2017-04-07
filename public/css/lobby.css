@@ -112,7 +112,7 @@ div#userlist-container {
 	border: 20px solid transparent;
 	padding: 2px;
 	border-image: url("/images/border.png") 16 repeat;
-	height: 430px;
+	height: 380px;
 	background-color:rgba(0, 0, 0, 0.4);
 	
 	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
@@ -139,14 +139,10 @@ div.margin {
 }
 
 /* Special Styling */
-div.answer-description {
-	border:2px solid #FFFFFF;
-	color:#FFFFFF;
-}
 
 /* Border */
 div.border-gold-trimmed {
-	border: 20px solid transparent;
+	border: 15px solid transparent;
 	border-image: url("/images/border_plain.png") 16 repeat;
 	
 	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
