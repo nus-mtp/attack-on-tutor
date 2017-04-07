@@ -1,12 +1,12 @@
 {
-  "server-ip": "127.0.0.1",
-  "server-port": 8081,
-  "api-key": "Zj9Moa3qSwP8aXdQlUQUK",
-  "db-host": "localhost",
-  "db-dialect": "mysql",
-  "db-name": "sample_database_name",
-  "db-username": "sample_username",
-  "db-password": "sample_password",
-  "jwt-secret": "secret",
-  "use-https": false
+  \"server-ip\": \"127.0.0.1\",
+  \"server-port\": 8081,
+  \"api-key\": \"Zj9Moa3qSwP8aXdQlUQUK\",
+  \"db-host\": \"localhost\",
+  \"db-dialect\": \"mysql\",
+  \"db-name\": \"sample_database_name\",
+  \"db-username\": \"sample_username\",
+  \"db-password\": \"sample_password\",
+  \"jwt-secret\": \"secret\",
+  \"use-https\": false
 }
