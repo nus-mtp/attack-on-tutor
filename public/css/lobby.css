@@ -68,9 +68,7 @@ li.header a:hover {
 
 div#question-list-container {
 	border: 10px solid transparent;
-	padding: 2px;
 	border-image: url("/images/border.png") 20% round;
-	padding: 20px;
 	
     image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
     image-rendering: -moz-crisp-edges;          /* Firefox                        */
@@ -83,7 +81,6 @@ div#question-list-container {
 
 div#question-list-container {
 	border: 20px solid transparent;
-	padding: 2px;
 	border-image: url("/images/border.png") 16 repeat;
 	background-color:rgba(0, 0, 0, 0.4);
 	
@@ -115,7 +112,7 @@ div#userlist-container {
 	border: 20px solid transparent;
 	padding: 2px;
 	border-image: url("/images/border.png") 16 repeat;
-	height: 360px;
+	height: 430px;
 	background-color:rgba(0, 0, 0, 0.4);
 	
 	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
@@ -125,10 +122,6 @@ div#userlist-container {
     image-rendering: pixelated; /* Chrome */
     image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
     -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-}
-
-div#inputMessageID {
-	padding: 20px;
 }
 
 /* General Styling Purposes */
@@ -146,10 +139,6 @@ div.margin {
 }
 
 /* Special Styling */
-div.question-received {
-	margin-left: 50px;
-}
-
 div.answer-description {
 	border:2px solid #FFFFFF;
 	color:#FFFFFF;
@@ -171,13 +160,20 @@ div.border-gold-trimmed {
 
 div.question-area {
 	width:100%;
-	padding-left:40px;
-	padding-right:40px;
 	max-height:300px;
 	overflow:auto;
 }
 
 div.outer-container {
-	padding-left: 10px;
-	padding-right: 10px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+div.answers-received {
+	margin-top: 20px;
+}
+
+div.border-bottom {
+	border-bottom: 20px solid transparent;
+	border-image: url("/images/border_plain.png") 16 repeat;
 }
