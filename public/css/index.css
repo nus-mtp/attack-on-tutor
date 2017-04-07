@@ -52,7 +52,7 @@ h2 {
 }
 
 .titleContainer {
-	margin-top: 10%;
+	margin-top: 5%;
 }
 
 #welcomeText {
@@ -80,6 +80,16 @@ p {
 	outline: none;
 }
 
-a.active {
-	font-family: 'VT323', monospace;
-}	
+img.logo {
+	display: block;
+    margin: 0 auto;
+	width:300px;
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
