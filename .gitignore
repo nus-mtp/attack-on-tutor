@@ -44,9 +44,6 @@ node_modules/
 # Ignore bower components
 bower_components/
 
-# Ignore default config file
-config.json
-
 # Ignore ssl
 ssl/
 
