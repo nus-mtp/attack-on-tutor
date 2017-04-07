@@ -44,7 +44,6 @@ h2 {
 	margin:0;
 	padding:0;
 	text-align: center;
-	margin-top: 1vh;
 }
 
 #logout {
@@ -52,7 +51,7 @@ h2 {
 }
 
 .titleContainer {
-	margin-top: 10%;
+	margin-top: 8%;
 }
 
 #welcomeText {
@@ -71,4 +70,19 @@ h2 {
 	margin-top: 2%;
 	background-color: transparent;
 	outline: none;
+}
+
+img.center {
+    display: block;
+    margin: 0 auto;
+	width: 22%;
+	height: auto;
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
