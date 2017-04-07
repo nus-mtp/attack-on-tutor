@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>E-Tutorial Lobby</title>
         <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
 		<link rel="stylesheet" type="text/css" href="/css/lobby.css">
 		<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">
         <script>
@@ -38,13 +38,13 @@
 			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+					<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="text-center row"> <!-- Question Composer Inner Box -->
-							<h2> Question Composer</h2>
+							<h2>Question Composer</h2>
 						</div>
 
 						<div class="row">
-							<div class="question-area" style="width:100%; max-height:300px; overflow:auto;">
+							<div class="question-area">
 								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type Your Question Here!" type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
@@ -61,15 +61,11 @@
                                 </div>
 							</div>
 						</div>
-		
-						<div class="row">
-							<button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
-						</div>
 						
 						<div class="row">
-							<div class="answers-received-area" style="width:100%; max-height:300px; overflow:auto;">
-								<ul class="answers-received-list">
-	                                <li class="answers-received" ng-repeat="(uuid, question) in questions">
+							<div class="answers-received-area">
+								<div class="answers-received-list">
+	                                <div class="answers-received border-gold-trimmed" ng-repeat="(uuid, question) in questions">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid">
 	                                            <h3 style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
@@ -81,41 +77,40 @@
 	                                        
 											<div class="row-fluid group-received-answers" ng-show="question.groupAnswers[question.selectedGroup].answered">
 	                                            <div class="row">
-	                                            	<div class="col-md-3 col-sm-3 col-xs-3">
-	                                            		<div>
-                                                   			{{question.groupAnswers[question.selectedGroup].student}}
+	                                            	<div class="col-md-4 col-sm-4 col-xs-4 whiteFont border" style="margin-top:10px;">
+	                                            		<div>	{{question.groupAnswers[question.selectedGroup].student}}
                                                    		</div>
 	                                                </div>
 	                                                
-													<div class="col-md-9 col-sm-9 col-xs-9">
-                                                   		<div style="white-space: pre-wrap;" class="answer-description" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
+													<div class="col-md-8 col-sm-8 col-xs-8">
+                                                   		<div style="white-space: pre-wrap; margin-top:10px;" class="answer-description" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
 	                                                </div>
 	                                            </div>
 	                                            
 												<div class="row">
-													<div class="explanation-area" style="width:100%; max-height:300px; overflow:auto;">
+													<div class="explanation-area" style="width:100%; padding-top:15px; max-height:300px; overflow:auto;">
 														<textarea class="answer-explanation-input" style="width:100%;"
 															ng-model="question.groupAnswers[question.selectedGroup].explanation"
-															placeholder="Type explanation..." type="text"  ng-trim="false">
+															placeholder="Explanation!" type="text"  ng-trim="false">
 														</textarea>
 													</div>
 												</div>
 												
-												<div class="row-fluid">
-		                                        	<input class="experience-input" type="number" style="float:left;"
+												<div class="row">
+		                                        	<input class="experience-input" type="number" style="margin-top:15px; margin-bottom:15px; width:100%;"
 		                                        		ng-model="question.groupAnswers[question.selectedGroup].experience"/>
 		                                            <button class="btn btn-success grade-question" ng-if="isQuestionAnswered(uuid)" ng-click="gradeQuestion(uuid)" style="float:right;">Grade!</button>
 		                                        </div>
 	                                        </div>
 	                                        
 											<div class="row" ng-show="!question.groupAnswers[question.selectedGroup].answered">
-                                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                               		Waiting for answer...
+                                                <div class="whiteFont margin">
+                                               		Status: Waiting for Answer...
                                                 </div>
                                             </div>
 	                                    </div>
-	                                </li>
-	                            </ul>
+	                                </div>
+	                            </div>
 							</div>
 						</div>
 
@@ -123,15 +118,15 @@
 				</div>
                 
                 <div ng-controller="studentCtrl">
-                	<div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
+                	<div class="col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row">
 							<h2> Combat Log </h2>
 						</div>
 						
 						<div class="row">
-							<div class="questions-received-area" style="width:100%; max-height:300px; overflow:auto;">
-								<ul class="questions-received-list">
-	                                <li class="question-received" ng-repeat="(uuid, question) in questions">
+							<div class="questions-received-area" style="width:90%; margin-left:20px; max-height:300px; overflow:auto;">
+								<div class="questions-received-list">
+	                                <div class="question-received border" ng-repeat="(uuid, question) in questions">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid">
 	                                            <h3 style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
@@ -139,7 +134,7 @@
 	                                        
 											<div class="question-received-answers">
 	                                            <div ng-repeat="answer in question.answers" class="row">
-	                                            	<div class="col-md-2 col-sm-2 col-xs-2">
+	                                            	<div class="col-md-4 col-sm-4 col-xs-4 whiteFont">
 	                                            		<div>
                                                    			{{answer.student.username}}
                                                    		</div>
@@ -149,77 +144,82 @@
                                                    		<textarea class="answer-description-input" style="width:100%;" ng-show="answer.owned" ng-model="answer.description" placeholder="Type answer..." type="text"  ng-trim="false"></textarea>
                                                    		<div style="white-space: pre-wrap;" class="answer-description" ng-show="!answer.owned" ng-bind-html="answer.description"></div>
 	                                                </div>
-	                                                
-													<div class="col-md-2 col-sm-2 col-xs-2">
-	                                                	<button class="btn vote-answer" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:right;">Vote!</button>
-                                               			<div>
-                                                   			{{answer.selectedCount}}
-                                               			</div>
-	                                                </div>
 	                                            </div>
 	                                        </div>
 	                                        
 											<div class="row-fluid">
-	                                            <button class="btn btn-success update-answer" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:right;">Update!</button>
+												<button class="btn vote-answer" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:left;">Vote!</button>
+												<div>
+													{{answer.selectedCount}}
+												</div>
+											
+	                                            <button class="btn btn-success update-answer" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
+
 	                                            <button class="btn btn-success submit-answer" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)" style="float:right;">Submit!</button>
 	                                        </div>
 	                                    </div>
 	                                    
 										<div class="container-fluid" ng-show="question.graded">
-	                                    	<div class="row-fluid">
+	                                    	<div class="row-fluid" style="margin-top:15px;">
 		                                    	<button class="btn answers-received-select-group" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
 	                                        </div>
 	                                       
 											<div class="row-fluid group-received-answers">
 	                                            <div class="row">
-	                                            	<div class="col-md-3 col-sm-3 col-xs-3">
-	                                            		<div>
-                                                   			{{question.groupAnswers[question.selectedGroup].student}}
+	                                            	<div class="col-md-3 col-sm-3 col-xs-3 whiteFont" style="margin-top:15px;">
+	                                            		<div>	{{question.groupAnswers[question.selectedGroup].student}}
                                                    		</div>
 	                                                </div>
 	                                                
 													<div class="col-md-9 col-sm-9 col-xs-9">
-                                                   		<div style="white-space: pre-wrap;" class="answer-description" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
+                                                   		<div style="white-space: pre-wrap; margin-top:15px;" class="answer-description" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
 	                                                </div>
 	                                            </div>
 	                                            
 												<div class="row">
-													<div class="explanation-area" style="width:100%; max-height:300px; overflow:auto;">
-														<div class="answer-explanation-input" style="width:100%;"
+													<!--<div class="explanation-area" style="width:100%; max-height:300px; overflow:auto;">-->
+													<div class="col-md-3 col-sm-3 col-xs-3 whiteFont" style="margin-top:15px;">
+														<div class="experience-input whiteFont" style="float:left;"
+															ng-bind-html="question.groupAnswers[question.selectedGroup].experience">
+														</div>
+													</div>
+													
+													<div class="col-md-9 col-sm-9 col-xs-9 whiteFont" style="margin-top:15px;">
+														<div class="answer-explanation-input whiteFont" style="width:100%;"
 															ng-bind-html="question.groupAnswers[question.selectedGroup].explanation">
 														</div>
 													</div>
 												</div>
 												
-												<div class="row-fluid">
-		                                        	<div class="experience-input" style="float:left;"
+												<!--<div class="row-fluid">
+		                                        	<div class="experience-input whiteFont" style="float:left;"
 		                                        		ng-bind-html="question.groupAnswers[question.selectedGroup].experience">
 		                                        	</div>
-		                                        </div>
+		                                        </div>-->
 	                                        </div>
 	                                    </div>
 	                                    
 										<div class="container-fluid" ng-show="!question.graded">
-	                                    	<div class="row-fluid">
-		                                    	Waiting for grading...
+	                                    	<div class="whiteFont" style="margin-top:10px">
+		                                    	Status: Waiting for Grading...
 	                                        </div>
 	                                    </div>
-	                                </li>
-	                            </ul>
+	                                </div>
+	                            </div>
 							</div>
 						</div>
 					</div>
 				</div>	
 			</div>
 
-			<div class="row" id="battle-screen-container">
-				<!--<div ng-controller="battleScreenCtrl">-->
+			<!--<div class="row" id="battle-screen-container">
+				<div ng-controller="battleScreenCtrl">
 					<div class="text-center row">
 					
 						<p></p>
 						
 						<div class="col-md-3">
-						 	<div class="text-center-row">
+						 	<div class="text-center-row border">
 								<h2>Tutor's Avatar</h2>
 							</div>
 						</div>
@@ -236,8 +236,8 @@
 							</div>
 						</div>
 					</div>
-				<!--</div>-->
-			</div>
+				</div>
+			</div>-->
 
 			<div class="row" id="lobby-container">
 			
@@ -332,15 +332,15 @@
 						
 						<div class="row" ng-if="socket.getUserType() == 'student'">
 							<div class="users-active-list">
-								<ul class="users-active">
-									<li class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
+								<div class="users-active">
+									<div class="user-active" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]" style="border:2px solid #FFFFFF; width:90%; margin-left:20px; margin-top:8px;">
 	                                    <div class="container-fluid">
-	                                        <div class="row-fluid">
+	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
 	                                        </div>
 	                                    </div>
-	                                </li>
-								</ul>
+	                                </div>
+								</div>
 							</div>
 						</div>
 						
