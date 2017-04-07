@@ -7,13 +7,15 @@ angular.module('lobbyApp').controller ('socketCtrl', function ($scope, $window, 
         var userRole = $window.userRole;
         var moduleId = $window.moduleId;
         var tutorialId = $window.tutorialId;
-        
+        var tutorialUuid = $window.tutorialUuid;
+
         var data = {
             'userId' : userId,
             'username' : username,
             'userRole' : userRole,
             'moduleId' : moduleId,
-            'tutorialId' : tutorialId
+            'tutorialId' : tutorialId,
+            'tutorialUuid' : tutorialUuid
         };
         
         socket.emit ('new connection', data);

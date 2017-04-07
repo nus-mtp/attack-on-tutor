@@ -13,6 +13,7 @@
             window.tutorialId = "<%= tutorialId %>";
             window.username = "<%= username %>";
             window.userRole = "<%= userRole %>";
+            window.tutorialUuid = "<%= tid %>";
         </script>
 
     </head>
@@ -134,28 +135,26 @@
 	                                        
 											<div class="question-received-answers">
 	                                            <div ng-repeat="answer in question.answers" class="row">
-	                                            	<div class="col-md-4 col-sm-4 col-xs-4 whiteFont">
-	                                            		<div>
-                                                   			{{answer.student.username}}
-                                                   		</div>
+	                                            	<div class="row">
+		                                            	<div class="col-md-4 col-sm-4 col-xs-4 whiteFont">
+		                                            		<div>
+	                                                   			{{answer.student.username}}
+	                                                   		</div>
+		                                                </div>
+		                                                
+														<div class="col-md-8 col-sm-8 col-xs-8">
+	                                                   		<textarea class="answer-description-input" style="width:100%;" ng-show="answer.owned" ng-model="answer.description" placeholder="Type answer..." type="text"  ng-trim="false"></textarea>
+	                                                   		<div style="white-space: pre-wrap;" class="answer-description" ng-show="!answer.owned" ng-bind-html="answer.description"></div>
+		                                                </div>
 	                                                </div>
-	                                                
-													<div class="col-md-8 col-sm-8 col-xs-8">
-                                                   		<textarea class="answer-description-input" style="width:100%;" ng-show="answer.owned" ng-model="answer.description" placeholder="Type answer..." type="text"  ng-trim="false"></textarea>
-                                                   		<div style="white-space: pre-wrap;" class="answer-description" ng-show="!answer.owned" ng-bind-html="answer.description"></div>
-	                                                </div>
-	                                            </div>
-	                                        </div>
-	                                        
-											<div class="row-fluid">
-												<button class="btn vote-answer" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:left;">Vote!</button>
-												<div>
-													{{answer.selectedCount}}
-												</div>
-											
-	                                            <button class="btn btn-success update-answer" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
+	                                                <div class="row-fluid">
+														<button class="btn vote-answer" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:left;">Vote: {{answer.selectedCount}} </button>
 
-	                                            <button class="btn btn-success submit-answer" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)" style="float:right;">Submit!</button>
+			                                            <button class="btn btn-success update-answer" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
+
+			                                            <button class="btn btn-success submit-answer" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)" style="float:right;">Submit!</button>
+			                                        </div>
+	                                            </div>
 	                                        </div>
 	                                    </div>
 	                                    

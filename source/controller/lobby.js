@@ -28,6 +28,7 @@ var get = function (req, res, next)
 	        userId: userId,
 	        moduleId: moduleId,
 	        tutorialId: tutorialId,
+	        tid: tid,
 	        userRole: req.body.userRole,
 	        username: user.name
 	    });

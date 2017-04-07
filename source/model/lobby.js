@@ -1,5 +1,6 @@
 var app = require ('../../app');
 var io = require ('socket.io')();
+var Tutorial = require ('./Tutorial');
 var lobbyio = io.of ('/lobby');
 
 var listen = function (server) {
@@ -103,6 +104,8 @@ Lobby.prototype.getUsersInRoom = function (roomName) {
                     userSockets.push ({
                         'username' : lobbyio.connected[socketId].username,
                         'userType' : lobbyio.connected[socketId].userType,
+                        'userId' : lobbyio.connected[socketId].userId,
+                        'tutorialId' : lobbyio.connected[socketId].tutorialId,
                         'socketId' : socketId
                     });
                 }
@@ -205,6 +208,7 @@ lobbyio.on ('connection', function (socket) {
         }
         
         socket.tutorialGroup = data.tutorialId;
+        socket.tutorialId = data.tutorialUuid;
 		socket.moduleGroup = data.moduleId;
 		socket.namespace = lobby.namespace;
         socket.userId = data.userId;
@@ -226,8 +230,6 @@ lobbyio.on ('connection', function (socket) {
             'numUsers': lobby.numUsers,
             'defaultGroup': lobby.namespace
         });
-
-        console.log (lobby.questions);
 
         updateUsers (lobby, socket);
         
@@ -325,6 +327,15 @@ lobbyio.on ('connection', function (socket) {
                         'questionUuid': data.uuid,
                         'groupNames' : lobby.questions[data.uuid].groups,
                         'gradedAnswers': lobby.questions[data.uuid].groupAnswers
+                    });
+                });
+
+                lobby.questions[data.uuid].groups.forEach (function (groupName, i) {
+                    var socketsInGroup = lobby.getUsersInRoom (groupName);
+                    socketsInGroup.forEach (function (socketClient, i) {
+                        if (socketClient.userType == 'student') {
+                            Tutorial.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
+                        }
                     });
                 });
 
