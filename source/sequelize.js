@@ -10,7 +10,7 @@ if (process.env.DATABASE_URL) {
 		host: app.get('db-host'),
 		dialect: app.get('db-dialect'),
 		pool: {
-			max: 10,
+			max: 5,
 			min: 0,
 			idle: 10000
 		}
