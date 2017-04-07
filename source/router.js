@@ -21,6 +21,7 @@ router.get ('/login', auth.ensureAuth, login.get);
 router.get ('/login/callback', login.callback);
 
 router.get ('/dashboard', auth.ensureAuth, dashboard.get);
+
 router.get ('/error',
 	function (req, res, next)
 	{
