@@ -54,22 +54,6 @@ var user = sequelize.define('user', {
 sequelize.sync({});
 
 /**
- * Change user EXP
- * @param  uid
- * @param {int} amount [Amount of points to increase/decrease by]
- * @return {Promise}
- */
-var changeExp = function (uid, amount) {
-	return user.findOne({
-		where: {
-			id: uid
-		}
-	}).then(function (result) {
-		return result.increment(['exp'], { by: amount });
-	});
-}
-
-/**
  * Set avatar
  * @param  uid
  * @param  newAvatarId 
@@ -103,9 +87,27 @@ var getAvatarId = function (uid) {
 
 }
 
+/**
+ * Change user EXP
+ * @param  uid
+ * @param {int} amount [Amount of points to increase/decrease by]
+ * @return {Promise}
+ */
+var changeExp = function (uid, tid, amount) {
+	console.log(uid);
+	console.log(tid);
+	// return user.findOne({
+	// 	where: {
+	// 		id: uid
+	// 	}
+	// }).then(function (result) {
+	// 	return result.increment(['exp'], { by: amount });
+	// });
+}
+
+
 
 
 module.exports = user;
-module.exports.changeExp = changeExp;
 module.exports.setAvatar = setAvatar;
 module.exports.getAvatarId = getAvatarId;
