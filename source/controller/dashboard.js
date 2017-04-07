@@ -179,12 +179,14 @@ var processTopUsers = function (data) {
 	var userArray = [];
 	for (i = 0; i < data.rows.length; i++) {
 		var user = data.rows[i];
-		var exp = user.dataValues.tutorials[0].userTutorial.exp;
-		userArray.push({
-			name: user.dataValues.name,
-			exp: exp,
-			level: calculateLevel(exp)
-		});
+		if (user.dataValues.tutorials[0].userTutorial.role == "student") {
+			var exp = user.dataValues.tutorials[0].userTutorial.exp;
+			userArray.push({
+				name: user.dataValues.name,
+				exp: exp,
+				level: calculateLevel(exp)
+			});
+		}
 	}
 	userArray.sort(sort_by('exp', true, parseInt));
 	return userArray;

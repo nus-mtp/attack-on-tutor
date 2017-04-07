@@ -43,7 +43,6 @@
                           <div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
                           </div>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -66,10 +65,12 @@
                                 <div class="row">
                                     <table class="table" ng-show="t.leaderboardIsVisible">
                                         <tr>
+                                            <th></th>
                                             <th>Name</th>
                                             <th>Level</th>
                                         </tr>
                                         <tr ng-repeat="s in t.students">
+                                            <td>{{ $index + 1 }}</td>
                                             <td>{{ s.name }}</td>
                                             <td>{{ s.level }}</td>
                                         </tr>
