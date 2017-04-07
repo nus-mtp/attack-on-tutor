@@ -34,13 +34,13 @@ var get = function (req, res, next)
 
 	} else {
 		//console.log('fail');
-		res.send('Auth unsuccessful 2.');
+		//res.send('Auth unsuccessful 2.');
 		
-		/*var errorMessage = "Auth unsuccessful";
+		var errorMessage = "Unsuccessful Authentication (E1C)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
-		});*/
+		});
 	}
 };
 
@@ -76,9 +76,7 @@ var enterLobby = function (req, res, next) {
 									return next();
 								});
 						} else {
-							//res.json({ success: false, message: he tutor of this tutorial class has not registered with the system.''T});
-							//res.redirect('/error');
-							var errorMessage = "Auth unsuccessful 3";
+							var errorMessage = "The tutor of this tutorial class has not registered with the system.";
 							res.render('error.ejs', {
 								success: false,
 								errorMessage: errorMessage
@@ -86,10 +84,20 @@ var enterLobby = function (req, res, next) {
 						}	
 					}); 
 			} else {
-				console.log(1);
+				var errorMessage = "You are not a member of this tutorial.";
+				res.render('error.ejs', {
+					errorMessage: errorMessage
+				});
 			}
 		});
-	});
+
+	} else {
+		var errorMessage = "Please Access Lobby from Dashboard (E6)";
+		
+		res.render('error.ejs', {
+			errorMessage: errorMessage
+		});
+	}
 }
 
 /**
@@ -136,13 +144,17 @@ var getUsersInTutorial = function (req, res, next) {
 			return next();	
 			//res.json({success: true, users: users, tutorialId: tid});
 		}).catch(function (err) {
-			res.json({success: false, message: 'Could not find users in tutorial'});
+			//res.json({success: false, message: 'Could not find users in tutorial'});
+			
+			var errorMessage = "Could Not Find Users in Tutorial (E7)";
+		
+			res.render('error.ejs', {
+				errorMessage: errorMessage
+			});
 		});
 	});
 
 }
-
-
 
 module.exports.get = get;
 module.exports.enterLobby = enterLobby;

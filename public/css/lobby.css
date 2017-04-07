@@ -1,20 +1,39 @@
 body {
-	background-color: #141311;
+	background-image: url("/images/background.jpg");
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center; 
+	background-size: cover;
+	/*(background-color: #141311;*/
+}
+
+div {
+	font-family: 'VT323', monospace;
 }
 
 h1 {
-	font-family: 'Lato', serif;
+	font-family: 'VT323', monospace;
 	font-weight: bold;
 	text-align: center;
 	color: #FFFFFF;
 }
 
 h2 {
-	font-family: 'Lato', serif;
+	font-family: 'VT323', monospace;
 	font-weight: bold;
 	font-size: 24px;
 	text-align: center;
-	color: #A2482E;
+	/*color: #A2482E;*/
+	color: #FFFFFF;
+}
+
+h3 {
+	font-family: 'VT323', monospace;
+	font-weight: bold;
+	font-size: 16px;
+	text-align: left;
+	/*color: #A2482E;*/
+	color: #FFFFFF;
 }
 
 ul#header {
@@ -24,13 +43,17 @@ ul#header {
 	background-color: #141311;
 }
 
+li {
+	list-style-type: none;
+}
+
 li.header {
 	float: left;
 	list-style-type: none;
 }
 
 li.header a {
-	font-family: 'Lato', serif;
+	font-family: 'VT323', monospace;
 	font-size: 1.5vw;
 	color: #FFFFFF;
 	display: block;
@@ -46,27 +69,115 @@ li.header a:hover {
 div#question-list-container {
 	border: 10px solid transparent;
 	padding: 2px;
-	border-image: url("/images/border-image.png") 30 repeat;
+	border-image: url("/images/border.png") 20% round;
 	padding: 20px;
+	
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
-div.text-center-row {
-	border: 10px solid transparent;
+div#question-list-container {
+	border: 20px solid transparent;
 	padding: 2px;
-	border-image: url("/images/border-image.png") 30 repeat;
-	height: 300px;
+	border-image: url("/images/border.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
 div#chat-container {
-	border: 10px solid transparent;
+	border: 20px solid transparent;
 	padding: 2px;
-	border-image: url("/images/border-image.png") 30 repeat;
-	padding: 20px;
+	border-image: url("/images/border.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
 div#userlist-container {
-	border: 10px solid transparent;
+	border: 20px solid transparent;
 	padding: 2px;
-	border-image: url("/images/border-image.png") 30 repeat;
-	height: 286px;
+	border-image: url("/images/border.png") 16 repeat;
+	height: 360px;
+	background-color:rgba(0, 0, 0, 0.4);
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+
+div#inputMessageID {
+	padding: 20px;
+}
+
+/* General Styling Purposes */
+div.whiteFont {
+	color:#FFFFFF;
+}
+
+div.border { /* Testing Purposes */
+	border:2px solid #FFFFFF;
+}
+
+div.margin {
+	margin-top: 5px;
+	margin-left: 15px;
+}
+
+/* Special Styling */
+div.question-received {
+	margin-left: 50px;
+}
+
+div.answer-description {
+	border:2px solid #FFFFFF;
+	color:#FFFFFF;
+}
+
+/* Border */
+div.border-gold-trimmed {
+	border: 20px solid transparent;
+	border-image: url("/images/border_plain.png") 16 repeat;
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+
+div.question-area {
+	width:100%;
+	padding-left:40px;
+	padding-right:40px;
+	max-height:300px;
+	overflow:auto;
+}
+
+div.outer-container {
+	padding-left: 10px;
+	padding-right: 10px;
 }

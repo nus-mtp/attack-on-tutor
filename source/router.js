@@ -24,7 +24,7 @@ router.get ('/dashboard', auth.ensureAuth, dashboard.get);
 router.get ('/error',
 	function (req, res, next)
 	{
-		var errorMessage = "You Cannot Just Access the Error Page Manually!";
+		var errorMessage = "You Cannot Just Access the Error Page Manually! (E3)";
 		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
