@@ -386,12 +386,13 @@ var forceSyncIVLE = function (uid) {
  * @return {Promise}     [description]
  */
 var findTopUsersInTutorial = function (tid) {
-	return userTutorial.findAndCountAll({
-		where:{
-			tutorialId: tid
-		},
+	return User.findAndCountAll({
+		include: [{
+			model: tutorial,
+			where: { id: tid }
+		}],
 		order: [
-			['exp','DESC']
+			[tutorial, 'exp', 'DESC']
 		]
 	});
 }
@@ -412,8 +413,6 @@ var getUserTutorials = function (uid) {
 	});
 }
 
-
-
 /**
  * Gets user info by uid
  * @param  uid
@@ -424,6 +423,39 @@ var getUserInfo = function (uid) {
 		where: {
 			id: uid
 		}
+	});
+}
+
+/**
+ * Gets tutorial by coursecode and name
+ * @param  {String} coursecode 
+ * @param  {String} name    
+ * @return Promise   
+ */
+var getTutorialByCoursecodeAndName = function (coursecode, name) {
+	return tutorial.findOne({
+		attributes: ['id'],
+		where: {
+			coursecode: coursecode,
+			name: name
+		}
+	});
+}
+
+/**
+ * Change user EXP
+ * @param  uid
+ * @param {int} amount [Amount of points to increase/decrease by]
+ * @return {Promise}
+ */
+var changeExp = function (uid, tid, amount) {
+	return userTutorial.findOne({
+		where: {
+			userId: uid,
+			tutorialId: tid
+		}
+	}).then(function (result) {
+		return result.increment(['exp'], { by: amount });
 	});
 }
 
@@ -439,4 +471,5 @@ module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
 module.exports.findTopUsersInTutorial = findTopUsersInTutorial;
 module.exports.getUserTutorials = getUserTutorials;
+module.exports.getTutorialByCoursecodeAndName = getTutorialByCoursecodeAndName;
 module.exports.getUserInfo = getUserInfo;

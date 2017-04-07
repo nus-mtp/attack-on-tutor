@@ -21,6 +21,7 @@ var get = function (req, res, next)
 	    var userId = user.id;
 	    var moduleId = req.params.moduleId;
 	    var tutorialId = req.params.tutorialId;
+	    var tid = req.body.tut.id;
 	    
 	    res.render ('lobby/lobby', {
 	        title: 'Lobby UI',
@@ -53,48 +54,37 @@ var enterLobby = function (req, res, next) {
 
 	var user = req.body.auth.decoded;
 	var userId = user.id;
+	var coursecode = req.params.moduleId;
+	var tutorialName = req.params.tutorialId;
+	//var tutorialId = req.body['tut-id'];
 
-	var tutorialId = req.body['tut-id'];
-
-	if (tutorialId != null) {
-	// TODO: fix naming in lobby.ejs to match database. 
-		// Checks if user is in user list
-		Tutorial.checkIfInTutorialUserList(userId, tutorialId).then(function (data) {
+	Tutorial.getTutorialByCoursecodeAndName(coursecode, tutorialName).then(function (result) {
+		var tutId = result.dataValues.id;
+		Tutorial.checkIfInTutorialUserList(userId, tutId).then(function (data) {
 			if (data !== null) {
-				
-				Tutorial.findTutorialTutorID(tutorialId).then( 						// Get tutor ID
+				Tutorial.findTutorialTutorID(tutId).then( 						// Get tutor ID
 					function (data) {
 						console.log(data == null);
 						if (data != null) {
 							var tutorId = data.dataValues.userId;
 							var userRole = (tutorId == userId) ? 'tutor' : 'student'; 	// Check if user is tutor
-							Tutorial.findTutorialInfo(tutorialId).then( 				// Get tutorial info
+							Tutorial.findTutorialInfo(tutId).then( 				// Get tutorial info
 								function(data) {
 									var tut = data[0].dataValues;
-									// var courseId = tut.courseid;
-									// var moduleId = tut.coursecode;
-									// var tutorialId = tut.name;
 									req.body.tut = tut;
 									req.body.userRole = userRole;
 									return next();
 								});
 						} else {
-							//res.json({ success: false, message: 'The tutor of this tutorial class has not registered with the system.'});
-							//res.redirect('/error');
-							
-							var errorMessage = "Unregistered Tutor (E4)";
-		
+							var errorMessage = "The tutor of this tutorial class has not registered with the system.";
 							res.render('error.ejs', {
+								success: false,
 								errorMessage: errorMessage
 							});
 						}	
 					}); 
-        
 			} else {
-				//res.json({ success: false, message: 'You are not a member of this tutorial.'});
-				
-				var errorMessage = "Not a Member of this Tutorial (E5)";
-		
+				var errorMessage = "You are not a member of this tutorial.";
 				res.render('error.ejs', {
 					errorMessage: errorMessage
 				});
@@ -102,8 +92,6 @@ var enterLobby = function (req, res, next) {
 		});
 
 	} else {
-		//res.json({success: false, message: 'Please access lobby from dashboard!'});
-		
 		var errorMessage = "Please Access Lobby from Dashboard (E6)";
 		
 		res.render('error.ejs', {
@@ -111,7 +99,6 @@ var enterLobby = function (req, res, next) {
 		});
 	}
 }
-
 
 /**
  * Check if user is a tutor of class.
