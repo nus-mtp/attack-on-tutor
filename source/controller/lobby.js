@@ -90,14 +90,8 @@ var enterLobby = function (req, res, next) {
 				});
 			}
 		});
+	});
 
-	} else {
-		var errorMessage = "Please Access Lobby from Dashboard (E6)";
-		
-		res.render('error.ejs', {
-			errorMessage: errorMessage
-		});
-	}
 }
 
 /**
