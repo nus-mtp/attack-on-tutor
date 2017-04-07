@@ -35,9 +35,7 @@ var get = function (req, res, next)
 	} else {
 		//console.log('fail');
 		//res.send('Auth unsuccessful 2.');
-		
 		var errorMessage = "Unsuccessful Authentication (E1C)";
-		
 		res.render('error.ejs', {
 			errorMessage: errorMessage
 		});

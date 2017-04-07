@@ -20,16 +20,16 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     var promises = [];
     var tuts = [];
 
-    // promises.push($http({
+    promises.push($http({
 
-    //     method: 'POST',
-    //     url: '/api/dashboard/forceSyncIVLE'
+        method: 'POST',
+        url: '/api/dashboard/forceSyncIVLE'
 
-    // }).then(function successCallback(response) {
+    }).then(function successCallback(response) {
 
-    // }, function errorCallback(response) {
-    //     console.log('Error: ' + response.message);
-    // }));
+    }, function errorCallback(response) {
+        console.log('Error: ' + response.message);
+    }));
 
     promises.push(
         $http({

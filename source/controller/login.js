@@ -15,8 +15,10 @@ if (!usehttps) {
 
 var get = function (req, res, next) {
 	var auth = req.body.auth;
+	console.log(1);
+	console.log(auth);
 	if (auth.success) {
-		res.redirect('/');
+		res.redirect('/')
 	}
 	res.redirect('https://ivle.nus.edu.sg/api/login/?apikey=' + app.get('api-key') + '&url=' + protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/login/callback');
 }
@@ -67,9 +69,8 @@ var callback = function (req, res, next) {
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' updated user information');
-						// Link to Dashboard
 						res.cookie('token', authToken);
-						return res.redirect('/error.ejs');
+						return res.redirect('/dashboard');
 
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
