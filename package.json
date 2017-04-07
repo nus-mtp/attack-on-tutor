@@ -6,9 +6,18 @@
     "start": "node ./app"
   },
   "dependencies": {
+    "bignumber.js": "^4.0.1",
     "body-parser": "^1.17.0",
+    "cookie-parser": "^1.4.3",
     "ejs": "~2.3.3",
-    "express": "~4.13.1"
+    "express": "~4.13.1",
+    "jsonwebtoken": "^7.3.0",
+    "mysql": "^2.13.0",
+    "readable-stream": "^2.2.6",
+    "rest": "^2.0.0",
+    "sequelize": "^3.30.4",
+    "socket.io": "^1.7.3",
+    "sqlstring": "^2.2.0"
   },
   "description": "E-tutorial app",
   "main": "app.js",
