@@ -9,11 +9,10 @@ li.header {
 }
 
 li a {
-	font-family: 'VT323', monospace;
-	font-size: 1.5vw;
+	font-size: 1.5em;
 	color: #FFFFFF;
 	display: block;
-	padding: 10px;
+	padding: 0.5em;
 	text-align: center;
 	text-decoration: none;
 }
@@ -24,4 +23,8 @@ li a:hover {
 
 #logout {
 	cursor: pointer;
+}
+
+.font {
+	font-family: 'VT323', monospace;
 }

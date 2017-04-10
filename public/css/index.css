@@ -3,11 +3,10 @@ body {
 }
 
 h2 {
-	font-family: 'VT323', monospace;
-	font-size: 4.5vh;
+	font-size: 3em;
 	color: #A2482E;
 	text-align: center;
-	margin-top: 1vh;
+	margin-top: 1%;
 }
 
 #titleContainer {
@@ -25,6 +24,7 @@ h2 {
 	overflow: hidden;
 }
 
+/* For Buttons */
 .centralise {
 	text-align: center;
 	margin-top: 2%;
@@ -35,7 +35,7 @@ h2 {
 .logo {
 	display: block;
     margin: 0 auto;
-	width:300px;
+	width:25em;
 	
 	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
     image-rendering: -moz-crisp-edges;          /* Firefox                        */

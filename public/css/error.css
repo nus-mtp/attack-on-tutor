@@ -3,49 +3,21 @@ body {
 }
 
 h1 {
-	font-family: 'Lato', serif;
-	font-size: 5vw;
+	font-weight: bold;
+	font-size: 6em;
 	color: #FFFFFF;
-	margin: 0;
-	padding: 2%;
 	text-align: center;
-	margin-top: 20vh;
+	margin-top: 10%;
 }
 
 h2 {
-	font-family: 'Lato', serif;
 	font-weight: bold;
-	font-size: 24px;
-	text-align: center;
+	font-size: 4em;
 	color: #A2482E;
-}
-
-ul {
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: #141311;
-}
-
-li {
-	float: left;
-}
-
-li a {
-	font-family: 'Lato', serif;
-	font-size: 1.5vw;
-	color: #FFFFFF;
-	display: block;
-	padding: 10px;
 	text-align: center;
-	text-decoration: none;
 }
 
-li a:hover {
-	background-color: #B7B7B6;
-}
-
-p {
+.centralise {
 	text-align: center;
 	margin-top: 10%;
 	background-color: transparent;

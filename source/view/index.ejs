@@ -17,12 +17,12 @@
     <ul>
 		<ul id="header">
 			<li class="header">
-				<a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
+				<a class="active font" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
 			</li>
 		
 			<% if(user){ %>
 				<li class="header">
-					<a class="active" id="logout" >Log Out</a>
+					<a class="active font" id="logout" >Log Out</a>
 				</li>
 			<% } %>
 		</ul>
@@ -32,14 +32,14 @@
 		<img class="logo" src="/images/logo.png"></img>
 		
 		<% if(user){ %>
-			<h2 id="welcomeText">Welcome, <%= user.name %>!</h2>
+			<h2 id="welcomeText" class="font">Welcome, <%= user.name %>!</h2>
 			<a href="/dashboard">
-				<div class="centralise"><button type="button" class="btn btn-danger btn-lg">Go to Dashboard!</button></div>
+				<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Go to Dashboard!</button></div>
 			</a>
 		<% } else{ %>
 			<h2 id="hiddenText">-</h2>
 			<a href="/login"> 
-				<div class="centralise"><button type="button" class="btn btn-danger btn-lg">Login Here!</button></div>	
+				<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Login Here!</button></div>	
 			</a>
 		<% } %>
     </div>
