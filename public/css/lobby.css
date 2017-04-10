@@ -12,63 +12,46 @@ h2 {
 
 h3 {
 	font-size: 1.5em;
-	text-align: left;
-}
-
-div#question-list-container {
-	border: 20px solid transparent;
-	border-image: url("/images/border.png") 16 repeat;
-	background-color:rgba(0, 0, 0, 0.4);
-}
-
-div#chat-container {
-	border: 20px solid transparent;
-	padding: 2px;
-	border-image: url("/images/border.png") 16 repeat;
-	background-color:rgba(0, 0, 0, 0.4);
 }
 
 div#userlist-container {
-	border: 20px solid transparent;
-	padding: 2px;
-	border-image: url("/images/border.png") 16 repeat;
 	height: 380px;
-	background-color:rgba(0, 0, 0, 0.4);
 }
 
-div.margin {
+.margin {
 	margin-top: 5px;
 	margin-left: 15px;
 }
+/* -------------------------- */
 
-/* Border */
-div.border-gold-trimmed {
+/* Outer Border */
+.border-normal {
+	border: 20px solid transparent;
+	border-image: url("/images/border.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+}
+
+/* Inner Border */
+.border-gold-trimmed {
 	border: 15px solid transparent;
 	border-image: url("/images/border_plain.png") 16 repeat;
 }
 
-div.question-area {
-	width:100%;
-	max-height:300px;
-	overflow:auto;
-}
-
-div.outer-container {
-	padding-left: 30px;
-	padding-right: 30px;
-}
-
-div.answers-received {
-	margin-top: 20px;
-}
-
-div.border-bottom {
+.border-bottom {
 	border-bottom: 20px solid transparent;
 	border-image: url("/images/border_plain.png") 16 repeat;
 }
 
-.question-description-input {
-	width: 100%;
+/* -------------------------- */
+
+.question-area {
+	max-height:300px;
+	overflow:auto;
+}
+
+.outer-container {
+	padding-left: 30px;
+	padding-right: 30px;
 }
 
 .floatRight {

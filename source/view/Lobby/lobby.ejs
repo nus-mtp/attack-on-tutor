@@ -3,10 +3,25 @@
     <head>
         <meta charset="UTF-8">
         <title>E-Tutorial Lobby</title>
+		
+		<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
+		<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
+		<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
+		<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
+
+		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
+		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
+		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
+		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
+		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
+		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
+		
         <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
 		<link rel="stylesheet" type="text/css" href="/css/lobby.css">
 		<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">
+		
         <script>
 			window.userId = "<%= userId %>";
             window.moduleId = "<%= moduleId %>";
@@ -15,7 +30,6 @@
             window.userRole = "<%= userRole %>";
             window.tutorialUuid = "<%= tid %>";
         </script>
-
     </head>
 
     <body ng-app="lobbyApp">
@@ -42,14 +56,14 @@
 			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-12 col-sm-12 col-xs-12 outer-container smoothImage" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+					<div class="col-md-12 col-sm-12 col-xs-12 outer-container smoothImage border-normal" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="text-center row"> <!-- Question Composer Inner Box -->
 							<h2 class="font whiteFont centerText boldText">Question Composer</h2>
 						</div>
 
 						<div class="row">
 							<div class="question-area">
-								<textarea class="question-description-input font" ng-model="composerQuestion.description" placeholder="Type Your Question Here!" type="text"  ng-trim="false"></textarea>
+								<textarea class="question-description-input font maximumWidth" ng-model="composerQuestion.description" placeholder="Type Your Question Here!" type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
 						
@@ -70,16 +84,16 @@
 							<div class="answers-received-area">
 								<div class="answers-received-list">
 	                                <div class="answers-received border-gold-trimmed" ng-repeat="(uuid, question) in questions">
-	                                    <div class="container-fluid">
-	                                        <div class="row-fluid">
+	                                    <div class="container">
+	                                        <div class="row">
 	                                            <h3 class="font whiteFont boldText" style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
 	                                        </div>
 	                    
-											<div class="row-fluid">
-		                                    	<button class="btn answers-received-select-group" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
+											<div class="row">
+		                                    	<button class="btn answers-received-select-group font" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
 	                                        </div>
 	                                        
-											<div class="row-fluid group-received-answers" ng-show="question.groupAnswers[question.selectedGroup].answered">
+											<div class="row group-received-answers" ng-show="question.groupAnswers[question.selectedGroup].answered">
 	                                            <div class="row border-gold-trimmed">
 	                                            	<div class="col-md-4 col-sm-4 col-xs-4 whiteFont" style="margin-top:10px;">
 	                                            		<div>	{{question.groupAnswers[question.selectedGroup].student}}
@@ -108,7 +122,7 @@
 	                                        </div>
 	                                        
 											<div class="row" ng-show="!question.groupAnswers[question.selectedGroup].answered">
-                                                <div class="whiteFont margin">
+                                                <div class="font whiteFont">
                                                		Status: Waiting for Answer...
                                                 </div>
                                             </div>
@@ -122,7 +136,7 @@
 				</div>
                 
                 <div ng-controller="studentCtrl">
-                	<div class="col-md-12 col-sm-12 col-xs-12 smoothImage" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
+                	<div class="col-md-12 col-sm-12 col-xs-12 smoothImage border-normal" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row">
 							<h2 class="font whiteFont centerText boldText"> Combat Log </h2>
 						</div>
@@ -155,14 +169,14 @@
 
 			                                            <button class="btn btn-success update-answer" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
 
-			                                            <button class="btn btn-success submit-answer" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)" style="float:right;">Submit!</button>
+			                                            <button class="btn btn-success submit-answer floatRight" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)">Submit!</button>
 			                                        </div>
 	                                            </div>
 	                                        </div>
 	                                    </div>
 	                                    
 										<div class="container-fluid" ng-show="question.graded">
-	                                    	<div class="row-fluid" style="margin-top:15px;">
+	                                    	<div class="row-fluid"">
 		                                    	<button class="btn answers-received-select-group" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
 	                                        </div>
 	                                       
@@ -214,37 +228,10 @@
 				</div>	
 			</div>
 
-			<!--<div class="row" id="battle-screen-container">
-				<div ng-controller="battleScreenCtrl">
-					<div class="text-center row">
-					
-						<p></p>
-						
-						<div class="col-md-3">
-						 	<div class="text-center-row border">
-								<h2>Tutor's Avatar</h2>
-							</div>
-						</div>
-						
-						<div class="col-md-6">
-						   <div class="text-center-row">
-								<h2>Combat Screen</h2>
-							</div>
-						</div>
-						
-						<div class="col-md-3">
-							<div class="text-center-row">
-								<h2>Tutees' Avatars</h2>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>-->
-
 			<div class="row" id="lobby-container" style="margin-top:50px;">
 			
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-7 col-xs-6 smoothImage" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-8 col-sm-7 col-xs-6 smoothImage border-normal" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						
 						<div class="text-center row">
 							<h2 class="font whiteFont centerText boldText"> Messages </h2>
@@ -268,10 +255,10 @@
 										data-username="{{message.user}}">
 										<div ng-if="message.type == 'chat'">
 											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span> 
-											<span class="messageBody" ng-bind="message.message" style="color:white;"></span>
+											<span class="messageBody whiteFont" ng-bind="message.message"></span>
 										</div>
 										
-										<div class="font" ng-if="message.type == 'log'" style="color:white;">
+										<div class="font whiteFont" ng-if="message.type == 'log'">
 											{{ message.message }}
 										</div>
 									</div>
@@ -280,7 +267,7 @@
 						</div>
 						
 						<div class="row">
-							<div class="typing-message-area" style="width:100%;">
+							<div class="typing-message-area maximumWidth">
 								<ul class="typing-messages">
 									<li ng-repeat="typingMessage in typingMessages">
 										<div>
@@ -301,7 +288,7 @@
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-5 col-xs-6 smoothImage" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-4 col-sm-5 col-xs-6 smoothImage border-normal" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="text-center row">
 							<h2 class="font whiteFont centerText boldText"> Active Users </h2>
 						</div>
@@ -319,7 +306,7 @@
 						<div class="row outer-container" ng-if="socket.getUserType() =='tutor'">
 							<div class="users-active-list">
 								<div class="users-active">
-									<div class="user-active border-gold-trimmed" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]" style="width:100%;">
+									<div class="user-active border-gold-trimmed maximumWidth" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid font" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
@@ -333,7 +320,7 @@
 						<div class="row outer-container" ng-if="socket.getUserType() == 'student'">
 							<div class="users-active-list">
 								<div class="users-active">
-									<div class="user-active border-gold-trimmed" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]" style="width:100%;">
+									<div class="user-active border-gold-trimmed maximumWidth" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid font" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
@@ -352,7 +339,7 @@
                         	<div class="col-md-4 col-sm-4 col-xs-4">
                             	<button class="btn btn-success create-group font" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
                             	<div ng-if="selectedGroup > 0">
-                            		<button class="btn btn-warning delete-group" ng-click="deleteGroup()" style="float:right;">Delete Group</button>
+                            		<button class="btn btn-warning delete-group floatRight" ng-click="deleteGroup()">Delete Group</button>
                             	</div>
                         	</div>
                         </div>
@@ -362,40 +349,8 @@
 				
 			</div>
 		</div>			
-        <!--<script>
-		
-			/*$(document).ready(function() {
-				var $textarea = $('#messageBox');
-				var scrollTop = parseInt($textarea.prop('scrollHeight'));
-				$textarea.scrollTop(scrollTop);
-				console.log(scrollTop);
-			});*/
-		
-			/*function chatPermaBot() {
-				//document.getElementById("messageBox").scrollTop = document.getElementById("messageBox").scrollHeight;
-				//var number = parseInt(shoutbox.attr("scrollHeight"));
-				var chatBox = document.getElementById('messageBox');
-				chatBox.scrollTop = chatBox.number;
-				console.log("Hehe");
-			}*/
-		</script> -->
+
 	</body>
 </html>
 
-<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
-<script type="text/javascript" src="/libs/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
-<script type="text/javascript" src="/libs/angular-1.6.3/angular.min.js"></script>
-<script type="text/javascript" src="/libs/angular-1.6.3/angular-sanitize.min.js"></script>
-
-<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-module.js"></script>
-<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-socket-controller.js"></script>
-<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-student-controller.js"></script>
-<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-tutor-controller.js"></script>
-<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-chat-controller.js"></script>
-<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
-
 <script src="js/lobby.js" type="application/javascript"></script>
-
-<style>
-</style>
