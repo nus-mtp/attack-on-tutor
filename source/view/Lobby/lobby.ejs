@@ -21,16 +21,19 @@
     <body ng-app="lobbyApp">
 	
 		<ul id="header">
-			<li class="header"><a class="active" href="/"><%= username %></a></li>
+			<li class="header">
+				<a class="active font" href="/"><%= username %></a>
+			</li>
 		
-			<li class="header" style="float:right"><a class="active" href="/dashboard">Dashboard</a></li>
-			<!--<li class="header" style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>-->
+			<li class="header">
+				<a class="active font" href="/dashboard">Dashboard</a>
+			</li>
 		</ul>
 	
 		<div ng-controller="socketCtrl" class="container" id="header-bar"> <!-- Title Box -->
 			<div class="row">
 				<div class="text-center col-md-12">
-					<h1>Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
+					<h1 class="font whiteFont centerText boldText">Welcome to <%= moduleId %> <%= tutorialId %>'s Lobby!</h1>
 				</div>
 			</div>
 		</div>
@@ -39,25 +42,25 @@
 			<div class="row" id="battle-container"> <!-- Question Composer Outer Box -->
 				
 				<div ng-controller="tutorCtrl">
-					<div class="col-md-12 col-sm-12 col-xs-12 outer-container" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
+					<div class="col-md-12 col-sm-12 col-xs-12 outer-container smoothImage" id="question-list-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="text-center row"> <!-- Question Composer Inner Box -->
-							<h2>Question Composer</h2>
+							<h2 class="font whiteFont centerText boldText">Question Composer</h2>
 						</div>
 
 						<div class="row">
 							<div class="question-area">
-								<textarea class="question-description-input" style="width:100%;" ng-model="composerQuestion.description" placeholder="Type Your Question Here!" type="text"  ng-trim="false"></textarea>
+								<textarea class="question-description-input font" ng-model="composerQuestion.description" placeholder="Type Your Question Here!" type="text"  ng-trim="false"></textarea>
 							</div>
 						</div>
 						
 						<div class="row">
 							<div class="groups-list">
                                 <div>
-									<h3>Groups To Send To:</h3>
+									<h3 class="font whiteFont boldText">Groups To Send To:</h3>
                                     <div class="row-fluid">
-                                        <button class="btn select-group" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
+                                        <button class="btn select-group font" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
 
-                                        <button class="btn btn-success send-question" style="float:right;" ng-click="sendQuestion()">Attack!</button>
+                                        <button class="btn btn-success send-question floatRight font" ng-click="sendQuestion()">Attack!</button>
                                     </div>
                                 </div>
 							</div>
@@ -69,7 +72,7 @@
 	                                <div class="answers-received border-gold-trimmed" ng-repeat="(uuid, question) in questions">
 	                                    <div class="container-fluid">
 	                                        <div class="row-fluid">
-	                                            <h3 style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
+	                                            <h3 class="font whiteFont boldText" style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
 	                                        </div>
 	                    
 											<div class="row-fluid">
@@ -99,8 +102,8 @@
 												
 												<div class="row">
 		                                        	<input class="experience-input" type="number" style="margin-top:15px; margin-bottom:15px; width:100%;"
+		                                            <button class="btn btn-success grade-question floatRight" ng-if="isQuestionAnswered(uuid)" ng-click="gradeQuestion(uuid)">Grade!</button>
 		                                        		ng-model="question.groupAnswers[question.selectedGroup].experience"/>
-		                                            <button class="btn btn-success grade-question" ng-if="isQuestionAnswered(uuid)" ng-click="gradeQuestion(uuid)" style="float:right;">Grade!</button>
 		                                        </div>
 	                                        </div>
 	                                        
@@ -119,9 +122,9 @@
 				</div>
                 
                 <div ng-controller="studentCtrl">
-                	<div class="col-md-12 col-sm-12 col-xs-12" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
+                	<div class="col-md-12 col-sm-12 col-xs-12 smoothImage" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row">
-							<h2> Combat Log </h2>
+							<h2 class="font whiteFont centerText boldText"> Combat Log </h2>
 						</div>
 						
 						<div class="row">
@@ -130,7 +133,7 @@
 	                                <div class="question-received border-gold-trimmed outer-container" style="margin-bottom:25px;" ng-repeat="(uuid, question) in questions">
 	                                    <div class="container-fluid border-bottom">
 	                                        <div class="row-fluid">
-	                                            <h3 style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
+	                                            <h3 class="font whiteFont boldText" style="white-space: pre-wrap;" ng-bind-html="question.description"></h3>
 	                                        </div>
 	                                        
 											<div class="question-received-answers">
@@ -241,16 +244,16 @@
 			<div class="row" id="lobby-container" style="margin-top:50px;">
 			
 				<div ng-controller="chatCtrl">
-					<div class="col-md-8 col-sm-7 col-xs-6" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-8 col-sm-7 col-xs-6 smoothImage" id="chat-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						
 						<div class="text-center row">
-							<h2> Messages </h2>
+							<h2 class="font whiteFont centerText boldText"> Messages </h2>
 						</div>
 						
 						<div class="row">
 							<div class="groups-list">
                                 <div class="container-fluid">
-                                    <div class="row-fluid outer-container">
+                                    <div class="row-fluid outer-container font">
                                         <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
                                     </div>
                                 </div>
@@ -258,19 +261,17 @@
 						</div>
 						
 						<div class="row outer-container">
-							<div class="chat-area border-gold-trimmed" id="messageBox" style="width:100%; height:200px; position:relative; overflow-y: scroll;
-								overflow-x:hidden; -ms-word-break: break-all; word-break: break-all; word-break: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; margin-top:10px;">
+							<div class="chat-area border-gold-trimmed" id="messageBox">
 								<div class="messages">
 									<div ng-repeat="message in messages[socket.getSocketGroups()[selectedGroup]]"
 										ng-class="{'log' : message.type=='log', 'message' : message.type=='message'}"
-										data-username="{{message.user}}" style="margin-left:10px;"
-										>
+										data-username="{{message.user}}">
 										<div ng-if="message.type == 'chat'">
 											<span class="username" ng-bind="message.user" style="color:{{getUsernameColor(message.user)}}; padding-right:5px;"></span> 
 											<span class="messageBody" ng-bind="message.message" style="color:white;"></span>
 										</div>
 										
-										<div ng-if="message.type == 'log'" style="color:white;">
+										<div class="font" ng-if="message.type == 'log'" style="color:white;">
 											{{ message.message }}
 										</div>
 									</div>
@@ -293,22 +294,22 @@
 						
 						<div class="row">
 							<!-- ng-model within ng-if block must reference the data prepended by $parent -->
-							<input class="inputMessage" style="width:95%; margin-left:20px;" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type Your Message Here!"/>
+							<input class="inputMessage font maximumWidth" ng-model="$parent.chatMessage" ng-enter="sendMessage()" ng-change="updateTyping()" placeholder="Type Your Message Here!"/>
 						</div>
 					
 					</div>
 				</div>
 
 				<div ng-controller="activeUsersCtrl">
-					<div class="col-md-4 col-sm-5 col-xs-6" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
+					<div class="col-md-4 col-sm-5 col-xs-6 smoothImage" id="userlist-container" ng-if="socket.getConnectionState() == socket.CONNECTED()">
 						<div class="text-center row">
-							<h2> Active Users </h2>
+							<h2 class="font whiteFont centerText boldText"> Active Users </h2>
 						</div>
 						
 						<div class="row">
 							<div class="groups-list">
                                 <div class="container-fluid">
-                                    <div class="row-fluid outer-container">
+                                    <div class="row-fluid outer-container font">
                                         <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
                                     </div>
                                 </div>
@@ -320,7 +321,7 @@
 								<div class="users-active">
 									<div class="user-active border-gold-trimmed" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]" style="width:100%;">
 	                                    <div class="container-fluid">
-	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
+	                                        <div class="row-fluid font" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
 	                                        </div>
 	                                    </div>
@@ -334,7 +335,7 @@
 								<div class="users-active">
 									<div class="user-active border-gold-trimmed" ng-repeat="user in users[socket.getAllSocketGroups()[selectedGroup]]" style="width:100%;">
 	                                    <div class="container-fluid">
-	                                        <div class="row-fluid" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
+	                                        <div class="row-fluid font" ng-click="selectUser(user.socketId);" ng-style="{'color' : selectedUsers.indexOf (user.socketId) < 0 ? 'white' : 'yellow'}">
 	                                            {{user.username}}
 	                                        </div>
 	                                    </div>
@@ -345,11 +346,11 @@
 						
 						<div class="row-fluid" ng-if="socket.getUserType() == 'tutor'">
 							<div class="col-md-8 col-sm-8 col-xs-8">
-                            	<input class="input-group-name" style="width:100%; margin-top:20px;" ng-model="$parent.$parent.newGroupName" placeholder="Type Your Group Name Here!"/>
+                            	<input class="input-group-name font maximumWidth" style="margin-top:20px;" ng-model="$parent.$parent.newGroupName" placeholder="Type Your Group Name Here!"/>
                         	</div>
 
                         	<div class="col-md-4 col-sm-4 col-xs-4">
-                            	<button class="btn btn-success create-group" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
+                            	<button class="btn btn-success create-group font" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
                             	<div ng-if="selectedGroup > 0">
                             		<button class="btn btn-warning delete-group" ng-click="deleteGroup()" style="float:right;">Delete Group</button>
                             	</div>
