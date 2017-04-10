@@ -1,20 +1,10 @@
-body {
-	background-color: #141311;
-}
-
 h1 {
-	font-weight: bold;
 	font-size: 6em;
-	color: #FFFFFF;
-	text-align: center;
 	margin-top: 10%;
 }
 
 h2 {
-	font-weight: bold;
 	font-size: 4em;
-	color: #A2482E;
-	text-align: center;
 }
 
 .centralise {

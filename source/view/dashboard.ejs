@@ -9,7 +9,6 @@
     <script type="text/javascript" src="/libs/socket.io-1.7.3/js/socket.io.min.js"></script>
 	
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
-    <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
 	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">	
@@ -17,10 +16,14 @@
 
 <body>
 	<ul id="header">
-			<li class="header"><a class="active" href="/"><%= user.name %></a></li>
+			<li class="header">
+				<a class="active font" href="/"><%= user.name %></a>
+			</li>
 			
 			<% if(user){ %>
-				<li class="header" style="float:right"><a class="active" id="logout" href="/">Log Out</a></li>
+				<li class="header">
+					<a class="active font" id="logout" href="/">Log Out</a>
+				</li>
 			<% } %>
 	</ul>
 	
@@ -29,67 +32,74 @@
 	<div class="container-fluid" ng-app="dashboardApp">
 		<div class="row">
             <div class="col-md-2">
-                <div class="level-container" ng-controller="userCtrl">
-                    <img ng-src="{{userInfo.imgSrc}}" style="width: 100%" class="img-responsive" />
-                    <h2>{{userInfo.name}}</h2>
-                    <div class="tutorial-level-bar" ng-repeat="t in userInfo.tutorials">
+                <div class="font whiteFont level-container" ng-controller="userCtrl">
+                    
+					<img ng-src="{{userInfo.imgSrc}}" class="img-responsive"/>
+                    <h2 class="brownFont centerText boldText">{{userInfo.name}}</h2>
+                    
+					<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
                         {{t.coursecode}}
                         <br>
                         Level: {{t.level}}
                         <br>
-                        {{t.currExp}} / {{t.totalToNext}}
+                        Experience: {{t.currExp}} / {{t.totalToNext}}
                         <br>
+						
                         <div class="progress">
-                          <div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
-                          </div>
+							<div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
+							</div>
                         </div>
                     </div>
                 </div>
             </div>
 
 			<div class="col-md-10">
-
-				<h2>Modules</h2>
+				<h2 class="font brownFont centerText boldText">Modules</h2>
+				
 				<div class="list-group" ng-controller="moduleCtrl">
-                  <ul id="tutorials">
-                    <li ng-repeat="t in tuts">
-                        <div class="container">
-                            <div class="module-container">
-                                <div class="row">
-                                    {{t.coursecode}} {{t.coursename}}
-                                </div>
-                                <div class="row">
-                                    <button class="btn btn-primary lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
-                                    <button class="btn btn-primary" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
-                                </div>
-                                <div class="row">
-                                    <table class="table" ng-show="t.leaderboardIsVisible">
-                                        <tr>
-                                            <th></th>
-                                            <th>Name</th>
-                                            <th>Level</th>
-                                        </tr>
-                                        <tr ng-repeat="s in t.students">
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ s.name }}</td>
-                                            <td>{{ s.level }}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+					<div id="tutorials">
+						<div ng-repeat="t in tuts">
+							<div class="container">
+								<div class="module-container">
+                                
+									<div class="row font whiteFont centerText">
+										{{t.coursecode}} {{t.coursename}}
+									</div>
+									
+									<div class="row font centerText separateModules">
+										<button class="btn btn-primary lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
+										<button class="btn btn-primary" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
+									</div>
+									
+									<div class="row font whiteFont">
+										<table class="table" ng-show="t.leaderboardIsVisible">
+											<tr>
+												<th></th>
+												<th>Name</th>
+												<th>Level</th>
+											</tr>
+											<tr ng-repeat="s in t.students">
+												<td>{{ $index + 1 }}</td>
+												<td>{{ s.name }}</td>
+												<td>{{ s.level }}</td>
+											</tr>
+										</table>
+									</div>
+								
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-                
+				
 			</div>
+			
 		</div>
 	</div>
 	
-</div>
 </body>
+
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-
 <script src="javascripts/dashboard/dashboard.js" type="application/javascript"></script>

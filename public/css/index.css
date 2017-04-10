@@ -1,11 +1,5 @@
-body {
-	background-color: #141311;
-}
-
 h2 {
 	font-size: 3em;
-	color: #A2482E;
-	text-align: center;
 	margin-top: 1%;
 }
 
@@ -36,12 +30,4 @@ h2 {
 	display: block;
     margin: 0 auto;
 	width:25em;
-	
-	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated; 				/* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
