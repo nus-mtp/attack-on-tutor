@@ -473,3 +473,4 @@ module.exports.findTopUsersInTutorial = findTopUsersInTutorial;
 module.exports.getUserTutorials = getUserTutorials;
 module.exports.getTutorialByCoursecodeAndName = getTutorialByCoursecodeAndName;
 module.exports.getUserInfo = getUserInfo;
+module.exports.changeExp = changeExp;

@@ -14,7 +14,7 @@ li {
 }
 
 li a {
-	font-family: 'Lato', serif;
+	font-family: 'VT323', monospace;
 	font-size: 1.5vw;
 	color: #FFFFFF;
 	display: block;
@@ -28,7 +28,7 @@ li a:hover {
 }
 
 h1 {
-	font-family: 'Lato', serif;
+	font-family: 'VT323', monospace;
 	font-size: 5vw;
 	color: #FFFFFF;
 	margin: 0;
@@ -38,7 +38,7 @@ h1 {
 }
 
 h2 {
-	font-family: 'Lato', serif;
+	font-family: 'VT323', monospace;
 	font-size: 4.5vh;
 	color: #A2482E;
 	margin:0;
@@ -52,7 +52,7 @@ h2 {
 }
 
 .titleContainer {
-	margin-top: 10%;
+	margin-top: 5%;
 }
 
 #welcomeText {
@@ -71,4 +71,25 @@ h2 {
 	margin-top: 2%;
 	background-color: transparent;
 	outline: none;
+}
+
+p {
+	text-align: center;
+	margin-top: 2%;
+	background-color: transparent;
+	outline: none;
+}
+
+img.logo {
+	display: block;
+    margin: 0 auto;
+	width:300px;
+	
+	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
