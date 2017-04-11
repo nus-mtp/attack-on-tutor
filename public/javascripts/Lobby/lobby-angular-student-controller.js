@@ -46,21 +46,17 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
 
     //Someone has submitted the answer.
     socket.on ('submit answer', function (data) {
-        console.log (data);
         $scope.questions[data.uuid].submitted = true;
     });
 
     //Someone has submitted the answer.
     socket.on ('grade question', function (data) {
-        console.log (data);
         var question = $scope.questions[data.questionUuid];
 
         question.graded = true;
         question.groupNames = data.groupNames;
         question.groupAnswers = data.gradedAnswers;
         question.selectedGroup = data.groupNames[0];
-
-        console.log ($scope.questions);
     });
 
     //Scope functions.
