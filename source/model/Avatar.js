@@ -17,6 +17,7 @@ var Avatar = sequelize.define('avatar', {
 		unique: true,
 		primaryKey: true
 	},
+	name: { type: Sequelize.STRING },
 	price: { type: Sequelize.INTEGER },
 	url: { type: Sequelize.STRING }
 });
