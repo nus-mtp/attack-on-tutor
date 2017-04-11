@@ -459,6 +459,9 @@ var changeExp = function (uid, tid, amount) {
 	});
 }
 
+var sumLevels = function (uid) {
+}
+
 
 module.exports = tutorial;
 module.exports.forceSyncIVLE = forceSyncIVLE;

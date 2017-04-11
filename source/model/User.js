@@ -25,21 +25,12 @@ var user = sequelize.define('user', {
 			}
 		}
 	},
-	name: {
-		type: Sequelize.STRING
-	},
-	email: {
-		type: Sequelize.STRING
-	},
-	gender: {
-		type: Sequelize.ENUM('Male', 'Female')
-	},
-	token: {
-		type: Sequelize.STRING(511)
-	},
-	avatarId: {
-		type: Sequelize.STRING
-	}
+	name: { type: Sequelize.STRING },
+	email: { type: Sequelize.STRING },
+	gender: { type: Sequelize.ENUM('Male', 'Female') },
+	token: { type: Sequelize.STRING(511) },
+	avatarId: { type: Sequelize.STRING },
+	levelsSpent: { type: Sequelize.INTEGER }
 
 }, {
 	instanceMethods: {
@@ -83,30 +74,8 @@ var getAvatarId = function (uid) {
 			id: uid
 		},
 		attributes: ['avatarId']
-	})
-
+	});
 }
-
-/**
- * Change user EXP
- * @param  uid
- * @param {int} amount [Amount of points to increase/decrease by]
- * @return {Promise}
- */
-var changeExp = function (uid, tid, amount) {
-	console.log(uid);
-	console.log(tid);
-	// return user.findOne({
-	// 	where: {
-	// 		id: uid
-	// 	}
-	// }).then(function (result) {
-	// 	return result.increment(['exp'], { by: amount });
-	// });
-}
-
-
-
 
 module.exports = user;
 module.exports.setAvatar = setAvatar;
