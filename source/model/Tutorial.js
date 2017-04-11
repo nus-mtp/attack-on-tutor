@@ -188,7 +188,7 @@ var findAndCountAllUsersInTutorial = function(tid){
 			model: tutorial,
 			where: {id: tid}
 		}],
-		attributes:['id','name','gender','email']
+		attributes:['id','name', 'avatarId']
 	});
 };
 

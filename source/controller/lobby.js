@@ -101,7 +101,6 @@ var enterLobby = function (req, res, next) {
  * @return boolean
  */
 var userIsTutorOfClass = function (uid, tid) {
-
 	Tutorial.findTutorialTutorID(tid).then(function (data) {
 		if (data !== null) {
 			return uid == data.dataValues.userId;
@@ -109,7 +108,6 @@ var userIsTutorOfClass = function (uid, tid) {
 			return false;
 		}
 	});
-
 }
 
 /**
@@ -122,31 +120,35 @@ var getUsersInTutorial = function (req, res, next) {
 	var tid = req.body.tutorialId;
 	var users = {}
 	var tutorId = '';
-	Tutorial.findTutorialTutorID(tid).then(function (data) {
-		tutorId = data.dataValues.userId;
-		Tutorial.findAndCountAllUsersInTutorial(tid).then(function (data) {
-			for (i = 0; i < data.rows.length; i++) {
-				var user = data.rows[i].dataValues;
-				var role = (user.id != tutorId) ? 'student' : 'tutor';
-				var userObj = {
-					username: user.name,
-					userType: role
-				}
-				users[user.id] = userObj;
-			}
-			return next();	
-			//res.json({success: true, users: users, tutorialId: tid});
-		}).catch(function (err) {
-			//res.json({success: false, message: 'Could not find users in tutorial'});
-			
-			var errorMessage = "Could Not Find Users in Tutorial (E7)";
-		
-			res.render('error.ejs', {
-				errorMessage: errorMessage
-			});
-		});
+	Tutorial.findAndCountAllUsersInTutorial(tid).then(function (data) {
+		var returnObj = processLobbyUsers(data);
+		res.json({ success: true, data: returnObj });
 	});
+}
 
+/**
+ * Processes db query for use in lobby
+ * @return {JSON} processed data
+ */
+var processLobbyUsers = function (data) {
+	var returnObj = {};
+	var students = [];
+	for (i = 0; i < data.rows.length; i++) {
+		var studentObj = {};
+		var student = data.rows[i].dataValues;
+		var userTut = student.tutorials[0].userTutorial.dataValues;
+		if (userTut.role != 'student') {
+			returnObj.tutor = student;
+		} else {
+			studentObj.name = student.name;
+			studentObj.id = student.id;
+			studentObj.avatarId = student.avatarId;
+			studentObj.exp = userTut.exp;
+			students.push(studentObj);
+		}
+	}
+	returnObj.students = students;
+	return returnObj;
 }
 
 module.exports.get = get;
