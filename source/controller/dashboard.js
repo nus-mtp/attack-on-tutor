@@ -141,7 +141,7 @@ var processUserInfo = function (result) {
 	for (i = 0; i < tuts.length; i++) {
 		var tut = tuts[i];
 		if (tut.userTutorial.role == "student") {
-			tutArray.push ({ // Left Bar
+			tutArray.push ({
 				coursecode: tut.coursecode,
 				coursename: tut.coursename,
 				exp: tut.userTutorial.exp,
