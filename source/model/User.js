@@ -39,10 +39,6 @@ var user = sequelize.define('user', {
 	},
 	avatarId: {
 		type: Sequelize.STRING
-	},
-	levelsSpent: {
-		type: Sequelize.INTEGER,
-		defaultValue: 0
 	}
 
 }, {
