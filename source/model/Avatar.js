@@ -5,6 +5,7 @@
 var sequelize = require ('../sequelize');
 var Sequelize = require ('sequelize');
 var User = require ('./User');
+var Tutorial = require('./Tutorial');
 
 /**
  * Define avatar model
@@ -26,3 +27,5 @@ Avatar.belongsToMany(User, {
 	foreignKey: 'avatarId',
 	through: 'userAvatar'
 });
+
+sequelize.sync();

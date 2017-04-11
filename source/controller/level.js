@@ -1,10 +1,11 @@
+var constant = 0.1;
+
 /**
  * Calculates level-related user info
  * @param  user
  * @return user
  */
 var setLevelInfo = function(tutArray) {
-    var constant = 0.1;
     for (i = 0; i < tutArray.length; i++) {
         var tutObj = tutArray[i];
         var exp = tutObj.exp;
@@ -16,7 +17,6 @@ var setLevelInfo = function(tutArray) {
     return tutArray;
 }
 
-var constant = 0.1;
 
 /**
  * Calculates level based on exp
