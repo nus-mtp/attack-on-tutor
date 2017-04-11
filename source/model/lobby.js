@@ -165,7 +165,13 @@ Lobby.prototype.getAllGroupsInLobby = function () {
 
 Lobby.prototype.addSocketToGroup = function (socket, group) {
     if (this.groups[group]) {
-        socket.join (this.namespace + '/' + group);
+        if (socket.group.length > 0 && socket.userType == 'student') {
+            console.log (socket.group);
+            //Remove the socket from the group it is currently inside.
+            socket.emit ('deleted group', socket.group);
+            this.removeSocketFromGroup (socket, socket.group);
+        }
+        socket.join (this.namespace + '/' + group );
         socket.group = group;
     }
 }

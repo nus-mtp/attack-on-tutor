@@ -74,7 +74,6 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
     	if (!$scope.messages[data.groupList[0]]) {
 			$scope.messages[data.groupList[0]] = [];
     	}
-        
     });
 
     socket.on ('added group', function (data) {

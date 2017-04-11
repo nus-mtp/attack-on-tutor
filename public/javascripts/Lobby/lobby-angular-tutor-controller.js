@@ -31,7 +31,6 @@ angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
             };
         });
 
-        console.log (data);
         $scope.questions[data.question.uuid] = {
             'uuid' : data.question.uuid,
             'description' : data.question.description,
@@ -50,6 +49,15 @@ angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
 		if ($scope.inSelectedGroups(index)) {
 			delete $scope.selectedGroups[$scope.selectedGroups.indexOf (index)];
 		} else {
+            if (index == 0) {
+                $scope.selectedGroups = [];
+            }
+            else
+            {
+                if ($scope.inSelectedGroups(0)) {
+                    delete $scope.selectedGroups[$scope.selectedGroups.indexOf (0)];
+                }
+            }
 			$scope.selectedGroups.push (index);
 		}
 	};
