@@ -39,6 +39,10 @@ var user = sequelize.define('user', {
 	},
 	avatarId: {
 		type: Sequelize.STRING
+	},
+	levelsSpent: {
+		type: Sequelize.INTEGER,
+		defaultValue: 0
 	}
 
 }, {
@@ -86,26 +90,6 @@ var getAvatarId = function (uid) {
 	})
 
 }
-
-/**
- * Change user EXP
- * @param  uid
- * @param {int} amount [Amount of points to increase/decrease by]
- * @return {Promise}
- */
-var changeExp = function (uid, tid, amount) {
-	console.log(uid);
-	console.log(tid);
-	// return user.findOne({
-	// 	where: {
-	// 		id: uid
-	// 	}
-	// }).then(function (result) {
-	// 	return result.increment(['exp'], { by: amount });
-	// });
-}
-
-
 
 
 module.exports = user;

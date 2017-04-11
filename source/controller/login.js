@@ -48,7 +48,8 @@ var callback = function (req, res, next) {
 						email: result.Email,
 						gender: result.Gender,
 						token: result.Token,
-						avatarId: 'avatar-01'
+						avatarId: 'avatar-01',
+						levelsSpent: 0
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						//logger.info(result.UserID + ' created user');
