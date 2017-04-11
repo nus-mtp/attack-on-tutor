@@ -66,6 +66,9 @@ npm-debug.log.*
 # Ignore jsdocs
 documentation/jsdoc/
 
+# Ignore migrations
+migrations/
+
 # Ignore config
 config/
 config.json
