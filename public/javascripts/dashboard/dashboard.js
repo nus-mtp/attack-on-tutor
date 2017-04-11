@@ -13,17 +13,6 @@ angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) 
         console.log(response);
     });
 
-    $http({
-        method: 'POST',
-        url: '/api/lobby/getUsersInTutorial',
-        data: { tutorialId: 'test2' }
-    }).then(function successCallback(response) {
-        console.log(response);
-    }, function errorCallback(response) {
-        console.log(response);
-    });
-
-
 });
 
 angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http, $q, $window) {
