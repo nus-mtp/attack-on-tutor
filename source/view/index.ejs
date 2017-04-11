@@ -16,44 +16,31 @@
 <body>
     <ul>
 		<ul id="header">
-			<li class="header" style="float:right"><a class="active" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a></li>
+			<li class="header">
+				<a class="active font" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
+			</li>
 		
 			<% if(user){ %>
-				<li style="float:right"><a class="active" id="logout" >Log Out</a></li>
+				<li class="header">
+					<a class="active font" id="logout" >Log Out</a>
+				</li>
 			<% } %>
 		</ul>
-	
-        <!--<li><a class="active" href="/">Attack on Tutor</a></li>-->
-		<!--else{ %>
-            <li style="float:right"><a class="active" href="/login" >Log In</a></li> -->
     </ul>
 
-    <div class="logoContainer">
-    </div>
-
-    <div class="titleContainer">
-        <!--<h1>
-			Attack on Tutor
-		</h1>
-		
-		<h2>
-			A Fantasy-like Tutorial Experience
-		</h2>-->
-		
-		<img class="logo" src="/images/logo.png"></img>
+    <div id="titleContainer">
+		<img class="logo smoothImage" src="/images/logo.png"></img>
 		
 		<% if(user){ %>
-			<!--<h2 id="welcomeText" onclick="createWelcomeText()">Test</h2>-->
-			<h2 id="welcomeText">Welcome, <%= user.name %>!</h2>
+			<h2 id="welcomeText" class="font brownFont centerText">Welcome, <%= user.name %>!</h2>
 			<a href="/dashboard">
-				<p><button type="button" class="btn btn-danger btn-lg">Go to Dashboard!</button></p>
+				<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Go to Dashboard!</button></div>
 			</a>
 		<% } else{ %>
-			<h2 class="hiddenText">-</h2>
+			<h2 id="hiddenText">-</h2>
 			<a href="/login"> 
-				<p><button type="button" class="btn btn-danger btn-lg">Login Here!</button></p>	
+				<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Login Here!</button></div>	
 			</a>
-			<!--<img class="login-button" src="">-->
 		<% } %>
     </div>
 </body>
@@ -61,17 +48,6 @@
 </html>
 
 <script>
-	/*function capitalizeEachWord(str) {
-		return str.replace(/\w\S*/ /*g, function(txt) {
-			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-		});
-	}
-	
-	function createWelcomeText() {
-		var userNameCap = capitalizeEachWord(userName);
-		document.getElementById("welcomeText").innerHTML = "Welcome, " + userNameCap + "!";
-	}*/
-
     var logoutConfirmation = "Would You Like to Log Out?";
 	
     $("#logout").on
@@ -83,18 +59,4 @@
             location.reload();
 		}
 	);
-	
-    /*$(".login-button").on
-	(
-		"click",
-		function(event)
-		{
-			console.log ( "See You Soon!" );
-		}
-	);*/
-	
-	//createWelcomeText();
 </script>
-
-<style>
-</style>
