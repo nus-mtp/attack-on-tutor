@@ -12,16 +12,23 @@ h2 {
 
 h3 {
 	font-size: 1.5em;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
-div#userlist-container {
-	height: 380px;
+/* General Font Size for Lobby */
+.lobbyGeneralFontSize {
+	font-size: 1.2em;
 }
 
-.margin {
-	margin-top: 5px;
-	margin-left: 15px;
+.btn {
+	font-size: 1.2em;
 }
+
+.lobbyBottomFiller {
+	padding-bottom: 0.4em;
+}
+
 /* -------------------------- */
 
 /* Outer Border */
@@ -37,25 +44,11 @@ div#userlist-container {
 	border-image: url("/images/border_plain.png") 16 repeat;
 }
 
-.border-bottom {
-	border-bottom: 20px solid transparent;
-	border-image: url("/images/border_plain.png") 16 repeat;
-}
-
 /* -------------------------- */
 
 .question-area {
 	max-height:300px;
 	overflow:auto;
-}
-
-.outer-container {
-	padding-left: 30px;
-	padding-right: 30px;
-}
-
-.floatRight {
-	float: right;
 }
 
 .maximumWidth {
@@ -74,5 +67,22 @@ div#userlist-container {
 	-webkit-hyphens: auto; 
 	-moz-hyphens: auto; 
 	hyphens: auto; 
-	margin-top:10px;
+}
+
+.explanation-area {
+	padding-top: 15px;
+	max-height: 300px;
+	overflow: auto;
+}
+
+.marginTop {
+	margin-top: 1em;
+}
+
+.marginBottom {
+	margin-bottom: 1em;
+}
+
+.chatWhiteSpace {
+	white-space: pre-wrap;
 }
