@@ -1,44 +1,54 @@
 angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
 	$scope.socket = socket;
+    $scope.health = 100;
+    $scope.maxHealth = 100;
 	$scope.selectedGroups = [];
     $scope.composerQuestion = {
         'description' : ''
     };
     $scope.questions = {};
 
-    socket.on ('submit answer', function (data) {
-        var question = $scope.questions[data.uuid];
-        if (question) {
-            var groupAnswer = question.groupAnswers[data.answer.groupName];
-            if (groupAnswer) {
-                groupAnswer.answered = true;
-                groupAnswer.student = data.answer.student.username;
-                groupAnswer.description = data.answer.description;
-            }
+    socket.on ('login', function (data) {
+        if (data.userType == 'tutor') {
+            socket.on ('submit answer', function (data) {
+                var question = $scope.questions[data.uuid];
+                if (question) {
+                    var groupAnswer = question.groupAnswers[data.answer.groupName];
+                    if (groupAnswer) {
+                        groupAnswer.answered = true;
+                        groupAnswer.student = data.answer.student.username;
+                        groupAnswer.description = data.answer.description;
+                    }
+                }
+            });
+
+            socket.on ('log question', function (data) {
+                //Object to store the answers receieved from students later.
+                var groupAnswers = {};
+                data.question.groups.forEach (function (value) {
+                    groupAnswers[value] = {
+                        'student' : '',
+                        'description' : '',
+                        'explanation' : '',
+                        'experience' : 0,
+                        'answered' : false
+                    };
+                });
+
+                $scope.questions[data.question.uuid] = {
+                    'uuid' : data.question.uuid,
+                    'description' : data.question.description,
+                    'graded' : false,
+                    'groupNames' : data.question.groups,
+                    'groupAnswers' : groupAnswers,
+                    'selectedGroup' : data.question.groups[0]
+                };
+            });
+
+            socket.on ('reset health', function (data) {
+                $scope.health = $scope.maxHealth;
+            });
         }
-    });
-
-    socket.on ('log question', function (data) {
-        //Object to store the answers receieved from students later.
-        var groupAnswers = {};
-        data.question.groups.forEach (function (value) {
-            groupAnswers[value] = {
-                'student' : '',
-                'description' : '',
-                'explanation' : '',
-                'experience' : 0,
-                'answered' : false
-            };
-        });
-
-        $scope.questions[data.question.uuid] = {
-            'uuid' : data.question.uuid,
-            'description' : data.question.description,
-            'graded' : false,
-            'groupNames' : data.question.groups,
-            'groupAnswers' : groupAnswers,
-            'selectedGroup' : data.question.groups[0]
-        };
     });
 
     $scope.inSelectedGroups = function (index) {
@@ -102,6 +112,29 @@ angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
     };
 
     $scope.gradeQuestion = function (uuid) {
-        socket.emit ('grade question', $scope.questions[uuid]);
+        var question = $scope.questions[uuid];
+        question.graded = true;
+
+        healthLeft = $scope.health;
+        for (var group in question.groupAnswers) {
+            if (question.groupAnswers.hasOwnProperty (group)) {
+                healthLeft = $scope.health - question.groupAnswers[group].experience;
+                socket.emit ('damage shoutout', {
+                    'group' : group,
+                    'experience' : question.groupAnswers[group].experience
+                });
+            }
+        }
+
+        if (healthLeft > 0) {
+            $scope.health = healthLeft;
+        } else {
+            $scope.health = 0;
+            socket.emit ('experience payout');
+        }
+
+        socket.emit ('update health', $scope.health);
+
+        socket.emit ('grade question', question);
     };
 });

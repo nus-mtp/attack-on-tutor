@@ -86,3 +86,8 @@ h3 {
 .chatWhiteSpace {
 	white-space: pre-wrap;
 }
+
+.users-active-list {
+	max-height:250px;
+	overflow-y:auto;
+}

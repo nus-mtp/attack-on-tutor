@@ -427,6 +427,26 @@ lobbyio.on ('connection', function (socket) {
                     });
                 }
             });
+
+            socket.on ('damage shoutout', function (data) {
+                console.log ("Damage shoutout");
+                console.log (data);
+                console.log ("\n");
+            });
+
+            socket.on ('experience payout', function () {
+                console.log ("Experience payout");
+                console.log ("\n");
+            });
+
+            socket.on ('update health', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                console.log ("Update health");
+
+                lobby.broadcastToLobby (socket, 'update health', data);
+                console.log (data);
+                console.log ("\n");
+            });
         }
     });
 
