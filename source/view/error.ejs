@@ -8,37 +8,22 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
     <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 	
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato">
-	
-	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-	<link rel="stylesheet" type="text/css" href="css/error.css">
-	<link rel="stylesheet" type="text/css" href="css/navigationbar.css">
+	<link rel="stylesheet" type="text/css" href="/css/error.css">
+	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">
 </head>
 
-<body>
-	
-	<!--<ul>
-		<li></li>
-	</ul>-->	
-	
+<body>	
 	<% if(errorMessage){ %>
-		<h1>Error!</h1>
-		<h2><%=errorMessage%></h2>
+		<h1 class="font whiteFont centerText boldText">Error!</h1>
+		<h2 class="font brownFont centerText boldText"><%=errorMessage%></h2>
 	<% } %>
 	
 	<a href="/">
-		<p><button type="button" class="btn btn-danger btn-lg">Return!</button></p>
+		<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Return!</button></div>
 	</a>
 	
 </body>
+
 </html>
-
-<script>
-	 var errorMessage = "";
-</script>
-
-<style>
-	
-</style>

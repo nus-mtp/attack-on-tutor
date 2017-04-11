@@ -4,172 +4,85 @@ body {
     background-attachment: fixed;
     background-position: center; 
 	background-size: cover;
-	/*(background-color: #141311;*/
-}
-
-div {
-	font-family: 'VT323', monospace;
-}
-
-h1 {
-	font-family: 'VT323', monospace;
-	font-weight: bold;
-	text-align: center;
-	color: #FFFFFF;
 }
 
 h2 {
-	font-family: 'VT323', monospace;
-	font-weight: bold;
-	font-size: 24px;
-	text-align: center;
-	/*color: #A2482E;*/
-	color: #FFFFFF;
+	font-size: 2em;
 }
 
 h3 {
-	font-family: 'VT323', monospace;
-	font-weight: bold;
-	font-size: 16px;
-	text-align: left;
-	/*color: #A2482E;*/
-	color: #FFFFFF;
+	font-size: 1.5em;
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
-ul#header {
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: #141311;
+/* General Font Size for Lobby */
+.lobbyGeneralFontSize {
+	font-size: 1.2em;
 }
 
-li {
-	list-style-type: none;
+.btn {
+	font-size: 1.2em;
 }
 
-li.header {
-	float: left;
-	list-style-type: none;
+.lobbyBottomFiller {
+	padding-bottom: 0.4em;
 }
 
-li.header a {
-	font-family: 'VT323', monospace;
-	font-size: 1.5vw;
-	color: #FFFFFF;
-	display: block;
-	padding: 10px;
-	text-align: center;
-	text-decoration: none;
-}
+/* -------------------------- */
 
-li.header a:hover {
-	background-color: #B7B7B6;
-}
-
-div#question-list-container {
-	border: 10px solid transparent;
-	border-image: url("/images/border.png") 20% round;
-	
-    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated; /* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-}
-
-div#question-list-container {
+/* Outer Border */
+.border-normal {
 	border: 20px solid transparent;
 	border-image: url("/images/border.png") 16 repeat;
 	background-color:rgba(0, 0, 0, 0.4);
-	
-	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated; /* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
-div#chat-container {
-	border: 20px solid transparent;
-	padding: 2px;
-	border-image: url("/images/border.png") 16 repeat;
-	background-color:rgba(0, 0, 0, 0.4);
-	
-	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated; /* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-}
-
-div#userlist-container {
-	border: 20px solid transparent;
-	padding: 2px;
-	border-image: url("/images/border.png") 16 repeat;
-	height: 380px;
-	background-color:rgba(0, 0, 0, 0.4);
-	
-	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated; /* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-}
-
-/* General Styling Purposes */
-div.whiteFont {
-	color:#FFFFFF;
-}
-
-div.border { /* Testing Purposes */
-	border:2px solid #FFFFFF;
-}
-
-div.margin {
-	margin-top: 5px;
-	margin-left: 15px;
-}
-
-/* Special Styling */
-
-/* Border */
-div.border-gold-trimmed {
+/* Inner Border */
+.border-gold-trimmed {
 	border: 15px solid transparent;
 	border-image: url("/images/border_plain.png") 16 repeat;
-	
-	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated; /* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
-div.question-area {
-	width:100%;
+/* -------------------------- */
+
+.question-area {
 	max-height:300px;
 	overflow:auto;
 }
 
-div.outer-container {
-	padding-left: 30px;
-	padding-right: 30px;
+.maximumWidth {
+	width: 100%;
 }
 
-div.answers-received {
-	margin-top: 20px;
+.chat-area {
+	width:100%; 
+	height:200px; 
+	position:relative; 
+	overflow-y: scroll; 
+	overflow-x:hidden; 
+	-ms-word-break: break-all; 
+	word-break: break-all; 
+	word-break: break-word; 
+	-webkit-hyphens: auto; 
+	-moz-hyphens: auto; 
+	hyphens: auto; 
 }
 
-div.border-bottom {
-	border-bottom: 20px solid transparent;
-	border-image: url("/images/border_plain.png") 16 repeat;
+.explanation-area {
+	padding-top: 15px;
+	max-height: 300px;
+	overflow: auto;
+}
+
+.marginTop {
+	margin-top: 1em;
+}
+
+.marginBottom {
+	margin-bottom: 1em;
+}
+
+.chatWhiteSpace {
+	white-space: pre-wrap;
 }

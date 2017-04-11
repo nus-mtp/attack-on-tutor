@@ -1,69 +1,19 @@
-body {
-	background-color: #141311;
-}
-
-ul {
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	background-color: #141311;
-}
-
-li {
-	float: left;
-	color: #FFFFFF;
-}
-
-a.active {
-	font-family: 'VT323', monospace;
-}
-
-li a {
-	font-family: 'VT323', monospace;
-	font-size: 1.5vw;
-	color: #FFFFFF;
-	display: block;
-	padding: 10px;
-	text-align: center;
-	text-decoration: none;
-}
-
-li a:hover {
-	background-color: #B7B7B6;
-}
-
 h2 {
-	font-family: 'VT323', monospace;
-	font-weight: bold;
-	font-size: 24px;
-	text-align: left;
-	color: #A2482E;
+	font-size: 2.5em;
 }
 
-#logout {
-	cursor: pointer;
+.img-responsive {
+	width: 100%;
 }
 
-.avatarWardrobe {
-	text-align: center;
+.tutorial-level-bar {
+	font-size: 1.5em;
 }
 
-.col-md-12 {
-	margin-top: 3.5%;
-	height: 80vh;
+.module-container {
+	font-size: 1.5em;
 }
 
-
-img {
-	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
-    image-rendering: -moz-crisp-edges;          /* Firefox                        */
-    image-rendering: -o-crisp-edges;            /* Opera                          */
-    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
-    image-rendering: pixelated;					/* Chrome */
-    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
-}
-
-.level-container {
-	color: #FFFFFF;
+.separateModules {
+	margin-bottom: 2%;
 }
