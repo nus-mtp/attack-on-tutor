@@ -34,7 +34,9 @@
                     
 					<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
                     <h2 class="brownFont centerText boldText">{{userInfo.name}}</h2>
-                    
+                    Total Levels: {{userInfo.totalLevels}}
+                    <br>
+                    <button class="btn btn-primary">Change Avatar</button> <button class="btn btn-primary">Buy Avatars</button>
 					<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
                         {{t.coursecode}}
                         <br>
