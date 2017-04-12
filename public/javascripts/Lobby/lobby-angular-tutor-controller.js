@@ -130,7 +130,7 @@ angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
             $scope.health = healthLeft;
         } else {
             $scope.health = 0;
-            socket.emit ('experience payout');
+            socket.emit ('experience payout', uuid);
         }
 
         socket.emit ('update health', $scope.health);

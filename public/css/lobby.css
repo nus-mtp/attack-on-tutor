@@ -91,3 +91,8 @@ h3 {
 	max-height:250px;
 	overflow-y:auto;
 }
+
+.damagelog {
+	background-color:rgba(242, 84, 84, 0.4);
+	background:rgba(242, 84, 84, 0.4);
+}

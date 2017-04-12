@@ -433,7 +433,11 @@
 											<span class="messageBody font whiteFont lobbyGeneralFontSize" ng-bind="message.message"></span>
 										</div>
 										
-										<div class="font whiteFont lobbyGeneralFontSize" ng-if="message.type == 'log'">
+										<div class="font whiteFont lobbyGeneralFontSize" ng-class="{ 'log' : message.type == 'log'}" ng-if="message.type == 'log'">
+											{{ message.message }}
+										</div>
+
+										<div class="font whiteFont lobbyGeneralFontSize" ng-class="{ 'damagelog' : message.type == 'damagelog'}" ng-if="message.type == 'damagelog'">
 											{{ message.message }}
 										</div>
 									</div>

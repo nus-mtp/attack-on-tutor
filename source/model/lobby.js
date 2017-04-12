@@ -50,7 +50,8 @@ function Lobby () {
     this.questions = {};
     
     this.numUsers = 0;
-    
+
+    this.payoutExperience = 300;
 }
 
 Lobby.prototype.emitToLobby = function (key, value) {
@@ -432,11 +433,30 @@ lobbyio.on ('connection', function (socket) {
                 console.log ("Damage shoutout");
                 console.log (data);
                 console.log ("\n");
+
+                lobby.emitToLobby ('damage shoutout', data);
             });
 
-            socket.on ('experience payout', function () {
+            socket.on ('experience payout', function (uuid) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
                 console.log ("Experience payout");
                 console.log ("\n");
+
+                lobby.questions[uuid].groups.forEach (function (groupName, i) {
+                    var socketsInGroup = lobby.getUsersInRoom (groupName);
+                    socketsInGroup.forEach (function (socketClient, i) {
+                        if (socketClient.userType == 'student') {
+                            Tutorial.changeExp (socketClient.userId, socketClient.tutorialId, lobby.payoutExperience);
+                        }
+                    });
+                });
+
+
+                lobby.emitToLobby ( 'experience payout', {
+                    'message': "The mighty fall, and " + socket.username + " has lost one of their many lives. " + lobby.payoutExperience + " experience points for all!"
+                });
+
+                socket.emit ('reset health');
             });
 
             socket.on ('update health', function (data) {
