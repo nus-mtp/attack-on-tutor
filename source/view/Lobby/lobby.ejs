@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="/javascripts/Lobby/lobby-angular-activeusers-controller.js"></script>
 		
         <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Kanit:200|Roboto">
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
 		<link rel="stylesheet" type="text/css" href="/css/lobby.css">
 		<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">
@@ -174,12 +175,12 @@
 	                                        
 											<div class="row group-received-answers" ng-show="question.groupAnswers[question.selectedGroup].answered">
 	                                            <div class="container-fluid border-gold-trimmed">
-	                                            	<div class="col-md-4 col-sm-4 col-xs-4 font whiteFont">
+	                                            	<div class="col-md-4 col-sm-4 col-xs-4 font whiteFont lobbyGeneralFontSize">
 	                                            		<div>	{{question.groupAnswers[question.selectedGroup].student}}
                                                    		</div>
 	                                                </div>
 	                                                
-													<div class="col-md-8 col-sm-8 col-xs-8 font whiteFont">
+													<div class="col-md-8 col-sm-8 col-xs-8 font whiteFont lobbyGeneralFontSize">
                                                    		<div class="answer-description chatWhiteSpace" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
 	                                                </div>
 	                                            </div>
@@ -323,7 +324,6 @@
 	                                                <div class="row-fluid">
 														<button class="btn vote-answer font" ng-class="{'btn-success' : answer.selected, 'btn-warning' : !answer.selected }" ng-click="selectAnswer(uuid, $index)" style="float:left;" ng-disabled="question.submitted">Vote: {{answer.selectedCount}} </button>
 
-			                                            <button class="btn btn-success update-answer font" ng-show="answer.owned" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
 			                                        </div>
 	                                            </div>
 	                                        </div>
@@ -331,29 +331,30 @@
 	                                    
 										<div class="container-fluid" ng-show="question.graded">
 	                                    	<div class="row-fluid"">
+	                                    		<button class="btn btn-success update-answer font" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
 		                                    	<button class="row btn answers-received-select-group font marginTop" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
 	                                        </div>
 	                                       
 											<div class="row-fluid group-received-answers">
 	                                            <div class="row border-gold-trimmed">
-	                                            	<div class="col-md-3 col-sm-3 col-xs-3 font whiteFont">
+	                                            	<div class="col-md-3 col-sm-3 col-xs-3 font whiteFont lobbyGeneralFontSize">
 	                                            		<div>	{{question.groupAnswers[question.selectedGroup].student}}
                                                    		</div>
 	                                                </div>
 	                                                
-													<div class="col-md-9 col-sm-9 col-xs-9 font whiteFont">
-                                                   		<div class="answer-description chatWhiteSpace font whiteFont" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
+													<div class="col-md-9 col-sm-9 col-xs-9 font whiteFont lobbyGeneralFontSize">
+                                                   		<div class="answer-description font whiteFont chatWhiteSpace" ng-bind-html="question.groupAnswers[question.selectedGroup].description"></div>
 	                                                </div>
 	                                            </div>
 	                                            
 												<div class="row border-gold-trimmed">
 													<div class="col-md-3 col-sm-3 col-xs-3 whiteFont">
-														<div class="experience-input font whiteFont" style="float:left;"
+														<div class="experience-input font whiteFont lobbyGeneralFontSize" style="float:left;"
 															ng-bind-html="question.groupAnswers[question.selectedGroup].experience">
 														</div>
 													</div>
 													
-													<div class="col-md-9 col-sm-9 col-xs-9 font whiteFont">
+													<div class="col-md-9 col-sm-9 col-xs-9 font whiteFont lobbyGeneralFontSize">
 														<div class="answer-explanation-input whiteFont maximumWidth"
 															ng-bind-html="question.groupAnswers[question.selectedGroup].explanation">
 														</div>
@@ -447,14 +448,14 @@
 						
 						<div class="row">
 							<div class="typing-message-area maximumWidth">
-								<ul class="typing-messages">
-									<li ng-repeat="typingMessage in typingMessages">
+								<div class="typing-messages">
+									<div ng-repeat="typingMessage in typingMessages">
 										<div>
-											<span class="username" ng-bind="typingMessage.user" style="color:{{getUsernameColor(typingMessage.user)}}; padding-right:5px;"></span>
-											<span class="messageBody" ng-bind="typingMessage.message"></span>
+											<span class="username font whiteFont lobbyGeneralFontSize" ng-bind="typingMessage.user" style="color:{{getUsernameColor(typingMessage.user)}};"></span>
+											<span class="messageBody font whiteFont lobbyGeneralFontSize" ng-bind="typingMessage.message"></span>
 										</div>
-									</li>
-								</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						
