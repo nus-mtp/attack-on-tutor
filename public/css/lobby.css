@@ -38,6 +38,12 @@ h3 {
 	background-color:rgba(0, 0, 0, 0.4);
 }
 
+.border-bronze-trimmed {
+	border: 15px solid transparent;
+	border-image: url("/images/border2.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+}
+
 /* Inner Border */
 .border-gold-trimmed {
 	border: 15px solid transparent;
