@@ -189,7 +189,7 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
     	if (socket.getSocketGroups().indexOf (data.group) >= 0) {
         	$scope.typingMessages.push({
             	'user' : data.username,
-            	'message' : 'is typing in : ' + data.group
+            	'message' : 'is typing in: ' + data.group
             });
         }
     };
