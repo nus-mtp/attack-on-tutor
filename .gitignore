@@ -66,7 +66,13 @@ npm-debug.log.*
 # Ignore jsdocs
 documentation/jsdoc/
 
+# Ignore sequelize-cli folders
+migrations/
+models/
+seeders/
+
 # Ignore config
+config/
 config.json
 
 # Ignore heroku procfile
