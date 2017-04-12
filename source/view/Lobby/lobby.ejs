@@ -331,7 +331,6 @@
 	                                    
 										<div class="container-fluid" ng-show="question.graded">
 	                                    	<div class="row-fluid"">
-	                                    		<button class="btn btn-success update-answer font" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left; margin-left: 5px;">Update!</button>
 		                                    	<button class="row btn answers-received-select-group font marginTop" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
 	                                        </div>
 	                                       
@@ -368,13 +367,18 @@
 		                                        </div>-->
 	                                        </div>
 	                                    </div>
-	                                    
+
 										<div class="container-fluid" ng-show="!question.graded">
 	                                    	<div class="row font whiteFont">
 		                                    	Status: Waiting for Grading...
-												
-												<button class="btn btn-success submit-answer floatRight font" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)">Submit!</button>
 											</div>
+	                                    </div>
+
+	                                    <div class="container-fluid" ng-show="!question.graded">
+	                                    	<div class="row font whiteFont">
+	                                    		<button class="btn btn-success update-answer font" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left;">Update!</button>
+												<button class="btn btn-success submit-answer floatRight font" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)">Submit!</button>
+	                                    	</div>
 	                                    </div>
 	                                </div>
 	                            </div>
