@@ -1,6 +1,7 @@
 var app = require ('../../app');
 var io = require ('socket.io')();
-var Tutorial = require ('./Tutorial');
+var TutorialModule = require ('./Tutorial');
+var LobbyModule = require ('./Lobby');
 var lobbyio = io.of ('/lobby');
 
 var listen = function (server) {
@@ -341,7 +342,7 @@ lobbyio.on ('connection', function (socket) {
                     var socketsInGroup = lobby.getUsersInRoom (groupName);
                     socketsInGroup.forEach (function (socketClient, i) {
                         if (socketClient.userType == 'student') {
-                            Tutorial.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
+                            TutorialModule.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
                         }
                     });
                 });
@@ -446,7 +447,7 @@ lobbyio.on ('connection', function (socket) {
                     var socketsInGroup = lobby.getUsersInRoom (groupName);
                     socketsInGroup.forEach (function (socketClient, i) {
                         if (socketClient.userType == 'student') {
-                            Tutorial.changeExp (socketClient.userId, socketClient.tutorialId, lobby.payoutExperience);
+                            TutorialModule.changeExp (socketClient.userId, socketClient.tutorialId, lobby.payoutExperience);
                         }
                     });
                 });
