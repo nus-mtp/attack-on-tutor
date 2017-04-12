@@ -1,4 +1,5 @@
 angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
+    $scope.userInfo = {};
 	$scope.socket = socket;
     $scope.health = 100;
     $scope.maxHealth = 100;
@@ -9,6 +10,11 @@ angular.module('lobbyApp').controller ('tutorCtrl', function($scope, socket) {
     $scope.questions = {};
 
     socket.on ('login', function (data) {
+
+        console.log ( data );
+
+        $scope.userInfo.imgSrc = data.userAvatar;
+
         if (data.userType == 'tutor') {
             socket.on ('submit answer', function (data) {
                 var question = $scope.questions[data.uuid];

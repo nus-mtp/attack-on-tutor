@@ -59,10 +59,16 @@
 					<div class="col-md-3 col-md-offset-1 col-sm-3 col-xs-5 affix" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'tutor'">
 						<div class="text-center row smoothImage border-normal">
 							<div class="font whiteFont level-container">
-                    
-								<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
-			                    <h2 class="brownFont centerText boldText"><%= username %></h2>
-			                    
+								<div class="row">
+	                    			<div class="col-md-4 col-sm-6 col-xs-6">
+										<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage" style="width:100%;"/>
+									</div>
+
+									<div class="col-md-8 col-sm-6 col-xs-6">
+				                   		<h2 class="brownFont centerText boldText"><%= username %></h2>
+				                    </div>
+				                </div>
+
 								<div class="tutorial-level-bar centerText">
 			                        Health: {{health}} / {{maxHealth}}
 			                        <br>
@@ -216,9 +222,16 @@
 					<div class="col-md-3 col-sm-3 col-xs-3 affix" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row smoothImage border-normal">
 							<div class="font whiteFont level-container">
-                    
-								<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
-			                    <h2 class="brownFont centerText boldText">TUTOR NO NAMAE</h2>
+                    			
+                    			<div class="row">
+	                    			<div class="col-md-4 col-sm-6 col-xs-6">
+										<img ng-src="{{tutorInfo.imgSrc}}" class="img-responsive smoothImage" style="width:100%;"/>
+									</div>
+
+									<div class="col-md-8 col-sm-6 col-xs-6">
+				                   		<h2 class="brownFont centerText boldText">{{tutorInfo.username}}</h2>
+				                    </div>
+				                </div>
 			                    
 								<div class="tutorial-level-bar centerText">
 			                        Health: {{health}} / {{maxHealth}}
@@ -389,16 +402,25 @@
 					<div class="col-md-3 col-md-offset-9 col-sm-3 col-sm-offset-9 col-xs-3 col-xs-offset-9 affix" ng-if="socket.getConnectionState() == socket.CONNECTED() && socket.getUserType() == 'student'">
 						<div class="text-center row smoothImage border-normal">
 							<div class="font whiteFont level-container">
-                    
-								<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
-			                    <h2 class="brownFont centerText boldText"><%= username %></h2>
+                    			
+                    			<div class="row">
+	                    			<div class="col-md-4 col-sm-6 col-xs-6">
+										<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage" style="width:100%;"/>
+									</div>
+
+									<div class="col-md-8 col-sm-6 col-xs-6">
+				                   		<h2 class="brownFont centerText boldText"><%= username %></h2>
+				                    </div>
+				                </div>
 			                    
 								<div class="tutorial-level-bar centerText">
-			                        Experience: {{'Some num'}}
+									Level: <span ng-bind-html="userInfo.level"></span>
+									<br>
+			                        Experience: {{userInfo.exp}} / {{userInfo.expToNext}}
 			                        <br>
 			                        <div class="progress">
-										<div class="progress-bar" role="progressbar" aria-valuenow="{{0.7 * 100}}" aria-valuemin="0" aria-valuemax="100" style="width: {{0.7 * 100}}%">
-										{{0.7 * 100}}%
+										<div class="progress-bar" role="progressbar" aria-valuenow="{{userInfo.exp / userInfo.expToNext * 100}}" aria-valuemin="0" aria-valuemax="100" style="width: {{userInfo.exp / userInfo.expToNext * 100}}%">
+										{{userInfo.exp / userInfo.expToNext * 100}}%
 										</div>
 			                        </div>
 			                    </div>

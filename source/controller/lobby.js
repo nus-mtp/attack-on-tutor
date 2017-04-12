@@ -154,3 +154,4 @@ var processLobbyUsers = function (data) {
 module.exports.get = get;
 module.exports.enterLobby = enterLobby;
 module.exports.getUsersInTutorial = getUsersInTutorial;
+module.exports.processLobbyUsers = processLobbyUsers;

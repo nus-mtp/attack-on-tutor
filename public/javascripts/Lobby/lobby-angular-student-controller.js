@@ -1,13 +1,32 @@
 angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
 	$scope.socket = socket;
+    $scope.tutorInfo = {
+        'imgSrc' : '',
+        'username' : ''
+    }
     $scope.health = 100;
     $scope.maxHealth = 100;
+
+    $scope.userInfo = {
+        'imgSrc' : '',
+        'exp' : 0
+    };
+    
     $scope.questions = {};
     
     //Socket events
 
     socket.on ( 'login', function (data) { 
         
+        $scope.userInfo.imgSrc = data.userAvatar;
+        $scope.userInfo.exp = data.experience;
+        $scope.userInfo.level = $scope.calculateLevel($scope.userInfo.exp);
+        $scope.userInfo.expToNext = $scope.expToNextLevel($scope.userInfo.level + 1);
+
+        $scope.tutorInfo.imgSrc = data.tutorAvatar;
+        $scope.tutorInfo.username = data.tutorName;
+
+
         if (data.userType == 'student') {
             //Receives questions composed and sent by tutor
             socket.on ('add question', function (data) {
@@ -67,6 +86,18 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
             socket.on ('update health', function (data) {
                 $scope.health = data;
             });
+
+            socket.on ('experience payout', function (data) {
+                $scope.userInfo.exp += data.exp;
+                $scope.userInfo.level = $scope.calculateLevel($scope.userInfo.exp);
+                $scope.userInfo.expToNext = $scope.expToNextLevel($scope.userInfo.level + 1);
+            });
+
+            socket.on ('damage shoutout', function (data) {
+                $scope.userInfo.exp += data.experience;
+                $scope.userInfo.level = $scope.calculateLevel($scope.userInfo.exp);
+                $scope.userInfo.expToNext = $scope.expToNextLevel($scope.userInfo.level + 1);
+            });
         }
     });
 
@@ -88,6 +119,14 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     			$scope.questions[questionUuid].answers[index].selected = true;
     		}
     	}
+    };
+
+    $scope.calculateLevel = function (exp) {
+        return Math.floor(0.1 * Math.sqrt(exp)) + 1;
+    };
+
+    $scope.expToNextLevel = function (level) {
+        return Math.pow ( ((level - 1) / 0.1 ), 2);
     };
 
     var updateOtherAnswer = function (questionUuid, socketId, answerDescription) {

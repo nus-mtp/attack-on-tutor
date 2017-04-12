@@ -1,7 +1,7 @@
 var app = require ('../../app');
 var io = require ('socket.io')();
 var TutorialModule = require ('./Tutorial');
-var LobbyModule = require ('./Lobby');
+var LobbyModule = require ('../controller/lobby');
 var lobbyio = io.of ('/lobby');
 
 var listen = function (server) {
@@ -232,19 +232,48 @@ lobbyio.on ('connection', function (socket) {
         addedUser = true;
         
         //Update the client that login is successful.
-        socket.emit ('login', {
-            'userType': socket.userType,
-            'username': socket.username,
-            'numUsers': lobby.numUsers,
-            'defaultGroup': lobby.namespace
-        });
+        TutorialModule.findAndCountAllUsersInTutorial(socket.tutorialId).then(function (data) {
+            var returnObj = LobbyModule.processLobbyUsers(data);
+            console.log (returnObj);
 
-        updateUsers (lobby, socket);
+            if (socket.userType == 'student') {
+                var studentAvatar = "";
+                var studentExp = 0;
+                for (var i = 0; i < returnObj.students.length; i++) {
+                    if (returnObj.students[i].id == socket.userId) {
+                        studentAvatar = returnObj.students[i].avatarId;
+                        studentExp = returnObj.students[i].exp;
+                        break;
+                    }
+                }
+
+                socket.emit ('login', {
+                    'tutorAvatar' : "/images/avatars/" + returnObj.tutor.avatarId + ".png",
+                    'tutorName' : returnObj.tutor.name,
+                    'userAvatar' : "/images/avatars/" + studentAvatar + ".png",
+                    'experience' : studentExp,
+                    'userType': socket.userType,
+                    'username': socket.username,
+                    'numUsers': lobby.numUsers,
+                    'defaultGroup': lobby.namespace
+                });
+            } else {
+                socket.emit ('login', {
+                    'userAvatar' : "/images/avatars/" + returnObj.tutor.avatarId + ".png",
+                    'userType': socket.userType,
+                    'username': socket.username,
+                    'numUsers': lobby.numUsers,
+                    'defaultGroup': lobby.namespace
+                });
+            }
+
+            updateUsers (lobby, socket);
         
-        //Update all clients whenever a user successfully joins the lobby.
-        socket.broadcast.to(socket.namespace).emit ('user joined', {
-            'username': socket.username,
-            'numUsers': lobby.numUsers
+            //Update all clients whenever a user successfully joins the lobby.
+            socket.broadcast.to(socket.namespace).emit ('user joined', {
+                'username': socket.username,
+                'numUsers': lobby.numUsers
+            });
         });
 
         //Initialise the socket
@@ -454,6 +483,7 @@ lobbyio.on ('connection', function (socket) {
 
 
                 lobby.emitToLobby ( 'experience payout', {
+                    'exp' : lobby.payoutExperience,
                     'message': "The mighty fall, and " + socket.username + " has lost one of their many lives. " + lobby.payoutExperience + " experience points for all!"
                 });
 
