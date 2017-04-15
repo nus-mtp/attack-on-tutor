@@ -27,51 +27,57 @@
 	
 	<input id="uid" type="hidden" value="<%= user.id %>">
 
-	<div class="container-fluid" ng-app="dashboardApp">
+	<div class="container-fluid border-normal" ng-app="dashboardApp">
 		<div class="row">
-            <div class="col-md-2">
-                <div class="font whiteFont level-container" ng-controller="userCtrl">
-                    
-					<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
-                    <h2 class="brownFont centerText boldText">{{userInfo.name}}</h2>
-                    Total Levels: {{userInfo.totalLevels}}
-                    <br>
-                    <button class="btn btn-primary">Change Avatar</button> <button class="btn btn-primary">Buy Avatars</button>
-					<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
-                        {{t.coursecode}}
-                        <br>
-                        Level: {{t.level}}
-                        <br>
-                        Experience: {{t.currExp}} / {{t.totalToNext}}
-                        <br>
-						
-                        <div class="progress">
-							<div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
-							</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+			<div class="col-md-4">
 
-			<div class="col-md-10">
-				<h2 class="font brownFont centerText boldText">Modules</h2>
-				
-				<div class="list-group" ng-controller="moduleCtrl">
-					<div id="tutorials">
-						<div ng-repeat="t in tuts">
-							<div class="container">
-								<div class="module-container">
-                                
-									<div class="row font whiteFont centerText">
+				<div class="border-gold-trimmed">
+					<div class="font whiteFont level-container" ng-controller="userCtrl">
+						
+						<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
+						
+						<h2 class="brownFont centerText boldText">{{userInfo.name}}</h2>
+						
+						<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels}} </div>
+						
+						<button class="btn btn-primary outline floatLeft">Change Avatar</button> <button class="btn btn-primary outline floatRight">Buy Avatars</button>
+						
+						<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
+							{{t.coursecode}}
+							<br>
+							Level: {{t.level}}
+							<br>
+							Experience: {{t.currExp}} / {{t.totalToNext}}
+							<br>
+							
+							<div class="progress">
+								<div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-8">
+				<div class="border-gold-trimmed">
+					<h2 class="font brownFont centerText boldText border-bronze-trimmed">Modules</h2>
+								
+					<div class="list-group" ng-controller="moduleCtrl">
+						<div id="tutorials">
+							<div ng-repeat="t in tuts">
+								<div class="module-container font border-bronze-trimmed whiteFont dashboardMarginBottom">
+								
+									<div>
 										{{t.coursecode}} {{t.coursename}}
 									</div>
 									
-									<div class="row font centerText separateModules">
-										<button class="btn btn-primary lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
-										<button class="btn btn-primary" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
+									<div class="separateModules">
+										<button class="btn btn-primary outline lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
+										<button class="btn btn-primary outline" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
 									</div>
 									
-									<div class="row font whiteFont">
+									<div>
 										<table class="table" ng-show="t.leaderboardIsVisible">
 											<tr>
 												<th></th>
@@ -91,9 +97,7 @@
 						</div>
 					</div>
 				</div>
-				
 			</div>
-			
 		</div>
 	</div>
 	
