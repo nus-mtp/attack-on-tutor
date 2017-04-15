@@ -86,6 +86,27 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
     	$scope.selectedGroup = 0;
         delete $scope.messages[data];
     });
+
+    socket.on ('damage shoutout', function (data) {
+        var message = data.group + " doth dealt " + data.experience + " damage to the great beast.";
+        for (var i = 0; i < socket.getSocketGroups().length; i++) {
+            logMessage ({
+                'type' : 'damagelog',
+                'message' : message
+            }, socket.getSocketGroups()[i]);
+        }
+    });
+
+    socket.on ('experience payout', function (data) {
+        //Display the welcome message
+        $scope.defaultGroup = data.defaultGroup;
+        for (var i = 0; i < socket.getSocketGroups().length; i++) {
+            logMessage ({
+                'type' : 'damagelog',
+                'message' : data.message
+            }, socket.getSocketGroups()[i]);
+        }
+    });
 	
     //Scope functions.
     $scope.setSelectedGroup = function (index) {
@@ -189,7 +210,7 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
     	if (socket.getSocketGroups().indexOf (data.group) >= 0) {
         	$scope.typingMessages.push({
             	'user' : data.username,
-            	'message' : 'is typing in : ' + data.group
+            	'message' : 'is typing in: ' + data.group
             });
         }
     };

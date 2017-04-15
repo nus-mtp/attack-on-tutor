@@ -38,6 +38,12 @@ h3 {
 	background-color:rgba(0, 0, 0, 0.4);
 }
 
+.border-bronze-trimmed {
+	border: 15px solid transparent;
+	border-image: url("/images/border2.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+}
+
 /* Inner Border */
 .border-gold-trimmed {
 	border: 15px solid transparent;
@@ -85,4 +91,14 @@ h3 {
 
 .chatWhiteSpace {
 	white-space: pre-wrap;
+}
+
+.users-active-list {
+	max-height:250px;
+	overflow-y:auto;
+}
+
+.damagelog {
+	background-color:rgba(242, 84, 84, 0.4);
+	background:rgba(242, 84, 84, 0.4);
 }

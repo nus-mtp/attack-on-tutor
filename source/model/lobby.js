@@ -1,6 +1,7 @@
 var app = require ('../../app');
 var io = require ('socket.io')();
-var Tutorial = require ('./Tutorial');
+var TutorialModule = require ('./Tutorial');
+var LobbyModule = require ('../controller/lobby');
 var lobbyio = io.of ('/lobby');
 
 var listen = function (server) {
@@ -50,7 +51,8 @@ function Lobby () {
     this.questions = {};
     
     this.numUsers = 0;
-    
+
+    this.payoutExperience = 300;
 }
 
 Lobby.prototype.emitToLobby = function (key, value) {
@@ -230,19 +232,48 @@ lobbyio.on ('connection', function (socket) {
         addedUser = true;
         
         //Update the client that login is successful.
-        socket.emit ('login', {
-            'userType': socket.userType,
-            'username': socket.username,
-            'numUsers': lobby.numUsers,
-            'defaultGroup': lobby.namespace
-        });
+        TutorialModule.findAndCountAllUsersInTutorial(socket.tutorialId).then(function (data) {
+            var returnObj = LobbyModule.processLobbyUsers(data);
+            console.log (returnObj);
 
-        updateUsers (lobby, socket);
+            if (socket.userType == 'student') {
+                var studentAvatar = "";
+                var studentExp = 0;
+                for (var i = 0; i < returnObj.students.length; i++) {
+                    if (returnObj.students[i].id == socket.userId) {
+                        studentAvatar = returnObj.students[i].avatarId;
+                        studentExp = returnObj.students[i].exp;
+                        break;
+                    }
+                }
+
+                socket.emit ('login', {
+                    'tutorAvatar' : "/images/avatars/" + returnObj.tutor.avatarId + ".png",
+                    'tutorName' : returnObj.tutor.name,
+                    'userAvatar' : "/images/avatars/" + studentAvatar + ".png",
+                    'experience' : studentExp,
+                    'userType': socket.userType,
+                    'username': socket.username,
+                    'numUsers': lobby.numUsers,
+                    'defaultGroup': lobby.namespace
+                });
+            } else {
+                socket.emit ('login', {
+                    'userAvatar' : "/images/avatars/" + returnObj.tutor.avatarId + ".png",
+                    'userType': socket.userType,
+                    'username': socket.username,
+                    'numUsers': lobby.numUsers,
+                    'defaultGroup': lobby.namespace
+                });
+            }
+
+            updateUsers (lobby, socket);
         
-        //Update all clients whenever a user successfully joins the lobby.
-        socket.broadcast.to(socket.namespace).emit ('user joined', {
-            'username': socket.username,
-            'numUsers': lobby.numUsers
+            //Update all clients whenever a user successfully joins the lobby.
+            socket.broadcast.to(socket.namespace).emit ('user joined', {
+                'username': socket.username,
+                'numUsers': lobby.numUsers
+            });
         });
 
         //Initialise the socket
@@ -340,7 +371,7 @@ lobbyio.on ('connection', function (socket) {
                     var socketsInGroup = lobby.getUsersInRoom (groupName);
                     socketsInGroup.forEach (function (socketClient, i) {
                         if (socketClient.userType == 'student') {
-                            Tutorial.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
+                            TutorialModule.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
                         }
                     });
                 });
@@ -426,6 +457,46 @@ lobbyio.on ('connection', function (socket) {
                         });
                     });
                 }
+            });
+
+            socket.on ('damage shoutout', function (data) {
+                console.log ("Damage shoutout");
+                console.log (data);
+                console.log ("\n");
+
+                lobby.emitToLobby ('damage shoutout', data);
+            });
+
+            socket.on ('experience payout', function (uuid) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                console.log ("Experience payout");
+                console.log ("\n");
+
+                lobby.questions[uuid].groups.forEach (function (groupName, i) {
+                    var socketsInGroup = lobby.getUsersInRoom (groupName);
+                    socketsInGroup.forEach (function (socketClient, i) {
+                        if (socketClient.userType == 'student') {
+                            TutorialModule.changeExp (socketClient.userId, socketClient.tutorialId, lobby.payoutExperience);
+                        }
+                    });
+                });
+
+
+                lobby.emitToLobby ( 'experience payout', {
+                    'exp' : lobby.payoutExperience,
+                    'message': "The mighty fall, and " + socket.username + " has lost one of their many lives. " + lobby.payoutExperience + " experience points for all!"
+                });
+
+                socket.emit ('reset health');
+            });
+
+            socket.on ('update health', function (data) {
+                var lobby = lobbyList.getLobby(socket.moduleGroup, socket.tutorialGroup);
+                console.log ("Update health");
+
+                lobby.broadcastToLobby (socket, 'update health', data);
+                console.log (data);
+                console.log ("\n");
             });
         }
     });

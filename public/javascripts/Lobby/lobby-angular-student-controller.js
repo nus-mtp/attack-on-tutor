@@ -1,62 +1,104 @@
 angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
 	$scope.socket = socket;
+    $scope.tutorInfo = {
+        'imgSrc' : '',
+        'username' : ''
+    }
+    $scope.health = 100;
+    $scope.maxHealth = 100;
+
+    $scope.userInfo = {
+        'imgSrc' : '',
+        'exp' : 0
+    };
+    
     $scope.questions = {};
     
     //Socket events
 
-	//Receives questions composed and sent by tutor.
-    socket.on ('add question', function (data) {
-    	var answers = [];
-    	var tutors = [];
-    	//Extract the students and tutors in the groupmates list and create separate lists of their data.
-    	data.groupmates.forEach (function (groupmate, i) {
-    		if (groupmate.userType == 'tutor') {
-    			tutors.push (groupmate);
-    		} else if (groupmate.userType == 'student') {
-    			var owned = false;
-    			if (groupmate.socketId == socket.socketId()) {
-    				owned = true;
-    			}
-    			answers.push ({
-    				'student' : groupmate,
-    				'description' : '',
-    				'selected' : false,
-    				'owned' : owned,
-    				'selectedCount' : 0
-    			});
-    		}
-    	});
+    socket.on ( 'login', function (data) { 
+        
+        $scope.userInfo.imgSrc = data.userAvatar;
+        $scope.userInfo.exp = data.experience;
+        $scope.userInfo.level = $scope.calculateLevel($scope.userInfo.exp);
+        $scope.userInfo.expToNext = $scope.expToNextLevel($scope.userInfo.level + 1);
 
-    	if (!$scope.questions[data.question.uuid]) {
-    		$scope.questions[data.question.uuid] = {
-        		'description' : data.question.description,
-        		'answers' : answers,
-        		'tutors' : tutors,
-        		'uuid' : data.question.uuid,
-                'submitted' : false
-    		};
-    	}
-    });
+        $scope.tutorInfo.imgSrc = data.tutorAvatar;
+        $scope.tutorInfo.username = data.tutorName;
 
-    //Update answers composed by other users.
-    socket.on ('update answer', function (data) {
-    	updateAnswerCounts (data.questionUuid, data.selectedCount);
-    	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
-    });
 
-    //Someone has submitted the answer.
-    socket.on ('submit answer', function (data) {
-        $scope.questions[data.uuid].submitted = true;
-    });
+        if (data.userType == 'student') {
+            //Receives questions composed and sent by tutor
+            socket.on ('add question', function (data) {
+            	var answers = [];
+            	var tutors = [];
+            	//Extract the students and tutors in the groupmates list and create separate lists of their data.
+            	data.groupmates.forEach (function (groupmate, i) {
+            		if (groupmate.userType == 'tutor') {
+            			tutors.push (groupmate);
+            		} else if (groupmate.userType == 'student') {
+            			var owned = false;
+            			if (groupmate.socketId == socket.socketId()) {
+            				owned = true;
+            			}
+            			answers.push ({
+            				'student' : groupmate,
+            				'description' : '',
+            				'selected' : false,
+            				'owned' : owned,
+            				'selectedCount' : 0
+            			});
+            		}
+            	});
 
-    //Someone has submitted the answer.
-    socket.on ('grade question', function (data) {
-        var question = $scope.questions[data.questionUuid];
+            	if (!$scope.questions[data.question.uuid]) {
+            		$scope.questions[data.question.uuid] = {
+                		'description' : data.question.description,
+                		'answers' : answers,
+                		'tutors' : tutors,
+                		'uuid' : data.question.uuid,
+                        'submitted' : false
+            		};
+            	}
+            });
 
-        question.graded = true;
-        question.groupNames = data.groupNames;
-        question.groupAnswers = data.gradedAnswers;
-        question.selectedGroup = data.groupNames[0];
+            //Update answers composed by other users.
+            socket.on ('update answer', function (data) {
+            	updateAnswerCounts (data.questionUuid, data.selectedCount);
+            	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
+            });
+
+            //Someone has submitted the answer.
+            socket.on ('submit answer', function (data) {
+                $scope.questions[data.uuid].submitted = true;
+            });
+
+            //Someone has submitted the answer.
+            socket.on ('grade question', function (data) {
+                var question = $scope.questions[data.questionUuid];
+
+                question.graded = true;
+                question.groupNames = data.groupNames;
+                question.groupAnswers = data.gradedAnswers;
+                question.selectedGroup = data.groupNames[0];
+            });
+
+            socket.on ('update health', function (data) {
+                $scope.health = data;
+            });
+
+            socket.on ('experience payout', function (data) {
+                $scope.userInfo.exp += data.exp;
+                $scope.userInfo.level = $scope.calculateLevel($scope.userInfo.exp);
+                $scope.userInfo.expToNext = $scope.expToNextLevel($scope.userInfo.level + 1);
+            });
+
+            socket.on ('damage shoutout', function (data) {
+                $scope.userInfo.exp += data.experience;
+                $scope.userInfo.level = $scope.calculateLevel($scope.userInfo.exp);
+                $scope.userInfo.expToNext = $scope.expToNextLevel($scope.userInfo.level + 1);
+            });
+        }
     });
 
     //Scope functions.
@@ -77,6 +119,14 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     			$scope.questions[questionUuid].answers[index].selected = true;
     		}
     	}
+    };
+
+    $scope.calculateLevel = function (exp) {
+        return Math.floor(0.1 * Math.sqrt(exp)) + 1;
+    };
+
+    $scope.expToNextLevel = function (level) {
+        return Math.pow ( ((level - 1) / 0.1 ), 2);
     };
 
     var updateOtherAnswer = function (questionUuid, socketId, answerDescription) {
