@@ -29,9 +29,7 @@ var user = sequelize.define('user', {
 	email: { type: Sequelize.STRING },
 	gender: { type: Sequelize.ENUM('Male', 'Female') },
 	token: { type: Sequelize.STRING(511) },
-	avatarId: { type: Sequelize.STRING },
-	levelsSpent: { type: Sequelize.INTEGER }
-
+	avatarId: { type: Sequelize.STRING }
 }, {
 	instanceMethods: {
 		toJSON: function () {
