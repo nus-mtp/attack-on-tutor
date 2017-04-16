@@ -84,3 +84,14 @@ li a:hover {
 	border: 15px solid transparent;
 	border-image: url("/images/border_plain.png") 16 repeat;
 }
+
+.btn {
+	background-color: #A2482E;
+	border-radius:0;
+	color: #FFFFFF;
+}
+
+.btn:hover, .btn:focus, .btn:active, .btn.active, .open > .dropdown-toggle.btn {
+	background-color: #893C25;
+	color: #FFFFFF;
+}

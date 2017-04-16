@@ -36,12 +36,12 @@
 		<% if(user){ %>
 			<h2 id="welcomeText" class="font brownFont centerText">Welcome, <%= user.name %>!</h2>
 			<a href="/dashboard">
-				<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Go to Dashboard!</button></div>
+				<div class="centralise font"><button type="button" class="btn btn-lg">Go to Dashboard!</button></div>
 			</a>
 		<% } else{ %>
 			<h2 id="hiddenText">-</h2>
 			<a href="/login"> 
-				<div class="centralise font"><button type="button" class="btn btn-danger btn-lg">Login Here!</button></div>	
+				<div class="centralise font"><button type="button" class="btn btn-lg">Login Here!</button></div>	
 			</a>
 		<% } %>
     </div>
