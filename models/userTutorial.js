@@ -10,20 +10,20 @@ module.exports = function (sequelize, DataTypes) {
 			values: ['student', 'tutor'],
 			allowNull: false
 		},
-		tutorialId: {
-			type: DataTypes.UUID,
-			references: {
-				model: models.Tutorial,
-				key: 'id'
-			}
-		},
-		userId: {
-			type: DataTypes.STRING,
-			references: {
-				model: models.User,
-				key: 'id'
-			}
-		},
+		// tutorialId: {
+		// 	type: DataTypes.UUID,
+		// 	references: {
+		// 		model: models.Tutorial,
+		// 		key: 'id'
+		// 	}
+		// },
+		// userId: {
+		// 	type: DataTypes.STRING,
+		// 	references: {
+		// 		model: models.User,
+		// 		key: 'id'
+		// 	}
+		// },
 		exp: {
 			type: DataTypes.INTEGER
 		}
