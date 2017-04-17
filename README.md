@@ -82,6 +82,20 @@ config.json
 
 ```
 
+### 5. Migrate and set up database using the [Sequelize CLI](https://github.com/sequelize/cli)
+
+Global install
+```
+npm install -g sequelize-cli
+sequelize db:migrate
+```
+
+Local install to node_modules folder
+```
+npm install --save sequelize-cli
+.\node_modules\.bin\sequelize db:migrate
+```
+
 # Development
 
 ## Naming Branches
