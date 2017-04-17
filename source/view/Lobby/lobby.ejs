@@ -91,7 +91,7 @@
 										<div class="groups-list">
 			                                <div class="container-fluid">
 			                                    <div class="row outer-container font">
-			                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
+			                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index: selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
 			                                    </div>
 			                                </div>
 										</div>
@@ -131,9 +131,9 @@
 			                        	</div>
 
 			                        	<div class="row">
-			                            	<button class="btn btn-success create-group font" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
+			                            	<button class="btn create-group font" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
 			                            	<div ng-if="selectedGroup > 0" style="float:right; margin-top:15px;">
-			                            		<button class="btn btn-warning delete-group font" ng-click="deleteGroup()">Delete Group</button>
+			                            		<button class="btn delete-group font" ng-click="deleteGroup()">Delete Group</button>
 			                            	</div>
 			                        	</div>
 			                        </div>
@@ -158,9 +158,9 @@
                                 <div>
 									<h3 class="font whiteFont boldText">Groups To Send To:</h3>
                                     <div class="row-fluid">
-                                        <button class="btn select-group font" ng-class="{'btn-info' : inSelectedGroups($index), 'btn-success' : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
+                                        <button class="btn select-group font" ng-class="{'btn-info' : inSelectedGroups($index) : !inSelectedGroups($index)}" ng-repeat="group in socket.getSocketGroups()" ng-click="toggleSelectedGroup($index)">{{group}}</button>
 
-                                        <button class="btn btn-success send-question floatRight font" ng-disabled="composerQuestion.description.length == 0 || selectedGroups.length == 0" ng-click="sendQuestion()">Attack!</button>
+                                        <button class="btn send-question floatRight font" ng-disabled="composerQuestion.description.length == 0 || selectedGroups.length == 0" ng-click="sendQuestion()">Attack!</button>
                                     </div>
                                 </div>
 							</div>
@@ -176,7 +176,7 @@
 	                                        </div>
 	                    
 											<div class="row">
-		                                    	<button class="btn answers-received-select-group font" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index], 'btn-success' : question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
+		                                    	<button class="btn answers-received-select-group font" ng-class="{'btn-info' : question.selectedGroup == question.groupNames[$index]: question.selectedGroup != question.groupNames[$index]}" ng-repeat="group in question.groupNames" ng-click="setSelectedGroup(uuid, $index)">{{group}}</button>
 	                                        </div>
 	                                        
 											<div class="row group-received-answers" ng-show="question.groupAnswers[question.selectedGroup].answered">
@@ -201,7 +201,7 @@
 												
 												<div class="container-fluid">
 		                                        	<input class="experience-input font maximumWidth" type="number" ng-model="question.groupAnswers[question.selectedGroup].experience" ng-disabled="question.graded"/>
-														<button class="btn btn-success grade-question floatRight font" ng-if="isQuestionAnswered(uuid)" ng-disabled="question.graded" ng-click="gradeQuestion(uuid)">Grade!</button>	
+														<button class="btn grade-question floatRight font" ng-if="isQuestionAnswered(uuid)" ng-disabled="question.graded" ng-click="gradeQuestion(uuid)">Grade!</button>	
 		                                        </div>
 	                                        </div>
 	                                        
@@ -255,7 +255,7 @@
 										<div class="groups-list">
 			                                <div class="container-fluid">
 			                                    <div class="row outer-container font">
-			                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index, 'btn-success' : selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
+			                                        <button class="btn select-group" ng-class="{'btn-info' : selectedGroup == $index: selectedGroup != $index}" ng-repeat="group in socket.getAllSocketGroups()" ng-click="setSelectedGroup($index)">{{group}}</button>
 			                                    </div>
 			                                </div>
 										</div>
@@ -295,9 +295,9 @@
 			                        	</div>
 
 			                        	<div class="row">
-			                            	<button class="btn btn-success create-group font" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
+			                            	<button class="btn create-group font" ng-click="createGroup()" ng-disabled="!isValidGroupParams()" style="float:right; margin-top:15px;">Create Group!</button>
 			                            	<div ng-if="selectedGroup > 0" style="float:right; margin-top:15px;">
-			                            		<button class="btn btn-warning delete-group font" ng-click="deleteGroup()">Delete Group</button>
+			                            		<button class="btn delete-group font" ng-click="deleteGroup()">Delete Group</button>
 			                            	</div>
 			                        	</div>
 			                        </div>
@@ -389,8 +389,8 @@
 
 	                                    <div class="container-fluid" ng-show="!question.graded">
 	                                    	<div class="row font whiteFont">
-	                                    		<button class="btn btn-success update-answer font" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left;">Update!</button>
-												<button class="btn btn-success submit-answer floatRight font" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)">Submit!</button>
+	                                    		<button class="btn update-answer font" ng-disabled="question.submitted" ng-click="updateAnswer(uuid)" style="float:left;">Update!</button>
+												<button class="btn submit-answer floatRight font" ng-if="hasAllVotes(uuid) && !question.submitted" ng-click="submitAnswer(uuid)">Submit!</button>
 	                                    	</div>
 	                                    </div>
 	                                </div>

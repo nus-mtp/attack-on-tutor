@@ -17,3 +17,15 @@ h2 {
 .separateModules {
 	margin-bottom: 2%;
 }
+
+.dashboardGeneralFontSize {
+	font-size: 1.5em;
+}
+
+.dashboardMarginBottom {
+	margin-bottom: 1em;
+}
+
+.dashboardMarginLeft {
+	margin-left: 1em;
+}

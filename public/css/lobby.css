@@ -32,23 +32,7 @@ h3 {
 /* -------------------------- */
 
 /* Outer Border */
-.border-normal {
-	border: 20px solid transparent;
-	border-image: url("/images/border.png") 16 repeat;
-	background-color:rgba(0, 0, 0, 0.4);
-}
 
-.border-bronze-trimmed {
-	border: 15px solid transparent;
-	border-image: url("/images/border2.png") 16 repeat;
-	background-color:rgba(0, 0, 0, 0.4);
-}
-
-/* Inner Border */
-.border-gold-trimmed {
-	border: 15px solid transparent;
-	border-image: url("/images/border_plain.png") 16 repeat;
-}
 
 /* -------------------------- */
 
