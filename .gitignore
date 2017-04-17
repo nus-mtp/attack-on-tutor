@@ -67,8 +67,6 @@ npm-debug.log.*
 documentation/jsdoc/
 
 # Ignore sequelize-cli folders
-migrations/
-models/
 seeders/
 
 # Ignore config

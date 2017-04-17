@@ -8,9 +8,7 @@
 		"coursename": "TEST COURSE 1",
 		"week": "Every Week",
 		"day": "Monday",
-		"time": "1000 - 1200",
-		"createdAt": null,
-		"updatedAt": null
+		"time": "1000 - 1200"
 	}, {
 		"id": "test2",
 		"grouptype": "Tutorial",
@@ -20,9 +18,7 @@
 		"coursename": "TEST COURSE 2",
 		"week": "Every Week",
 		"day": "Tuesday",
-		"time": "1000 - 1200",
-		"createdAt": null,
-		"updatedAt": null
+		"time": "1000 - 1200"
 	}, {
 		"id": "test3",
 		"grouptype": "Tutorial",
@@ -32,9 +28,7 @@
 		"coursename": "TEST COURSE 3",
 		"week": "Every Week",
 		"day": "Wednesday",
-		"time": "1000 - 1200",
-		"createdAt": null,
-		"updatedAt": null
+		"time": "1000 - 1200"
 	}, {
 		"id": "test4",
 		"grouptype": "Tutorial",
@@ -44,9 +38,7 @@
 		"coursename": "TEST COURSE 4",
 		"week": "Every Week",
 		"day": "Thursday",
-		"time": "1000 - 1200",
-		"createdAt": null,
-		"updatedAt": null
+		"time": "1000 - 1200"
 	}, {
 		"id": "test5",
 		"grouptype": "Tutorial",
@@ -56,8 +48,7 @@
 		"coursename": "TEST COURSE 5",
 		"week": "Every Week",
 		"day": "Friday",
-		"time": "1000 - 1200",
-		"createdAt": null,
-		"updatedAt": null
-	}]
+		"time": "1000 - 1200"
+	}
+	]
 }

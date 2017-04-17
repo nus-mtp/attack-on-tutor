@@ -2,7 +2,7 @@ var express = require ('express');
 var app = module.exports = express ();
 var fs = require ('fs');
 var path = require ('path');
-
+var models = require('./models');
 
 app.set ('rootPath', __dirname);
 app.set('test', true); // Set to true to populate db with fake modules when /test is visited.
@@ -88,4 +88,5 @@ var server = app.listen
 	}	
 )
 
-lobby.listen (server);
+models.sequelize.sync().then(function () { lobby.listen (server) });
+//lobby.listen (server);

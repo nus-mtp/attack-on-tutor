@@ -1,6 +1,7 @@
 var express = require('express');
 var Tutorial = require('../model/Tutorial');
 var lobby = require('../model/lobby');
+var db = require('./db');
 var app = require('../../app');
 
 /**
@@ -57,17 +58,17 @@ var enterLobby = function (req, res, next) {
 	var tutorialName = req.params.tutorialId;
 	//var tutorialId = req.body['tut-id'];
 
-	Tutorial.getTutorialByCoursecodeAndName(coursecode, tutorialName).then(function (result) {
+	db.getTutorialByCoursecodeAndName(coursecode, tutorialName).then(function (result) {
 		var tutId = result.dataValues.id;
-		Tutorial.checkIfInTutorialUserList(userId, tutId).then(function (data) {
+		db.checkIfInTutorialUserList(userId, tutId).then(function (data) {
 			if (data !== null) {
-				Tutorial.findTutorialTutorID(tutId).then( 						// Get tutor ID
+				db.findTutorialTutorID(tutId).then( 						// Get tutor ID
 					function (data) {
 						console.log(data == null);
 						if (data != null) {
 							var tutorId = data.dataValues.userId;
 							var userRole = (tutorId == userId) ? 'tutor' : 'student'; 	// Check if user is tutor
-							Tutorial.findTutorialInfo(tutId).then( 				// Get tutorial info
+							db.findTutorialInfo(tutId).then( 				// Get tutorial info
 								function(data) {
 									var tut = data[0].dataValues;
 									req.body.tut = tut;
@@ -101,7 +102,7 @@ var enterLobby = function (req, res, next) {
  * @return boolean
  */
 var userIsTutorOfClass = function (uid, tid) {
-	Tutorial.findTutorialTutorID(tid).then(function (data) {
+	db.findTutorialTutorID(tid).then(function (data) {
 		if (data !== null) {
 			return uid == data.dataValues.userId;
 		} else {
@@ -120,7 +121,7 @@ var getUsersInTutorial = function (req, res, next) {
 	var tid = req.body.tutorialId;
 	var users = {}
 	var tutorId = '';
-	Tutorial.findAndCountAllUsersInTutorial(tid).then(function (data) {
+	db.findAndCountAllUsersInTutorial(tid).then(function (data) {
 		var returnObj = processLobbyUsers(data);
 		res.json({ success: true, data: returnObj });
 	});
@@ -136,7 +137,7 @@ var processLobbyUsers = function (data) {
 	for (i = 0; i < data.rows.length; i++) {
 		var studentObj = {};
 		var student = data.rows[i].dataValues;
-		var userTut = student.tutorials[0].userTutorial.dataValues;
+		var userTut = student.Tutorials[0].userTutorial.dataValues;
 		if (userTut.role != 'student') {
 			returnObj.tutor = student;
 		} else {

@@ -6,8 +6,7 @@
 		"gender": "Male",
 		"token": "fake-token-1",
 		"avatarId": "avatar-01",
-		"createdAt": null,
-		"updatedAt": null
+		"levelsSpent": 0
 	}, {
 		"id": "c0123456",
 		"name": "SAD STUDENT",
@@ -15,8 +14,7 @@
 		"gender": "Female",
 		"token": "fake-token-2",
 		"avatarId": "avatar-01",
-		"createdAt": null,
-		"updatedAt": null
+		"levelsSpent": 0
 	}, {
 		"id": "d0123456",
 		"name": "SMART STUDENT",
@@ -24,8 +22,7 @@
 		"gender": "Male",
 		"token": "fake-token-3",
 		"avatarId": "avatar-01",
-		"createdAt": null,
-		"updatedAt": null
+		"levelsSpent": 0
 	}, {
 		"id": "f0123456",
 		"name": "BRIGHT STUDENT",
@@ -33,8 +30,7 @@
 		"gender": "Male",
 		"token": "fake-token-4",
 		"avatarId": "avatar-01",
-		"createdAt": null,
-		"updatedAt": null
+		"levelsSpent": 0
 	}, {
 		"id": "g0123456",
 		"name": "FUN STUDENT",
@@ -42,7 +38,6 @@
 		"gender": "Female",
 		"token": "fake-token-5",
 		"avatarId": "avatar-01",
-		"createdAt": null,
-		"updatedAt": null
+		"levelsSpent": 0
 	}]
 }

@@ -17,43 +17,29 @@ angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) 
 
 angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http, $q, $window) {
 
-    var promises = [];
     var tuts = [];
 
-    promises.push($http({
-
+    $http({
         method: 'POST',
         url: '/api/dashboard/forceSyncIVLE'
-
     }).then(function successCallback(response) {
-
-    }, function errorCallback(response) {
-        console.log('Error: ' + response.message);
-    }));
-
-    promises.push(
         $http({
             method: 'POST', 
             url: '/api/dashboard/getTutorials'
-        }, function successCallback(response) {
-            //console.log(response);
+        }).then(function successCallback (response) {
+            var tuts = response.data.data.rows;
+            for (i = 0; i < tuts.length; i++) { // set leaderboard visibility to false
+                tuts[i].leaderboardIsVisible = false;
+                tuts[i].index = i;
+            }
+            $scope.tuts = tuts;
         }, function errorCallback(response) {
             console.log('Error: ' + response.message);
-        })
-    );
-
-    $q.all(promises).then(function (responseArray) {
-        if (responseArray.length == 1) { // if we aren't syncing with ivle
-            tuts = responseArray[0].data.data.rows;
-        } else {
-            tuts = responseArray[1].data.data.rows;
-        }
-        for (i = 0; i < tuts.length; i++) { // set leaderboard visibility to false
-            tuts[i].leaderboardIsVisible = false;
-            tuts[i].index = i;
-        }
-        $scope.tuts = tuts;
+        });
+    }, function errorCallback(response) {
+        console.log('Error: ' + response.message);
     });
+
 
     $scope.redirect = function(tut) {
         $window.location.href = 'lobby/'+tut.coursecode+'/'+tut.name;
@@ -77,11 +63,10 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
                 console.log($scope.tuts[tut.index].students);
             }, function errorCallback(response) {
                 console.log('Error: ' + response.message);
-            });
+        });
     }
 
 });
-
 
 
 /**

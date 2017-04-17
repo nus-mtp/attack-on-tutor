@@ -18,11 +18,11 @@ var get = function(req, res, next) {
 		makeTestModules();
 		makeTestStudents();
 		// TODO: Make the current user a tutor of TT1011 in a way thats NOT LIKE THIS, OMG.
-		sequelize.query("INSERT INTO userTutorials VALUES ('tutor', 'test1', '"+user.id+"', current_timestamp(), current_timestamp())").then(
-			function (data) {
-				console.log(data);
-			}
-		);
+		// sequelize.query("INSERT INTO userTutorials VALUES ('tutor', 'test1', '"+user.id+"', current_timestamp(), current_timestamp())").then(
+		// 	function (data) {
+		// 		console.log(data);
+		// 	}
+		// );
 		res.send('Database populated.');
 	} else {
 		console.log('Test mode is inactive.');
@@ -49,7 +49,22 @@ var makeTestModules = function () {
 var makeTestStudents = function () {
 	var students = testStudents.students;
 	User.bulkCreate(students, { ignoreDuplicates: true}).then(function (data) {
+		for (var i in data) {
+			data[i].addAvatar('avatar-01');
+			data[i].addTutorial('general-chat');
+		}
 	});
+}
+
+var makeTestUserTuts = function () {
+	for (var studentIndex in students) {
+		var student = students[studentIndex];
+		if (studentIndex == 0) {
+			userTutorial.findOrCreate({ defaults: { role: 'tutor', tutorialId: 'test1',  userId: student.id, exp: 0} });
+		} else {
+			userTutorial.findOrCreate({ defaults: { role: 'student', tutorialId: 'test1',  userId: student.id, exp: 0} });
+		}
+	}
 }
 
 module.exports.get = get

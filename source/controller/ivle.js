@@ -1,6 +1,6 @@
 var models = require ('../../models');
 var User = models.User;
-var tutorial = models.Tutorial;
+var Tutorial = models.Tutorial;
 var userTutorial = models.userTutorial;
 
 var rest = require ('rest');
@@ -14,7 +14,7 @@ var app = require ('../../app');
  * @returns {Promise}
  */
 var findTutorial = function (uid, tid) {
-	return tutorial.findAndCountAll ({
+	return Tutorial.findAndCountAll ({
 		where: {
 			id: tid
 		},
@@ -66,7 +66,7 @@ var checkIfInTutorialUserList = function (uid, tid) {
  * @returns {Promise}
  */
 var findAndCountAllTutorials = function (uid) {
-	return tutorial.findAndCountAll ({
+	return Tutorial.findAndCountAll ({
 		include: [{
 			model: User,
 			attributes: ['id'],
@@ -112,7 +112,7 @@ var findTutorialSession = function (uid) {
  * @returns {Promise}
  */
  var findAllTutorialInfoOfUser = function (uid) {
- 	return tutorial.findAndCountAll({
+ 	return Tutorial.findAndCountAll({
  		include: [{
  			model: userTutorial,
  			attributes: ['userId', 'tutorialId'],
@@ -190,7 +190,7 @@ var forceSyncIVLE = function (uid) {
 			}
 			groups = removeDuplicateTuts(groups);
 			return Promise.all (groups.map (function (group) {
-				return tutorial.findOrCreate ({
+				return Tutorial.findOrCreate ({
 					where: {
 						courseid: group['CourseID'],
 						name: group['GroupName']
@@ -291,23 +291,6 @@ var getTutorialByCoursecodeAndName = function (coursecode, name) {
 }
 
 /**
- * Change user EXP
- * @param  uid
- * @param {int} amount [Amount of points to increase/decrease by]
- * @return {Promise}
- */
-var changeExp = function (uid, tid, amount) {
-	return userTutorial.findOne({
-		where: {
-			userId: uid,
-			tutorialId: tid
-		}
-	}).then(function (result) {
-		return result.increment(['exp'], { by: amount });
-	});
-}
-
-/**
  * Removes duplicate tutorials from the IVLE object (which mysteriously
  * returns duplicates, for some reason)
  * @param  objArray
@@ -321,12 +304,4 @@ var removeDuplicateTuts = function (objArray) {
 
 }
 
-module.exports = tutorial;
-module.exports.findTutorialSession = findTutorialSession;
-module.exports.findAllTutorialInfoOfUser = findAllTutorialInfoOfUser;
-module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
-module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
-module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
-module.exports.getTutorialByCoursecodeAndName = getTutorialByCoursecodeAndName;
-module.exports.getUserInfo = getUserInfo;
-module.exports.changeExp = changeExp;
+module.exports.forceSyncIVLE = forceSyncIVLE;

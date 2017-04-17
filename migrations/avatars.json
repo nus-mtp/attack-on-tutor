@@ -1,0 +1,40 @@
+{
+	"array": [
+		{
+			"id": "avatar-01",
+			"name": "Sad Clown",
+			"price": 0,
+			"url": "images/avatars/avatar-01.png"
+		},
+		{
+			"id": "avatar-02",
+			"name": "Demon Girl",
+			"price": 1,
+			"url": "images/avatars/avatar-02.png"
+		},
+		{
+			"id": "avatar-03",
+			"name": "Grim Reaper",
+			"price": 1,
+			"url": "images/avatars/avatar-03.png"
+		},
+		{
+			"id": "avatar-04",
+			"name": "Alien Warrior",
+			"price": 2,
+			"url": "images/avatars/avatar-04.png"
+		},
+		{
+			"id": "avatar-05",
+			"name": "Blind Seer",
+			"price": 3,
+			"url": "images/avatars/avatar-05.png"
+		},
+		{
+			"id": "avatar-06",
+			"name": "Happy Orc",
+			"price": 3,
+			"url": "images/avatars/avatar-06.png"
+		}
+	]
+}
