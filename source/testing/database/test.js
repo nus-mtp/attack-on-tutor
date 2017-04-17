@@ -3,8 +3,9 @@ var app = require('../../../app');
 var sequelize = require('../../sequelize');
 var Sequelize = require('sequelize');
 
-var User = require('../../model/User');
-var Tutorial = require('../../model/Tutorial');
+var models = require('../../../models');
+var User = models.User;
+var Tutorial = models.Tutorial;
 
 var testModules = require('./test_modules.json');
 var testStudents = require('./test_students.json');
