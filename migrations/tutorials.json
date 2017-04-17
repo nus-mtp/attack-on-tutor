@@ -1,0 +1,15 @@
+{
+	"array": [
+		{		
+			"id": "general-chat",
+			"grouptype": "Tutorial",
+			"name": "1",
+			"courseid": "general-chat-course",
+			"coursecode": "GC1234",
+			"coursename": "GENERAL CHAT",
+			"week": "Every Week",
+			"day": "Sunday",
+			"time": "1000 - 1200"
+		}
+	]
+}
