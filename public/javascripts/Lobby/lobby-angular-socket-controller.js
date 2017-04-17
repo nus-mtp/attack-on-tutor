@@ -1,4 +1,9 @@
-//Controller for socket events used throughout the page.
+/**
+ * Controller for setting up client-side socket data.
+ * Front-end javascript code inside public folder.
+ *
+ * @module javascripts/lobby/lobby-angular-socket-controller
+ */
 angular.module('lobbyApp').controller ('socketCtrl', function ($scope, $window, socket) {
     //Send this event to notify server of a new connection.
     socket.on ('connect', function() {
