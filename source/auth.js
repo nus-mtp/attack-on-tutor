@@ -1,7 +1,6 @@
 var fs = require ('fs');
 var express = require ('express');
 var app = require ('../app');
-var user = require ('./model/User.js');
 var jwt = require ('jsonwebtoken');
 
 // Basic JSON web token verification
