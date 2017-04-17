@@ -1,3 +1,9 @@
+/**
+ * Controller for the chat functionalities within the lobby.
+ * Front-end javascript code inside public folder.
+ *
+ * @module javascripts/lobby/lobby-angular-chat-controller
+ */
 angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, socket) {
 	$scope.socket = socket;
 
@@ -7,8 +13,11 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
 	$scope.messages = {};
 	$scope.typingMessages = [];
     
-    var FADE_TIME = 150; // ms
-    var TYPING_TIMER_LENGTH = 400; // ms
+    //Fade timer for the typing messages.
+    var FADE_TIME = 150; //ms
+    var TYPING_TIMER_LENGTH = 400; //ms
+
+    //Colors for the usernames.
     var COLORS = [
 		'#e21400', '#91580f', '#f8a700', '#f78b00',
 		'#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
@@ -20,9 +29,11 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
 	
 	var username = $window.userId;
 
-    //Socket listeners
+    /*
+     *   Listeners for chat client.
+     */
     
-    //Whenever the server emits 'login', log the login message
+    //Whenever the server emits 'login', log the login message.
     socket.on ('login', function (data) {
         //Display the welcome message
         $scope.defaultGroup = data.defaultGroup;
@@ -70,18 +81,21 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
         removeChatTyping(data);
     });
 
+    //Add the new group to this client's chat channels.
     socket.on ('update users', function (data) {
     	if (!$scope.messages[data.groupList[0]]) {
 			$scope.messages[data.groupList[0]] = [];
     	}
     });
 
+    //Open this chat channel when this client has been added to a chat channel.
     socket.on ('added group', function (data) {
     	if (!$scope.messages[data]) {
     		$scope.messages[data] = [];
     	}
     });
 
+    //Clear the chat channel's data when this client has been removed from the group.
     socket.on ('deleted group', function (data) {
     	$scope.selectedGroup = 0;
         delete $scope.messages[data];
@@ -108,12 +122,22 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
         }
     });
 	
-    //Scope functions.
+    /*
+     *  Scope functions used by angular in the DOM.
+     */
+
+     /**
+     * Set the group with the given index as the selected chat channel.
+     *
+     * @param {Integer} index
+     */
     $scope.setSelectedGroup = function (index) {
     	$scope.selectedGroup = index;
     };
 
-	//Sends a chat message
+     /**
+     * Send a message to the server.
+     */
     $scope.sendMessage = function () {
         var message = $scope.chatMessage;
         //Prevent markup from being injected into the message
@@ -137,8 +161,13 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
 		socket.emit('stop typing');
 		typing = false;
     };
-	
-	//Gets the color of a username through our hash function
+
+    /**
+    * Get the color of a username through a hash function
+    *
+    * @param {String} username
+    * @returns {String} color
+    */
     $scope.getUsernameColor = function (username) {
         //Compute hash code
         var hash = 7;
@@ -151,13 +180,17 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
         return COLORS[index];
     };
 	
-	// Updates the typing event
+	/**
+    * Update the server whenever this client starts/stops typing.
+    */
     $scope.updateTyping = function () {
         if (!typing) {
             typing = true;
+            //Send the typing event to other users with the group name of the chat channel this user is typing into.
             socket.emit ('typing', socket.getSocketGroups()[$scope.selectedGroup]);
         }
         
+        //Timer to track when was the last keystroke by the user in the input field.
         lastTypingTime = (new Date()).getTime();
         setTimeout(function () {
             var typingTimer = (new Date()).getTime();
@@ -169,22 +202,41 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
         }, TYPING_TIMER_LENGTH);
     };
 	
-	//Private functions.
+	/*
+     *  Private functions used within the controller.
+     */
 	
-	//Prevents input from having injected markup
+	/**
+    * Prevents input from having injected markup.
+    *
+    * @param {String} input
+    * @returns {String} parsed
+    */
     var cleanInput = function (input) {
         return $('<div/>').text(input).text();
     };
 
+    /**
+    * Insert message into chat log.
+    *
+    * @param {String} message
+    * @param {String} groupname
+    */
     var logMessage = function (message, groupname) {
         if (!$scope.messages[groupname]) {
         	$scope.messages[groupname] = [];
         }
         $scope.messages[groupname].push(message);
 
+        //Scroll chat window to the last received message.
         $('.chat-area')[0].scrollTop = $('.chat-area')[0].scrollHeight;
     };
 	
+    /**
+    * Wrapper for logMessage used for logging participants entering/leaving lobby.
+    *
+    * @param {Object} data
+    */
 	var addParticipantsMessage = function (data) {
         var message = '';
         if (data.numUsers === 1) {
@@ -198,6 +250,12 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
 		}, $scope.defaultGroup);
     };
 	
+    /**
+    * Wrapper for logMessage to log messages from users.
+    *
+    * @param {Object} data
+    * @param {String} groupname
+    */
     var addChatMessage = function (data, groupname) {
         logMessage ({
 			'user' : data.username,
@@ -206,7 +264,13 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
 		}, groupname);
     };
 	
+    /**
+    * Wrapper for logMessage used for "[user] is typing" messages.
+    *
+    * @param {Object} data
+    */
     var addChatTyping = function (data) {
+        //Display only if this socket client is a member of a group that the message is being typed in.
     	if (socket.getSocketGroups().indexOf (data.group) >= 0) {
         	$scope.typingMessages.push({
             	'user' : data.username,
@@ -215,6 +279,11 @@ angular.module('lobbyApp').controller ('chatCtrl', function ($scope, $window, so
         }
     };
 
+    /**
+    * Remove "[user] is typing" message belonging to a specific user.
+    *
+    * @param {Object} data
+    */
     var removeChatTyping = function (data) {
     	var indexToRemove = [];
     	$scope.typingMessages.forEach (function (value, i) {

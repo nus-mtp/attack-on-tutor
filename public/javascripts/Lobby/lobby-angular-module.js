@@ -1,5 +1,6 @@
 angular.module('lobbyApp', ['ngSanitize']);
 
+//Factory for wrapping socketio as listeners are async and require manually updating angular.
 angular.module('lobbyApp').factory('socket', function ($rootScope, $window) {
 	var connect = function (namespace) {
 	    return io.connect(namespace, {
@@ -63,10 +64,10 @@ angular.module('lobbyApp').factory('socket', function ($rootScope, $window) {
 		getAllSocketGroups: function () {
 			return allSocketGroups;
 		},
-		//Wrappers for Socket IO client functions.
 		socketId: function () {
 			return socket.nsp + '#' + socket.id;
 		},
+		//Wrappers for Socket IO client functions.
 		on: function (eventName, callback) {
 			socket.on (eventName, function () {  
 				var args = arguments;
