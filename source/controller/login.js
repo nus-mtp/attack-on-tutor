@@ -54,8 +54,12 @@ var callback = function (req, res, next) {
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
 						user.addAvatar('avatar-01');
-						user.addTutorial('general-chat');
-						//logger.info(result.UserID + ' created user');
+						user.addTutorial('general-chat', {
+								role: 'tutor',
+								exp: 0
+								}
+						);
+						//dataValues.info(result.UserID + ' created user');
 						res.cookie('token', authToken);
 						return res.redirect('/');
 					}).catch(function(err){
