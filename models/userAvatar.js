@@ -1,19 +1,21 @@
 "use strict";
 
+var models = require('./');
+
 module.exports = function (sequelize, DataTypes) {
 
 	var userAvatar = sequelize.define('userAvatar', {
 		userId: {
 			type: DataTypes.STRING,
 			references: {
-				model: 'user',
+				model: models.User,
 				key: 'id'
 			}
 		},
 		avatarId: {
 			type: DataTypes.STRING,
 			references: {
-				model: 'avatar',
+				model: models.Avatar,
 				key: 'id'
 			}
 		}

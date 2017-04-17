@@ -1,5 +1,7 @@
 "use strict";
 
+var models = require('./');
+
 module.exports = function (sequelize, DataTypes) {
 
 	var Avatar = sequelize.define('Avatar', {
@@ -15,7 +17,6 @@ module.exports = function (sequelize, DataTypes) {
 		classMethods: {
 			associate: function (models) {
 				Avatar.belongsToMany(models.User, {
-					foreignKey: 'avatarId',
 					through: 'userAvatar'
 				});
 			}

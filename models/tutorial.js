@@ -1,5 +1,7 @@
 "use strict";
 
+var models = require('./');
+
 module.exports = function (sequelize, DataTypes) {
 	var Tutorial = sequelize.define ('Tutorial', {
 		id: {
@@ -33,6 +35,14 @@ module.exports = function (sequelize, DataTypes) {
 			type: DataTypes.STRING
 		}
 	}, {
+		classMethods: {
+			associate: function (models) {
+				Tutorial.belongsToMany(models.User, {
+					through: 'userTutorial'
+				});
+			}
+		}		
+	}, {
 		indexes: [
 			{
 				name: 'name',
@@ -43,15 +53,6 @@ module.exports = function (sequelize, DataTypes) {
 				fields: ['courseid']
 			}
 		]
-	}, {
-		classMethods: {
-			associate: function (models) {
-				Tutorial.belongsToMany(models.User, {
-					foreignKey: 'tutorialId',
-					through: 'userTutorial'
-				});
-			}
-		}
 	});
 
 	return Tutorial;

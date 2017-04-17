@@ -1,5 +1,7 @@
 'use strict';
 
+var models = require('./');
+
 module.exports = function(sequelize, DataTypes) {
 
 	var User = sequelize.define('User', {
@@ -32,6 +34,17 @@ module.exports = function(sequelize, DataTypes) {
 		avatarId: { type: DataTypes.STRING },
 		levelsSpent: { type: DataTypes.INTEGER }
 	}, {
+		classMethods: {
+			associate: function(models) {
+        		User.belongsToMany(models.Tutorial, {
+        			through: 'userTutorial'
+        		});
+        		User.belongsToMany(models.Avatar, {
+        			through: 'userAvatar'
+        		});
+    		}
+    	}		
+	}, {
 		instanceMethods: {
 			toJSON: function () {
 				var values = this.get();
@@ -39,15 +52,6 @@ module.exports = function(sequelize, DataTypes) {
 				return values;
 			}
 		}
-	}, {
-		classMethods: {
-			associate: function(models) {
-        		User.belongsToMany(models.Tutorial, {
-        			foreignKey: 'userId',
-        			through: 'userTutorial'
-        		});
-    		}
-    	}
     });
 
 	return User;
