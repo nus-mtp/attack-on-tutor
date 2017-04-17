@@ -25,7 +25,8 @@ module.exports = function (sequelize, DataTypes) {
 		// 	}
 		// },
 		exp: {
-			type: DataTypes.INTEGER
+			type: DataTypes.INTEGER,
+			allowNull: false
 		}
 	});
 
