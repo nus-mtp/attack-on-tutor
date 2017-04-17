@@ -4,7 +4,7 @@ var rest = require('rest');
 var app = require('../../app');
 var level = require('./level');
 var db = require('./db');
-
+var ivle = require('./ivle');
 var tutorial = require('../model/Tutorial');
 
 var protocol = 'https';
@@ -52,14 +52,13 @@ if (!usehttps) {
 var forceSyncIVLE = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
-		tutorial.forceSyncIVLE(user.id).catch(function (err) {
+		ivle.forceSyncIVLE(user.id).catch(function (err) {
 			res.json({success: false, message: err});
 		}).then(function() {
 			res.json({success: true, result: 'Synchronization Complete'});
 		}); 
 	} else {
 		//res.send("Permission denied");
-		
 		var errorMessage = "Permission Denied (E2)";
 		
 		res.render('error.ejs', {
@@ -79,7 +78,7 @@ var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
 		var tuts = [];
-		tutorial.findAndCountAllTutorials(user.id).then(function (data) {
+		db.findAndCountAllTutorials(user.id).then(function (data) {
 			for (i = 0; i < data.rows.length; i++) {
 				tuts.push(data.rows[i].dataValues);
 			}
@@ -120,7 +119,7 @@ var processUserInfo = function (result) {
 	var returnObject = {}
 	returnObject.name = user.name;
 	returnObject.avatarId = user.avatarId;
-	console.log(user.Avatars);
+	returnObject.avatars = user.Avatars;
 	returnObject.imgSrc = "images/avatars/" + user.avatarId + ".png";
 	var tuts = user.Tutorials;
 	var tutArray = [];

@@ -2,6 +2,8 @@ var models = require('../../models');
 var User = models.User;
 var Tutorial = models.Tutorial;
 var Avatar = models.Avatar;
+var userTutorial = models.userTutorial;
+var userAvatar = models.userAvatar;
 
 
 /**
@@ -21,6 +23,20 @@ var changeExp = function (uid, tid, amount) {
 	});
 }
 
+/**
+ * Find and count all tutorials of one user
+ * @param uid
+ * @returns {Promise}
+ */
+var findAndCountAllTutorials = function (uid) {
+	return Tutorial.findAndCountAll ({
+		include: [{
+			model: User,
+			attributes: ['id'],
+			where: {id: uid}
+		}]
+	});
+};
 
 /**
  * Find and count all users in some tutorial
@@ -62,7 +78,7 @@ var getUserInfo = function (uid) {
  * @return Promise   
  */
 var getTutorialByCoursecodeAndName = function (coursecode, name) {
-	return tutorial.findOne({
+	return Tutorial.findOne({
 		attributes: ['id'],
 		where: {
 			coursecode: coursecode,
@@ -113,14 +129,12 @@ var findTutorialTutorID = function (tid) {
  * @returns {Promise}
  */
 var findTutorialInfo = function (tid) {
-	return tutorial.findAll({
+	return Tutorial.findAll({
 		where: {
 			id: tid
 		}
 	});
 }
-
-
 
 module.exports.changeExp = changeExp;
 module.exports.findAndCountAllUsersInTutorial =  findAndCountAllUsersInTutorial;
@@ -129,3 +143,4 @@ module.exports.getTutorialByCoursecodeAndName = getTutorialByCoursecodeAndName;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.findTutorialInfo = findTutorialInfo;
+module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
