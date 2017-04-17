@@ -2,47 +2,48 @@
 var sequelize = require ('../sequelize');
 var Sequelize = require ('sequelize');
 
-var user = sequelize.define('user', {
-	id: {
-		type: Sequelize.STRING,
-		unique: true,
-		primaryKey: true,
-		validate: {
-			notEmpty: true,
-			isUnique: function(value, next) {
-				user.find({
-					where: {
-						id: value
-					}
-				}).then(function (user) {
-					if (user) {
-						return next ('User already exists!');
-					}
-					return next ();
-				}).catch(function (err) {
-					return next (err);
-				});
-			}
-		}
-	},
-	name: { type: Sequelize.STRING },
-	email: { type: Sequelize.STRING },
-	gender: { type: Sequelize.ENUM('Male', 'Female') },
-	token: { type: Sequelize.STRING(511) },
-	avatarId: { type: Sequelize.STRING },
-	levelsSpent: { type: Sequelize.INTEGER }
+var models = require('../../models');
+var user = models.User;
 
-}, {
-	instanceMethods: {
-		toJSON: function () {
-			var values = this.get();
-			delete values.token;
-			return values;
-		}
-	}
-});
+// var user = sequelize.define('user', {
+// 	id: {
+// 		type: Sequelize.STRING,
+// 		unique: true,
+// 		primaryKey: true,
+// 		validate: {
+// 			notEmpty: true,
+// 			isUnique: function(value, next) {
+// 				user.find({
+// 					where: {
+// 						id: value
+// 					}
+// 				}).then(function (user) {
+// 					if (user) {
+// 						return next ('User already exists!');
+// 					}
+// 					return next ();
+// 				}).catch(function (err) {
+// 					return next (err);
+// 				});
+// 			}
+// 		}
+// 	},
+// 	name: { type: Sequelize.STRING },
+// 	email: { type: Sequelize.STRING },
+// 	gender: { type: Sequelize.ENUM('Male', 'Female') },
+// 	token: { type: Sequelize.STRING(511) },
+// 	avatarId: { type: Sequelize.STRING },
+// 	levelsSpent: { type: Sequelize.INTEGER }
 
-sequelize.sync({});
+// }, {
+// 	instanceMethods: {
+// 		toJSON: function () {
+// 			var values = this.get();
+// 			delete values.token;
+// 			return values;
+// 		}
+// 	}
+// });
 
 /**
  * Set avatar
