@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./app"
+    "start": "node ./app",
+    "test": "mocha ./source/test/*.js"
   },
   "dependencies": {
     "bignumber.js": "^4.0.1",

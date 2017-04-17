@@ -53,6 +53,10 @@ li a:hover {
 	float: right;
 }
 
+.floatLeft {
+	float: left;
+}
+
 .smoothImage {
 	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
     image-rendering: -moz-crisp-edges;          /* Firefox                        */
@@ -61,4 +65,33 @@ li a:hover {
     image-rendering: pixelated;					/* Chrome */
     image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
     -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+
+.border-normal {
+	border: 20px solid transparent;
+	border-image: url("/images/border.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+}
+
+.border-bronze-trimmed {
+	border: 15px solid transparent;
+	border-image: url("/images/border2.png") 16 repeat;
+	background-color:rgba(0, 0, 0, 0.4);
+}
+
+/* Inner Border */
+.border-gold-trimmed {
+	border: 15px solid transparent;
+	border-image: url("/images/border_plain.png") 16 repeat;
+}
+
+.btn {
+	background-color: #A2482E;
+	border-radius:0;
+	color: #FFFFFF;
+}
+
+.btn:hover, .btn:focus, .btn:active, .btn.active, .open > .dropdown-toggle.btn {
+	background-color: #893C25;
+	color: #FFFFFF;
 }

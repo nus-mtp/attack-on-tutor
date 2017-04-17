@@ -1,3 +1,9 @@
+/**
+ * Controller for the student functionalities within the lobby.
+ * Front-end javascript code inside public folder.
+ *
+ * @module javascripts/lobby/lobby-angular-student-controller
+ */
 angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
 	$scope.socket = socket;
     $scope.tutorInfo = {
@@ -14,8 +20,11 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     
     $scope.questions = {};
     
-    //Socket events
+    /*
+     *   Listeners for student client.
+     */
 
+    //Listen for login response from server before initialising everything else.
     socket.on ( 'login', function (data) { 
         
         $scope.userInfo.imgSrc = data.userAvatar;
@@ -26,7 +35,7 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
         $scope.tutorInfo.imgSrc = data.tutorAvatar;
         $scope.tutorInfo.username = data.tutorName;
 
-
+        //Ensure the user logged in is a student, otherwise do not initialise all these socket listeners.
         if (data.userType == 'student') {
             //Receives questions composed and sent by tutor
             socket.on ('add question', function (data) {
@@ -62,7 +71,7 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
             	}
             });
 
-            //Update answers composed by other users.
+            //Update answers composed by other students.
             socket.on ('update answer', function (data) {
             	updateAnswerCounts (data.questionUuid, data.selectedCount);
             	updateOtherAnswer (data.questionUuid, data.socketId, data.answer);
@@ -73,7 +82,7 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
                 $scope.questions[data.uuid].submitted = true;
             });
 
-            //Someone has submitted the answer.
+            //Show the grades from the tutor for the answers provided by each group.
             socket.on ('grade question', function (data) {
                 var question = $scope.questions[data.questionUuid];
 
@@ -101,8 +110,15 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
         }
     });
 
-    //Scope functions.
+    /*
+     *  Scope functions used by angular in the DOM.
+     */
 
+     /**
+     * Send the updates from this student's answers to the server.
+     *
+     * @param {String} uuid
+     */
     $scope.updateAnswer = function (uuid) {
     	socket.emit ('update answer', {
     		'uuid' : uuid,
@@ -110,8 +126,15 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	});
     };
 
+    /**
+     * Select the answer with the given index for voting.
+     *
+     * @param {String} questionUuid
+     * @param {Integer} index
+     */
     $scope.selectAnswer = function (questionUuid, index) {
     	if ($scope.questions[questionUuid]) {
+            //Remove the vote from the other answers if any.
     		$scope.questions[questionUuid].answers.forEach (function (answer, i) {
     			answer.selected = false;
     		});
@@ -121,14 +144,34 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	}
     };
 
+    /**
+     * Calculate the student's level given the experience.
+     *
+     * @param {Integer} exp
+     * @returns {Integer}
+     */
     $scope.calculateLevel = function (exp) {
         return Math.floor(0.1 * Math.sqrt(exp)) + 1;
     };
 
+    /**
+     * Calculate the experience needed to reach the next level.
+     *
+     * @param {Integer} level
+     * @returns {Integer}
+     */
     $scope.expToNextLevel = function (level) {
         return Math.pow ( ((level - 1) / 0.1 ), 2);
     };
 
+    /**
+     * Update the answers given by the other students in the group.
+     *
+     * @param {String} questionUuid
+     * @param {String} socketId
+     * @param {String} answerDescription
+     * @returns {Boolean}
+     */
     var updateOtherAnswer = function (questionUuid, socketId, answerDescription) {
     	if ($scope.questions[questionUuid]) {
     		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
@@ -141,6 +184,13 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	return false;
     };
 
+    /**
+     * Update the votes given by the other students in the group.
+     *
+     * @param {String} questionUuid
+     * @param {Object} selectedCounts
+     *      Hash map with socketId of the student as key and number of votes for said student's answer as the value.
+     */
     var updateAnswerCounts = function (questionUuid, selectedCounts) {
     	if ($scope.questions[questionUuid]) {
     		for (var answerSocketId in selectedCounts) {
@@ -155,6 +205,12 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	}
     };
 
+    /**
+     * Check if this student's answer received all the other students votes.
+     *
+     * @param {String} questionUuid
+     * @returns {Boolean}
+     */
     $scope.hasAllVotes = function (questionUuid) {
     	if ($scope.questions[questionUuid]) {
     		for (var i = 0; i < $scope.questions[questionUuid].answers.length; i++) {
@@ -169,6 +225,11 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
     	return false;
     };
 
+    /**
+     * Send this student's answer to the server.
+     *
+     * @param {String} questionUuid
+     */
     $scope.submitAnswer = function (questionUuid) {
         if ($scope.questions[questionUuid]) {
             var ownAnswer = getOwnAnswer (questionUuid);
@@ -183,7 +244,16 @@ angular.module('lobbyApp').controller ('studentCtrl', function($scope, socket) {
         }
     };
 
-    //Private functions.
+    /*
+     *  Private functions used within the controller.
+     */
+
+    /**
+     * Get this student's answer.
+     *
+     * @param {String} uuid
+     * @returns {Object}
+     */
     var getOwnAnswer = function (uuid) {
     	var ownedAnswer =  $scope.questions[uuid].answers.filter (function (value){
             return value.owned;
