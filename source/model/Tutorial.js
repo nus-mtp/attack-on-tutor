@@ -107,19 +107,6 @@ var findTutorialSession = function (uid) {
 
 
 /**
- * Find tutorial info by tutorial id
- * @param tid
- * @returns {Promise}
- */
-var findTutorialInfo = function (tid) {
-	return tutorial.findAll({
-		where: {
-			id: tid
-		}
-	});
-}
-
-/**
  * Finds all tutorial info of a user's tutorials
  * @param uid
  * @returns {Promise}
@@ -240,7 +227,9 @@ var forceSyncIVLE = function (uid) {
 				relation['permission'] = groups[groupIndex]['Permission'];
 				relations.push (relation);
 			}
-			
+
+			console.log(userTutorial.Instance.prototype);
+
 			return Promise.all (relations.map (function (relation) {
 				var role = 'student';
 				if (relation['permission'] === 'M') {
@@ -248,8 +237,8 @@ var forceSyncIVLE = function (uid) {
 				}
 				return userTutorial.findOrCreate({
 					where: {
-						userId: result.user.id,
-						tutorialId: relation['tutorial'].dataValues.id
+						UserId: result.user.id,
+						TutorialId: relation['tutorial'].dataValues.id
 					},
 					defaults: {
 						role: role,
@@ -333,11 +322,8 @@ var removeDuplicateTuts = function (objArray) {
 }
 
 module.exports = tutorial;
-module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.findTutorialSession = findTutorialSession;
-module.exports.findTutorialInfo = findTutorialInfo;
 module.exports.findAllTutorialInfoOfUser = findAllTutorialInfoOfUser;
-module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.findAndCountAllUsersInTutorial = findAndCountAllUsersInTutorial;
