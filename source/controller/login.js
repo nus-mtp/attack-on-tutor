@@ -1,8 +1,9 @@
 var rest = require ('rest');
 var auth = require ('../auth');
 var app = require ('../../app');
-var User = require ('../model/User');
-
+var models = require ('../../models');
+var User = models.User;
+var Avatar = models.Avatar;
 
 var protocol = 'https';
 var usehttps = app.get('use-https');
@@ -52,6 +53,8 @@ var callback = function (req, res, next) {
 						levelsSpent: 0
 					}).then(function(user){
 						var authToken = auth.setAuth (result.UserID, result.Name);
+						user.addAvatar('avatar-01');
+						user.addTutorial('general-chat');
 						//logger.info(result.UserID + ' created user');
 						res.cookie('token', authToken);
 						return res.redirect('/');
@@ -72,7 +75,6 @@ var callback = function (req, res, next) {
 						//logger.info(result.UserID + ' updated user information');
 						res.cookie('token', authToken);
 						return res.redirect('/dashboard');
-
 					}).catch(function(err){
 						//logger.error(result.UserID + ' update user information failed');
 						console.log(err.stack);
@@ -91,6 +93,9 @@ var callback = function (req, res, next) {
 		return res.json({success: false, at:'Sync IVLE user information', message:'cannot connect IVLE'});
 	})
 };
+
+//Avatar.findOne({ where: { id: 'avatar-01' } }).then(function (result) { console.log(result); });
+//User.findOne({ where: { id: 'a0127127' } }).addAvatar(Avatar.findOne({ where: { id: 'avatar-01' } }));
 
 module.exports.get = get;
 module.exports.callback = callback;

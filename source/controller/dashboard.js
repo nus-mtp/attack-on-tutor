@@ -2,9 +2,10 @@ var express = require('express');
 var auth = require('../auth');
 var rest = require('rest');
 var app = require('../../app');
-var User = require('../model/User');
-var Tutorial = require('../model/Tutorial');
 var level = require('./level');
+var db = require('./db');
+
+var tutorial = require('../model/Tutorial');
 
 var protocol = 'https';
 var usehttps = app.get('use-https');
@@ -51,7 +52,7 @@ if (!usehttps) {
 var forceSyncIVLE = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
-		Tutorial.forceSyncIVLE(user.id).catch(function (err) {
+		tutorial.forceSyncIVLE(user.id).catch(function (err) {
 			res.json({success: false, message: err});
 		}).then(function() {
 			res.json({success: true, result: 'Synchronization Complete'});
@@ -78,7 +79,7 @@ var getTutorials = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
 		var tuts = [];
-		Tutorial.findAndCountAllTutorials(user.id).then(function (data) {
+		tutorial.findAndCountAllTutorials(user.id).then(function (data) {
 			for (i = 0; i < data.rows.length; i++) {
 				tuts.push(data.rows[i].dataValues);
 			}
@@ -92,31 +93,15 @@ var getTutorials = function (req, res, next) {
 	}
 }
 
-var syncUser = function (req, res, next) {
-	if (req.body.auth.success) {
-		var user = req.body.auth.decoded;
-		Tutorial.getUserInfo(user.id).then(function (data) {
-			res.json({success: true, message: 'Success', data: data});
-		});
-	} else {
-		var errorMessage = "Permission Denied (E2C)";
-		
-		res.render('error.ejs', {
-			errorMessage: errorMessage
-		});
-	}
-}
-
 var getUserInfo = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
-		Tutorial.getUserTutorials(user.id).then(function (result) {
+		db.getUserInfo(user.id).then(function (result) {
 			userTuts = processUserInfo(result);
 			res.json({success: true, message: 'Success', data: userTuts});
 		});
 	} else {
 		//res.send("Permission denied");
-		
 		var errorMessage = "Permission Denied (E2D)";
 		
 		res.render('error.ejs', {
@@ -135,8 +120,9 @@ var processUserInfo = function (result) {
 	var returnObject = {}
 	returnObject.name = user.name;
 	returnObject.avatarId = user.avatarId;
+	console.log(user.Avatars);
 	returnObject.imgSrc = "images/avatars/" + user.avatarId + ".png";
-	var tuts = user.tutorials;
+	var tuts = user.Tutorials;
 	var tutArray = [];
 	for (i = 0; i < tuts.length; i++) {
 		var tut = tuts[i];
@@ -158,9 +144,16 @@ var processUserInfo = function (result) {
 	return returnObject;
 }
 
+/**
+ * Get top users in tutorial for leaderboard
+ * @param  req
+ * @param  res
+ * @param  next
+ * @return JSON
+ */
 var getTopUsers = function (req, res, next) {
 	var tid = req.body.tid;
-	Tutorial.findAndCountAllUsersInTutorial(tid).then(function (result) {
+	db.findAndCountAllUsersInTutorial(tid).then(function (result) {
 		var result = processTopUsers(result);
 		res.json({success: true, message: 'Success', data: result});
 	});
@@ -175,8 +168,8 @@ var processTopUsers = function (data) {
 	var userArray = [];
 	for (i = 0; i < data.rows.length; i++) {
 		var user = data.rows[i];
-		if (user.dataValues.tutorials[0].userTutorial.role == "student") {
-			var exp = user.dataValues.tutorials[0].userTutorial.exp;
+		if (user.dataValues.Tutorials[0].userTutorial.role == "student") {
+			var exp = user.dataValues.Tutorials[0].userTutorial.exp;
 			userArray.push({
 				name: user.dataValues.name,
 				exp: exp,
@@ -185,6 +178,7 @@ var processTopUsers = function (data) {
 		}
 	}
 	userArray.sort(sort_by('exp', true, parseInt));
+	console.log(userArray);
 	return userArray;
 }
 
@@ -207,6 +201,5 @@ var sort_by = function(field, reverse, primer){
 module.exports.get = get;
 module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
-module.exports.syncUser = syncUser;
 module.exports.getUserInfo = getUserInfo;
 module.exports.getTopUsers = getTopUsers;
