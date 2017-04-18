@@ -170,9 +170,6 @@ var increaseLevelsSpent = function (uid, amount) {
 	});
 }
 
-userAvatar.findOne({where:{userid:'a0127127',avatarid:'avatar-02'}}).then(function(inst){inst.destroy()});
-increaseLevelsSpent('a0127127', -1);
-
 /**
  * Adds avatar to user
  * @param uid
