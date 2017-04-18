@@ -1,29 +1,35 @@
+/* General Element CSS
+   ------------------- */
 h2 {
 	font-size: 2.5em;
-}
-
-.img-responsive {
-	width: 100%;
-}
-
-.tutorial-level-bar {
-	font-size: 1.5em;
-}
-
-.module-container {
-	font-size: 1.5em;
 }
 
 .separateModules {
 	margin-bottom: 2%;
 }
 
-.dashboardGeneralFontSize {
-	font-size: 1.5em;
-}
-
 .dashboardMarginBottom {
 	margin-bottom: 1em;
+}
+
+.dashboardMarginLeft {
+	margin-left: 1em;
+}
+
+.dashboardGeneralFontSize {
+	font-size: 1.7em;	
+}
+
+/* Image CSS
+   --------- */
+.img-responsive {
+	width: 100%;
+}
+
+/* Button CSS
+   ---------- */
+.btn {
+	font-size: 0.9em;
 }
 
 .dashboardMarginLeft {

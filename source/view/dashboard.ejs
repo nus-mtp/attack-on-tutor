@@ -20,30 +20,36 @@
 </head>
 
 <body>
-	<ul id="header">
+	<ul id="header"> <!-- Header -->
 			<li class="header">
-				<a class="active font" href="/"><%= user.name %></a>
+				<a class="active font dashboardGeneralFontSize" href="/">Index Page</a>
 			</li>
-			<% if(user){ %>
-				<li class="header">
-					<a class="active font" id="logout" href="/">Log Out</a>
-				</li>
-			<% } %>
 	</ul>
 	
 	<input id="uid" type="hidden" value="<%= user.id %>">
 
 	<div class="container-fluid border-normal" ng-app="dashboardApp">
 		<div class="row">
-			<div class="col-md-4">
-
+			<div class="col-md-4"> <!-- User Details -->
 				<div class="border-gold-trimmed">
 					<div class="font whiteFont level-container" ng-controller="userCtrl">
-						
+
 						<div class="row padded-row">
-							<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
-							
-							<h2 class="brownFont centerText boldText">{{userInfo.name}}</h2>
+						<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
+						
+						<!-- User's Name -->
+						<h2 class="brownFont centerText boldText">{{userInfo.name}}</h2> 
+						
+						<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels}} </div>
+						
+						<!-- List of User's Tutorials and Relevant Information -->
+						<div class="tutorial-level-bar centerText dashboardGeneralFontSize" ng-repeat="t in userInfo.tutorials">
+							{{t.coursecode}}
+							<br>
+							Level: {{t.level}}
+							<br>
+							Experience: {{t.currExp}} / {{t.totalToNext}}
+							<br>
 							
 							<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels - userInfo.levelsSpent}} </div>
 						</div>
@@ -88,29 +94,36 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="container-fluid">
+							<button class="btn btnFontSize floatLeft">Change Avatar</button> 
+
+							<button class="btn btnFontSize floatRight">Buy Avatars</button>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="col-md-8">
+			<div class="col-md-8"> <!-- Module Details -->
 				<div class="border-gold-trimmed">
 					<h2 class="font brownFont centerText boldText border-bronze-trimmed">Modules</h2>
 								
 					<div class="list-group" ng-controller="moduleCtrl">
 						<div id="tutorials">
-							<div ng-repeat="t in tuts">
-								<div class="module-container font border-bronze-trimmed whiteFont dashboardMarginBottom">
+							<div ng-repeat="t in tuts"> <!-- List of Modules and Tutorials -->
+								<div class="module-container font border-bronze-trimmed whiteFont dashboardMarginBottom dashboardGeneralFontSize">
 								
 									<div>
 										{{t.coursecode}} {{t.coursename}}
 									</div>
 									
 									<div class="separateModules">
-										<button class="btn lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
+										<button class="btn lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Tutorial </button>
 										<button class="btn" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
 									</div>
 									
 									<div>
+										<!-- List of Tutees in Leaderboard -->
 										<table class="table" ng-show="t.leaderboardIsVisible">
 											<tr>
 												<th></th>
@@ -124,7 +137,7 @@
 											</tr>
 										</table>
 									</div>
-								
+
 								</div>
 							</div>
 						</div>
@@ -137,4 +150,5 @@
 </body>
 
 </html>
+
 
