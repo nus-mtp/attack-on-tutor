@@ -18,6 +18,7 @@ angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) 
         console.log(response);
     });
 
+
 });
 
 
