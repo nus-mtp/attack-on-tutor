@@ -122,7 +122,6 @@ var findTutorialTutorID = function (tid) {
 	);
 };
 
-
 /**
  * Find tutorial info by tutorial id
  * @param tid

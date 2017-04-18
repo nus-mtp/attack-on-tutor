@@ -6,6 +6,7 @@ var Sequelize = require('sequelize');
 var models = require('../../../models');
 var User = models.User;
 var Tutorial = models.Tutorial;
+var userTutorial = models.userTutorial;
 
 var testModules = require('./test_modules.json');
 var testStudents = require('./test_students.json');
@@ -18,12 +19,6 @@ var get = function(req, res, next) {
 		console.log('Test mode is active.');
 		makeTestModules();
 		makeTestStudents();
-		// TODO: Make the current user a tutor of TT1011 in a way thats NOT LIKE THIS, OMG.
-		// sequelize.query("INSERT INTO userTutorials VALUES ('tutor', 'test1', '"+user.id+"', current_timestamp(), current_timestamp())").then(
-		// 	function (data) {
-		// 		console.log(data);
-		// 	}
-		// );
 		res.send('Database populated.');
 	} else {
 		console.log('Test mode is inactive.');
@@ -52,21 +47,12 @@ var makeTestStudents = function () {
 	User.bulkCreate(students, { ignoreDuplicates: true}).then(function (data) {
 		for (var i in data) {
 			data[i].addAvatar('avatar-01');
-			data[i].addTutorial('general-chat');
+			data[i].addTutorial('general-chat', { role: 'tutor', exp: 0});
+			i == 0 ? data[i].addTutorial('test1', { role: 'tutor', exp: 0}) : data[i].addTutorial('test1', { role: 'student', exp: 0});
 		}
 	});
 }
 
-var makeTestUserTuts = function () {
-	for (var studentIndex in students) {
-		var student = students[studentIndex];
-		if (studentIndex == 0) {
-			userTutorial.findOrCreate({ defaults: { role: 'tutor', tutorialId: 'test1',  userId: student.id, exp: 0} });
-		} else {
-			userTutorial.findOrCreate({ defaults: { role: 'student', tutorialId: 'test1',  userId: student.id, exp: 0} });
-		}
-	}
-}
 
 module.exports.get = get
 module.exports.makeTestModules = makeTestModules;
