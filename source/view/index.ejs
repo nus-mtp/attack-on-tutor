@@ -19,12 +19,12 @@
     <ul>
 		<ul id="header">
 			<li class="header">
-				<a class="active font" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
+				<a class="active font dashboardGeneralFontSize" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
 			</li>
 		
 			<% if(user){ %>
 				<li class="header">
-					<a class="active font" id="logout" >Log Out</a>
+					<a class="active font dashboardGeneralFontSize" id="logout">Log Out</a>
 				</li>
 			<% } %>
 		</ul>
@@ -36,29 +36,15 @@
 		<% if(user){ %>
 			<h2 id="welcomeText" class="font brownFont centerText">Welcome, <%= user.name %>!</h2>
 			<a href="/dashboard">
-				<div class="centralise font"><button type="button" class="btn btn-lg">Go to Dashboard!</button></div>
+				<div class="centralise font"><button type="button" class="btn btn-lg dashboardGeneralFontSize">To the Dashboard</button></div>
 			</a>
 		<% } else{ %>
 			<h2 id="hiddenText">-</h2>
 			<a href="/login"> 
-				<div class="centralise font"><button type="button" class="btn btn-lg">Login Here!</button></div>	
+				<div class="centralise font"><button type="button" class="btn btn-lg dashboardGeneralFontSize">Login</button></div>	
 			</a>
 		<% } %>
     </div>
 </body>
 
 </html>
-
-<script>
-    var logoutConfirmation = "Would You Like to Log Out?";
-	
-    $("#logout").on
-	(
-		"click",
-		function(event)
-		{
-            Cookies.remove('token');
-            location.reload();
-		}
-	);
-</script>
