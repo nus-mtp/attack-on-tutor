@@ -7,6 +7,7 @@
 
 var app = require ('../../app');
 var io = require ('socket.io')();
+var db = require('../controller/db');
 var TutorialModule = require ('./Tutorial');
 var LobbyModule = require ('../controller/lobby');
 var lobbyio = io.of ('/lobby');
@@ -370,7 +371,7 @@ lobbyio.on ('connection', function (socket) {
         addedUser = true;
         
         //Update the client that login is successful after retrieving the neccessary data from the database.
-        TutorialModule.findAndCountAllUsersInTutorial(socket.tutorialId).then(function (data) {
+        db.findAndCountAllUsersInTutorial(socket.tutorialId).then(function (data) {
             var returnObj = LobbyModule.processLobbyUsers(data);
             if (socket.userType == 'student') {
                 var studentAvatar = "";
@@ -516,7 +517,7 @@ lobbyio.on ('connection', function (socket) {
                     var socketsInGroup = lobby.getUsersInRoom (groupName);
                     socketsInGroup.forEach (function (socketClient, i) {
                         if (socketClient.userType == 'student') {
-                            TutorialModule.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
+                            db.changeExp (socketClient.userId, socketClient.tutorialId, lobby.questions[data.uuid].groupAnswers[groupName].experience);
                         }
                     });
                 });
@@ -615,7 +616,7 @@ lobbyio.on ('connection', function (socket) {
                     var socketsInGroup = lobby.getUsersInRoom (groupName);
                     socketsInGroup.forEach (function (socketClient, i) {
                         if (socketClient.userType == 'student') {
-                            TutorialModule.changeExp (socketClient.userId, socketClient.tutorialId, lobby.payoutExperience);
+                            db.changeExp (socketClient.userId, socketClient.tutorialId, lobby.payoutExperience);
                         }
                     });
                 });
