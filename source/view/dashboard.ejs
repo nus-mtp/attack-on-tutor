@@ -30,7 +30,8 @@
 
 	<div class="container-fluid border-normal" ng-app="dashboardApp">
 		<div class="row">
-			<div class="col-md-4"> <!-- User Details -->
+			<div class="col-md-3">
+				<!-- User Details -->
 				<div class="border-gold-trimmed">
 					<div class="font whiteFont level-container" ng-controller="userCtrl">
 
@@ -41,21 +42,10 @@
 						<h2 class="brownFont centerText boldText">{{userInfo.name}}</h2> 
 						
 						<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels}} </div>
-						
-						<!-- List of User's Tutorials and Relevant Information -->
-						<div class="tutorial-level-bar centerText dashboardGeneralFontSize" ng-repeat="t in userInfo.tutorials">
-							{{t.coursecode}}
-							<br>
-							Level: {{t.level}}
-							<br>
-							Experience: {{t.currExp}} / {{t.totalToNext}}
-							<br>
-							
-							<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels - userInfo.levelsSpent}} </div>
-						</div>
+					
 						
 						<div class="row padded-row" ng-controller="avatarCtrl">
-							<div>
+							<div class="padded-row-vertical">
 								<center><button class="btn" ng-click="changeAvatarClicked()">Change Avatar</button>
 								<div ng-show="pickerIsVisible">
 									<div class="row" ng-repeat="row in avatarRows">
@@ -66,7 +56,7 @@
 									</div>									
 								</div></center>
 							</div>
-							<div>
+							<div class="padded-row-vertical">
 								<center><button class="btn" ng-click="buyAvatarsClicked()">Buy Avatars</button></center>
 								<div ng-show="shopIsVisible">
 									<div class="row" ng-repeat="row in shopRows">
@@ -81,7 +71,7 @@
 							</div>
 						</div>
 						<div class="row padded-row">
-							<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
+							<div class="tutorial-level-bar centerText dashboardGeneralFontSize" ng-repeat="t in userInfo.tutorials">
 								{{t.coursecode}}
 								<br>
 								Level: {{t.level}}
@@ -94,17 +84,12 @@
 								</div>
 							</div>
 						</div>
-						
-						<div class="container-fluid">
-							<button class="btn btnFontSize floatLeft">Change Avatar</button> 
-
-							<button class="btn btnFontSize floatRight">Buy Avatars</button>
-						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="col-md-8"> <!-- Module Details -->
+			<div class="col-md-9"> <!-- Module Details -->
 				<div class="border-gold-trimmed">
 					<h2 class="font brownFont centerText boldText border-bronze-trimmed">Modules</h2>
 								
