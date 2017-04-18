@@ -16,13 +16,8 @@
 <body>
 	<ul id="header">
 			<li class="header">
-				<a class="active font" href="/"><%= user.name %></a>
+				<a class="active font" href="/">Index Page</a>
 			</li>
-			<% if(user){ %>
-				<li class="header">
-					<a class="active font" id="logout" href="/">Log Out</a>
-				</li>
-			<% } %>
 	</ul>
 	
 	<input id="uid" type="hidden" value="<%= user.id %>">
