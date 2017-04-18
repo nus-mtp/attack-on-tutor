@@ -136,6 +136,53 @@ var findTutorialInfo = function (tid) {
 	});
 }
 
+/**
+ * Gets all avatars currently in database.
+ * @return {Promise}
+ */
+var getAllAvatars = function () {
+	return Avatar.findAndCountAll({
+		attributes: ['id', 'price', 'url', 'name']
+	});
+}
+
+/**
+ * Sets users avatar
+ * @param  uid  userId
+ * @param  aid  avatarId
+ * @return {Promise}
+ */
+var setUserAvatar = function(uid, aid) {
+	return User.findOne({ where: {id: uid} }).then(function (user) {
+		user.update({ avatarId: aid })
+	});
+}
+
+/**
+ * Increase user's levels spent
+ * @param  uid   
+ * @param  amount 
+ * @return  {Promise}
+ */
+var increaseLevelsSpent = function (uid, amount) {
+	return User.findOne({ where: { id: uid }}).then(function (user) {
+		user.increment(['levelsSpent'], { by: amount });
+	});
+}
+
+/**
+ * Adds avatar to user
+ * @param uid
+ * @param avatarId
+ * @return {Promise}
+ */
+var addAvatarToUser = function (uid, avatarId) {
+	return User.findOne({ where: { id: uid} }).then(function (user) {
+		user.addAvatar(avatarId);
+	});
+
+}
+
 module.exports.changeExp = changeExp;
 module.exports.findAndCountAllUsersInTutorial =  findAndCountAllUsersInTutorial;
 module.exports.getUserInfo = getUserInfo;
@@ -144,3 +191,7 @@ module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.findTutorialInfo = findTutorialInfo;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
+module.exports.getAllAvatars = getAllAvatars;
+module.exports.setUserAvatar = setUserAvatar;
+module.exports.addAvatarToUser = addAvatarToUser;
+module.exports.increaseLevelsSpent = increaseLevelsSpent;

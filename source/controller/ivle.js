@@ -228,8 +228,6 @@ var forceSyncIVLE = function (uid) {
 				relations.push (relation);
 			}
 
-			console.log(userTutorial.Instance.prototype);
-
 			return Promise.all (relations.map (function (relation) {
 				var role = 'student';
 				if (relation['permission'] === 'M') {

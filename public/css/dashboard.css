@@ -32,3 +32,24 @@ h2 {
 	font-size: 0.9em;
 }
 
+.dashboardMarginLeft {
+	margin-left: 1em;
+}
+
+.padded-row {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.padded-row-vertical {
+	padding-top: 2%;
+	padding-bottom: 2%;
+}
+
+.picker-img {
+	width: 30%;
+}
+
+.picker-img-container {
+	padding: 2%;
+}

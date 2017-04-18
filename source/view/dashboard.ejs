@@ -6,6 +6,12 @@
     
 	<script type="text/javascript" src="/libs/jquery/jquery-3.2.0.min.js"></script>
     <script type="text/javascript" src="/libs/js-cookie-2.1.0/js.cookie.min.js"></script>
+
+    <script src="libs\angular-1.6.3\angular.min.js" type="application/javascript"></script>
+    <script src="javascripts/dashboard/dashboard-user-controller.js" type="application/javascript"></script>
+    <script src="javascripts/dashboard/dashboard-module-controller.js" type="application/javascript"></script>
+    <script src="javascripts/dashboard/dashboard-avatar-controller.js" type="application/javascript"></script>
+
 	
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
     <link rel="stylesheet" href="/libs/bootstrap-3.3.7-dist/css/bootstrap.min.css" crossorigin="anonymous">
@@ -27,7 +33,8 @@
 			<div class="col-md-4"> <!-- User Details -->
 				<div class="border-gold-trimmed">
 					<div class="font whiteFont level-container" ng-controller="userCtrl">
-						
+
+						<div class="row padded-row">
 						<img ng-src="{{userInfo.imgSrc}}" class="img-responsive smoothImage"/>
 						
 						<!-- User's Name -->
@@ -44,8 +51,46 @@
 							Experience: {{t.currExp}} / {{t.totalToNext}}
 							<br>
 							
-							<div class="progress">
-								<div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
+							<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels - userInfo.levelsSpent}} </div>
+						</div>
+						
+						<div class="row padded-row" ng-controller="avatarCtrl">
+							<div>
+								<center><button class="btn" ng-click="changeAvatarClicked()">Change Avatar</button>
+								<div ng-show="pickerIsVisible">
+									<div class="row" ng-repeat="row in avatarRows">
+										<img class="picker-img smoothImage" ng-repeat="image in row" ng-mouseenter="setMouseoverPicker(image)" ng-mouseleave="setMouseoverPicker(null)" ng-click="avatarPicked(image)" ng-src="{{image.url}}"></img>
+									</div>
+									<div ng-show="showPickerAvatarDetails">
+										{{pickerHoveredImg.name}}
+									</div>									
+								</div></center>
+							</div>
+							<div>
+								<center><button class="btn" ng-click="buyAvatarsClicked()">Buy Avatars</button></center>
+								<div ng-show="shopIsVisible">
+									<div class="row" ng-repeat="row in shopRows">
+										<img class="picker-img smoothImage" ng-repeat="image in row" ng-mouseenter="setMouseoverShop(image)" ng-mouseleave="setMouseoverShop(null)" ng-src="{{image.url}}" ng-click="avatarBought(image)"></img>
+									</div>
+									<div ng-show="showShopAvatarDetails">
+										{{hoveredImg.name}}
+										<br>
+										Price: {{hoveredImg.price}}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row padded-row">
+							<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
+								{{t.coursecode}}
+								<br>
+								Level: {{t.level}}
+								<br>
+								Experience: {{t.currExp}} / {{t.totalToNext}}
+								<br>
+								<div class="progress">
+									<div class="progress-bar" role="progressbar" style="width: {{t.percentage}}%">
+									</div>
 								</div>
 							</div>
 						</div>
@@ -106,5 +151,4 @@
 
 </html>
 
-<script src="libs\angular-1.6.3\angular.min.js" type="application/javascript"></script>
-<script src="javascripts/dashboard/dashboard.js" type="application/javascript"></script>
+

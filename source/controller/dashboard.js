@@ -92,6 +92,13 @@ var getTutorials = function (req, res, next) {
 	}
 }
 
+var getAvatars = function (req, res, next) {
+	db.getAllAvatars().then(function (result) {
+		res.json({success: true, message: 'Success', data: result});
+	});
+}
+
+
 var getUserInfo = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
@@ -120,6 +127,7 @@ var processUserInfo = function (result) {
 	returnObject.name = user.name;
 	returnObject.avatarId = user.avatarId;
 	returnObject.avatars = user.Avatars;
+	returnObject.levelsSpent = user.levelsSpent;
 	returnObject.imgSrc = "images/avatars/" + user.avatarId + ".png";
 	var tuts = user.Tutorials;
 	var tutArray = [];
@@ -138,7 +146,7 @@ var processUserInfo = function (result) {
 	for (i = 0; i < tutArray.length; i++) {
 		totalLevels += tutArray[i].level;
 	}
-	returnObject.totalLevels = totalLevels - user.levelsSpent;
+	returnObject.totalLevels = totalLevels;
 	returnObject.tutorials = level.setLevelInfo(tutArray);
 	return returnObject;
 }
@@ -181,6 +189,26 @@ var processTopUsers = function (data) {
 	return userArray;
 }
 
+var setAvatar = function (req, res, next) {
+	var uid = req.body.auth.decoded.id;
+	var aid = req.body.aid;
+	db.setUserAvatar(uid, aid).then(function (result) {
+		res.json({ success: true, message: 'Success' });
+	});
+}
+
+var buyAvatar = function (req, res, next) {
+	var uid = req.body.auth.decoded.id;
+	var aid = req.body.aid;
+	var price = req.body.price;
+	db.addAvatarToUser(uid, aid).then(function (result) {
+		db.increaseLevelsSpent(uid, price).then(function (result) {
+			res.json({ success: true, message: 'Success' });
+		});
+	});
+}
+
+
 /**
  * JSON object sorting function
  */
@@ -202,3 +230,6 @@ module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
 module.exports.getUserInfo = getUserInfo;
 module.exports.getTopUsers = getTopUsers;
+module.exports.getAvatars = getAvatars;
+module.exports.setAvatar = setAvatar;
+module.exports.buyAvatar = buyAvatar;
