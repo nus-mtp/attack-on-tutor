@@ -45,7 +45,7 @@
 							
 							<h2 class="brownFont centerText boldText">{{userInfo.name}}</h2>
 							
-							<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels}} </div>
+							<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels - userInfo.levelsSpent}} </div>
 						</div>
 						
 						<div class="row padded-row" ng-controller="avatarCtrl">
@@ -53,18 +53,22 @@
 								<center><button class="btn" ng-click="changeAvatarClicked()">Change Avatar</button>
 								<div ng-show="pickerIsVisible">
 									<div class="row" ng-repeat="row in avatarRows">
-										<img class="picker-img smoothImage" ng-repeat="image in row" ng-click="setAvatar(image)" ng-src="{{image.url}}"></img>
+										<img class="picker-img smoothImage" ng-repeat="image in row" ng-mouseenter="setMouseoverPicker(image)" ng-mouseleave="setMouseoverPicker(null)" ng-click="avatarPicked(image)" ng-src="{{image.url}}"></img>
 									</div>
+									<div ng-show="showPickerAvatarDetails">
+										{{pickerHoveredImg.name}}
+									</div>									
 								</div></center>
 							</div>
 							<div>
 								<center><button class="btn" ng-click="buyAvatarsClicked()">Buy Avatars</button></center>
 								<div ng-show="shopIsVisible">
 									<div class="row" ng-repeat="row in shopRows">
-										<img class="picker-img smoothImage" ng-repeat="image in row" ng-mouseenter="setMouseover(image)" ng-mouseleave="setMouseover(null)" ng-src="{{image.url}}"></img>
+										<img class="picker-img smoothImage" ng-repeat="image in row" ng-mouseenter="setMouseoverShop(image)" ng-mouseleave="setMouseoverShop(null)" ng-src="{{image.url}}" ng-click="avatarBought(image)"></img>
 									</div>
-									<div ng-show="showAvatarDetails">
-										Name: {{hoveredImg.name}}
+									<div ng-show="showShopAvatarDetails">
+										{{hoveredImg.name}}
+										<br>
 										Price: {{hoveredImg.price}}
 									</div>
 								</div>

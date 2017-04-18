@@ -147,13 +147,43 @@ var getAllAvatars = function () {
 }
 
 /**
+ * Sets users avatar
+ * @param  uid  userId
+ * @param  aid  avatarId
+ * @return {Promise}
+ */
+var setUserAvatar = function(uid, aid) {
+	return User.findOne({ where: {id: uid} }).then(function (user) {
+		user.update({ avatarId: aid })
+	});
+}
+
+/**
+ * Increase user's levels spent
+ * @param  uid   
+ * @param  amount 
+ * @return  {Promise}
+ */
+var increaseLevelsSpent = function (uid, amount) {
+	return User.findOne({ where: { id: uid }}).then(function (user) {
+		user.increment(['levelsSpent'], { by: amount });
+	});
+}
+
+userAvatar.findOne({where:{userid:'a0127127',avatarid:'avatar-02'}}).then(function(inst){inst.destroy()});
+increaseLevelsSpent('a0127127', -1);
+
+/**
  * Adds avatar to user
  * @param uid
  * @param avatarId
  * @return {Promise}
  */
 var addAvatarToUser = function (uid, avatarId) {
-	return User.findOne({ where: { id: uid} }).addAvatar(avatarId);
+	return User.findOne({ where: { id: uid} }).then(function (user) {
+		user.addAvatar(avatarId);
+	});
+
 }
 
 module.exports.changeExp = changeExp;
@@ -165,3 +195,6 @@ module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.findTutorialInfo = findTutorialInfo;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
 module.exports.getAllAvatars = getAllAvatars;
+module.exports.setUserAvatar = setUserAvatar;
+module.exports.addAvatarToUser = addAvatarToUser;
+module.exports.increaseLevelsSpent = increaseLevelsSpent;

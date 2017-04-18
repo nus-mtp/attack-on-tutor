@@ -8,8 +8,10 @@ angular.module('dashboardApp').controller('avatarCtrl', function ($scope, $http)
 	$scope.pickerIsVisible = false;
 	$scope.shopIsVisible = false;
 	$scope.isBuyingAvatar = false;
-	$scope.showAvatarDetails = false;
+	$scope.showShopAvatarDetails = false;
+	$scope.showPickerAvatarDetails = false;
 	$scope.hoveredImg = {};
+	$scope.pickerHoverdImg = {};
 
 	$scope.changeAvatarClicked = function () {
 		$scope.pickerIsVisible = !$scope.pickerIsVisible;
@@ -21,16 +23,62 @@ angular.module('dashboardApp').controller('avatarCtrl', function ($scope, $http)
 		showShop();
 	}
 
-	$scope.setMouseover = function (img) {
-		$scope.showAvatarDetails = img ? true : false;
+	$scope.setMouseoverShop = function (img) {
+		$scope.showShopAvatarDetails = img ? true : false;
 		$scope.hoveredImg = img;
 	}
 
-	$scope.setAvatar = function (img) {
+	$scope.setMouseoverPicker = function (img) {
+		$scope.showPickerAvatarDetails = img ? true : false;
+		$scope.pickerHoveredImg = img;
+	}
+
+	$scope.avatarPicked = function (img) {
+		setAvatar(img);
+		$scope.$parent.userInfo.imgSrc = img.url;
+	}
+
+	$scope.avatarBought = function(img) {
+		buyAvatar(img);
+	}
+
+	var setAvatar = function (img) {
 		$http({
 			method: 'POST',
-			url: ''
+			url: '/api/dashboard/setAvatar',
+			data: { aid: img.id }
+		}, function successCallback(response) {
+			console.log(response);
+		}, function errorCallback(response) {
+			console.log(response);
 		});
+	}
+
+	var buyAvatar = function (img) {
+		if (img.price <= ($scope.$parent.userInfo.totalLevels - $scope.$parent.userInfo.levelsSpent)) {
+			$http({
+				method: 'POST',
+				url: '/api/dashboard/buyAvatar',
+				data: { aid: img.id, price: img.price }
+			}, function successCallback(response) {
+				// Update pickers
+				$scope.apply(function () {
+					$scope.$parent.userInfo.levelsSpent += img.price;
+					var avatars = $scope.$parent.userInfo.avatars.push(img);
+					console.log(avatars);
+					var avatarRows = splitArrayIntoThrees(avatars);
+					$scope.avatarRows = avatarRows;
+					var allAvatars = removeOwned($scope.$parent.userInfo.avatars.push(img), $scope.allAvatars);
+					var shopRows = splitArrayIntoThrees(allAvatars);
+					$scope.shopRows = shopRows;
+				});
+
+			}, function errorCallback (response) {
+
+			});
+		} else {
+			console.log('money no enough');
+		}
 	}
 
 	var showAvatarPicker = function() {
@@ -44,8 +92,8 @@ angular.module('dashboardApp').controller('avatarCtrl', function ($scope, $http)
             url: '/api/dashboard/getAvatars'
         }).then(function successCallback(response) {
             var allAvatars = response.data.data.rows;
-            var ownedAvatarIds = makeIdArray($scope.$parent.userInfo.avatars);
-            allAvatars = removeOwned(ownedAvatarIds, allAvatars);
+            $scope.allAvatars = allAvatars;
+            allAvatars = removeOwned($scope.$parent.userInfo.avatars, allAvatars);
             var shopRows = splitArrayIntoThrees(allAvatars);
             $scope.shopRows = shopRows;
         },
@@ -67,7 +115,8 @@ angular.module('dashboardApp').controller('avatarCtrl', function ($scope, $http)
  * @param  {[Array]} allAvatars 
  * @return
  */
-var removeOwned = function (ownedAvatarIds, allAvatars) {
+var removeOwned = function (ownedAvatars, allAvatars) {
+	var ownedAvatarIds = makeIdArray(ownedAvatars);
 	var result  = [];
 	var array = allAvatars;
 	for (index in array) {
