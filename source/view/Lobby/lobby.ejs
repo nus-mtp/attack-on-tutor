@@ -37,11 +37,11 @@
 	
 		<ul id="header">
 			<li class="header">
-				<a class="active font" href="/">Index Page</a>
+				<a class="active font dashboardGeneralFontSize" href="/">Index Page</a>
 			</li>
 		
 			<li class="header">
-				<a class="active font" href="/dashboard">Dashboard Page</a>
+				<a class="active font dashboardGeneralFontSize" href="/dashboard">Dashboard Page</a>
 			</li>
 		</ul>
 	
@@ -69,7 +69,7 @@
 				                    </div>
 				                </div>
 
-								<div class="tutorial-level-bar centerText">
+								<div class="tutorial-level-bar centerText lobbyGeneralFontSize">
 			                        Health: {{health}} / {{maxHealth}}
 			                        <br>
 			                        <div class="progress">
@@ -193,14 +193,14 @@
 	                                            
 												<div class="container-fluid">
 													<div class="explanation-area font maximumWidth">
-														<textarea class="answer-explanation-input maximumWidth" ng-model="question.groupAnswers[question.selectedGroup].explanation"
+														<textarea class="answer-explanation-input maximumWidth lobbyGeneralFontSize" ng-model="question.groupAnswers[question.selectedGroup].explanation"
 															placeholder="Explanation!" type="text"  ng-trim="false" ng-disabled="question.graded">
 														</textarea>
 													</div>
 												</div>
 												
 												<div class="container-fluid">
-		                                        	<input class="experience-input font maximumWidth" type="number" ng-model="question.groupAnswers[question.selectedGroup].experience" ng-disabled="question.graded"/>
+		                                        	<input class="experience-input font maximumWidth lobbyGeneralFontSize" type="number" ng-model="question.groupAnswers[question.selectedGroup].experience" ng-disabled="question.graded"/>
 														<button class="btn grade-question floatRight font" ng-if="isQuestionAnswered(uuid)" ng-disabled="question.graded" ng-click="gradeQuestion(uuid)">Grade!</button>	
 		                                        </div>
 	                                        </div>
@@ -233,7 +233,7 @@
 				                    </div>
 				                </div>
 			                    
-								<div class="tutorial-level-bar centerText">
+								<div class="tutorial-level-bar centerText lobbyGeneralFontSize">
 			                        Health: {{health}} / {{maxHealth}}
 			                        <br>
 			                        <div class="progress">
@@ -382,7 +382,7 @@
 	                                    </div>
 
 										<div class="container-fluid" ng-show="!question.graded">
-	                                    	<div class="row font whiteFont">
+	                                    	<div class="row font whiteFont lobbyGeneralFontSize">
 		                                    	Status: Waiting for Grading...
 											</div>
 	                                    </div>
@@ -413,7 +413,7 @@
 				                    </div>
 				                </div>
 			                    
-								<div class="tutorial-level-bar centerText">
+								<div class="tutorial-level-bar centerText lobbyGeneralFontSize">
 									Level: <span ng-bind-html="userInfo.level"></span>
 									<br>
 			                        Experience: {{userInfo.exp}} / {{userInfo.expToNext}}

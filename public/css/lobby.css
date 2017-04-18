@@ -6,35 +6,32 @@ body {
 	background-size: cover;
 }
 
+h1 {
+	font-size: 3.0em;
+}
+
 h2 {
-	font-size: 2em;
+	font-size: 2.5em;
 }
 
 h3 {
-	font-size: 1.5em;
+	font-size: 2.0em;
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
 
 /* General Font Size for Lobby */
 .lobbyGeneralFontSize {
-	font-size: 1.2em;
+	font-size: 1.5em;
 }
 
 .btn {
-	font-size: 1.2em;
+	font-size: 1.4em;
 }
 
 .lobbyBottomFiller {
 	padding-bottom: 0.4em;
 }
-
-/* -------------------------- */
-
-/* Outer Border */
-
-
-/* -------------------------- */
 
 .question-area {
 	max-height:300px;
@@ -85,4 +82,8 @@ h3 {
 .damagelog {
 	background-color:rgba(242, 84, 84, 0.4);
 	background:rgba(242, 84, 84, 0.4);
+}
+
+.progress-bar {
+	font-size: 1.0em;
 }
