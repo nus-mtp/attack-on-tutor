@@ -1,0 +1,8 @@
+These tests are created with Selenium IDE - Mozilla Firefox. There are both HTML and JAVA files for testing.
+
+Notes:
+- All web pages have to be fully loaded before they can be tested.
+- The folders represent where you should start from.
+- Some tests require pre-requisites before they can be tested.
+	- Tutee Answering a Question (Requires a question to be first 	posed)
+	- Justify an Answer (Requires a tutee to first give an answer)
