@@ -92,6 +92,13 @@ var getTutorials = function (req, res, next) {
 	}
 }
 
+var getAvatars = function (req, res, next) {
+	db.getAllAvatars().then(function (result) {
+		res.json({success: true, message: 'Success', data: result});
+	});
+}
+
+
 var getUserInfo = function (req, res, next) {
 	if (req.body.auth.success) {
 		var user = req.body.auth.decoded;
@@ -181,6 +188,8 @@ var processTopUsers = function (data) {
 	return userArray;
 }
 
+var s
+
 /**
  * JSON object sorting function
  */
@@ -202,3 +211,5 @@ module.exports.forceSyncIVLE = forceSyncIVLE;
 module.exports.getTutorials = getTutorials;
 module.exports.getUserInfo = getUserInfo;
 module.exports.getTopUsers = getTopUsers;
+module.exports.getAvatars = getAvatars;
+module.exports.setAvatar = setAvatar;

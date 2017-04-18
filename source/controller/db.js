@@ -136,6 +136,26 @@ var findTutorialInfo = function (tid) {
 	});
 }
 
+/**
+ * Gets all avatars currently in database.
+ * @return {Promise}
+ */
+var getAllAvatars = function () {
+	return Avatar.findAndCountAll({
+		attributes: ['id', 'price', 'url', 'name']
+	});
+}
+
+/**
+ * Adds avatar to user
+ * @param uid
+ * @param avatarId
+ * @return {Promise}
+ */
+var addAvatarToUser = function (uid, avatarId) {
+	return User.findOne({ where: { id: uid} }).addAvatar(avatarId);
+}
+
 module.exports.changeExp = changeExp;
 module.exports.findAndCountAllUsersInTutorial =  findAndCountAllUsersInTutorial;
 module.exports.getUserInfo = getUserInfo;
@@ -144,3 +164,4 @@ module.exports.checkIfInTutorialUserList = checkIfInTutorialUserList;
 module.exports.findTutorialTutorID = findTutorialTutorID;
 module.exports.findTutorialInfo = findTutorialInfo;
 module.exports.findAndCountAllTutorials = findAndCountAllTutorials;
+module.exports.getAllAvatars = getAllAvatars;
