@@ -6,20 +6,12 @@ h2 {
 	width: 100%;
 }
 
-.tutorial-level-bar {
-	font-size: 1.5em;
-}
-
-.module-container {
-	font-size: 1.5em;
-}
-
 .separateModules {
 	margin-bottom: 2%;
 }
 
 .dashboardGeneralFontSize {
-	font-size: 1.5em;
+	font-size: 1.7em;
 }
 
 .dashboardMarginBottom {
@@ -28,4 +20,8 @@ h2 {
 
 .dashboardMarginLeft {
 	margin-left: 1em;
+}
+
+.btnModulesFontSize {
+	font-size: 1.0em;
 }

@@ -16,7 +16,7 @@
 <body>
 	<ul id="header">
 			<li class="header">
-				<a class="active font" href="/">Index Page</a>
+				<a class="active font dashboardGeneralFontSize" href="/">Index Page</a>
 			</li>
 	</ul>
 	
@@ -35,9 +35,7 @@
 						
 						<div class="dashboardGeneralFontSize centerText"> Total Levels: {{userInfo.totalLevels}} </div>
 						
-						<button class="btn floatLeft">Change Avatar</button> <button class="btn floatRight">Buy Avatars</button>
-						
-						<div class="tutorial-level-bar centerText" ng-repeat="t in userInfo.tutorials">
+						<div class="tutorial-level-bar centerText dashboardGeneralFontSize" ng-repeat="t in userInfo.tutorials">
 							{{t.coursecode}}
 							<br>
 							Level: {{t.level}}
@@ -50,6 +48,12 @@
 								</div>
 							</div>
 						</div>
+						
+						<div class="container-fluid">
+							<button class="btn btnFontSize floatLeft">Change Avatar</button> 
+
+							<button class="btn btnFontSize floatRight">Buy Avatars</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -61,15 +65,15 @@
 					<div class="list-group" ng-controller="moduleCtrl">
 						<div id="tutorials">
 							<div ng-repeat="t in tuts">
-								<div class="module-container font border-bronze-trimmed whiteFont dashboardMarginBottom">
+								<div class="module-container font border-bronze-trimmed whiteFont dashboardMarginBottom dashboardGeneralFontSize">
 								
 									<div>
 										{{t.coursecode}} {{t.coursename}}
 									</div>
 									
 									<div class="separateModules">
-										<button class="btn lobby-button" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
-										<button class="btn" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
+										<button class="btn lobby-button btnModulesFontSize" ng-click="redirect(t)" name="tut-id" value="{{t.id}}"> Join Class </button>
+										<button class="btn btnModulesFontSize" ng-click="toggleLeaderboard(t)"> View Leaderboard </button>
 									</div>
 									
 									<div>
