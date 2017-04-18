@@ -1,7 +1,15 @@
+/* General CSS
+   ----------- */
 body {
 	background-color: #141311;
 }
 
+.font {
+	font-family: 'VT323', monospace;
+}
+
+/* Header CSS
+   ---------- */
 ul#header {
 	overflow: hidden;
 	background-color: #141311;
@@ -29,10 +37,12 @@ li a:hover {
 	cursor: pointer;
 }
 
-.font {
-	font-family: 'VT323', monospace;
+.headerGeneralFontSize {
+	font-size: 1.7em;
 }
 
+/* General Element CSS
+   -------------------- */
 .whiteFont {
 	color: #FFFFFF;
 }
@@ -49,14 +59,20 @@ li a:hover {
 	text-align: center;
 }
 
-.floatRight {
-	float: right;
-}
-
 .floatLeft {
 	float: left;
 }
 
+.floatRight {
+	float: right;
+}
+
+.indexGeneralFontSize {
+	font-size: 1.7em;	
+}
+
+/* Image CSS
+   --------- */
 .smoothImage {
 	image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
     image-rendering: -moz-crisp-edges;          /* Firefox                        */
@@ -67,24 +83,27 @@ li a:hover {
     -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
 }
 
+/* Border CSS
+   ---------- */
 .border-normal {
-	border: 20px solid transparent;
+	border: 15px solid transparent;
 	border-image: url("/images/border.png") 16 repeat;
 	background-color:rgba(0, 0, 0, 0.4);
 }
 
 .border-bronze-trimmed {
-	border: 15px solid transparent;
+	border: 10px solid transparent;
 	border-image: url("/images/border2.png") 16 repeat;
 	background-color:rgba(0, 0, 0, 0.4);
 }
 
-/* Inner Border */
 .border-gold-trimmed {
-	border: 15px solid transparent;
+	border: 10px solid transparent;
 	border-image: url("/images/border_plain.png") 16 repeat;
 }
 
+/* Button CSS
+   ---------- */
 .btn {
 	background-color: #A2482E;
 	border-radius:0;
@@ -98,8 +117,4 @@ li a:hover {
 
 .btnFontSize {
 	font-size: 1.5em;
-}
-
-.dashboardGeneralFontSize {
-	font-size: 1.7em;
 }

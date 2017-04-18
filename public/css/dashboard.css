@@ -1,9 +1,7 @@
+/* General Element CSS
+   ------------------- */
 h2 {
 	font-size: 2.5em;
-}
-
-.img-responsive {
-	width: 100%;
 }
 
 .separateModules {
@@ -18,6 +16,19 @@ h2 {
 	margin-left: 1em;
 }
 
-.btnModulesFontSize {
-	font-size: 1.0em;
+.dashboardGeneralFontSize {
+	font-size: 1.7em;	
 }
+
+/* Image CSS
+   --------- */
+.img-responsive {
+	width: 100%;
+}
+
+/* Button CSS
+   ---------- */
+.btn {
+	font-size: 0.9em;
+}
+

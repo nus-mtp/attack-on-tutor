@@ -8,40 +8,44 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.0/js.cookie.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Kanit:200|Roboto">
-	<link rel="stylesheet" type="text/css" href="
-	https://fonts.googleapis.com/css?family=VT323">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=VT323">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    
+	<link rel="stylesheet" type="text/css" href="/css/index.css">
 	<link rel="stylesheet" type="text/css" href="/css/navigationbar.css">	
 </head>
 
 <body>
     <ul>
-		<ul id="header">
+		<ul id="header"> <!-- Header -->
 			<li class="header">
-				<a class="active font dashboardGeneralFontSize" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
+				<a class="active font headerGeneralFontSize" href="https://github.com/nus-mtp/etutorial">GitHub Repository</a>
 			</li>
 		
-			<% if(user){ %>
+			<% if(user){ %> <!-- Only Shown when User is Logged in -->
 				<li class="header">
-					<a class="active font dashboardGeneralFontSize" id="logout">Log Out</a>
+					<a class="active font headerGeneralFontSize" id="logout">Log Out</a>
 				</li>
 			<% } %>
 		</ul>
     </ul>
 
-    <div id="titleContainer">
-		<img class="logo smoothImage" src="/images/logo.png"></img>
+    <div id="titleContainer"> <!-- Main Body -->
+		<img class="logo smoothImage" src="/images/logo.png"></img> <!-- Logo -->
 		
-		<% if(user){ %>
+		<% if(user){ %> <!-- Only Shown when User is Logged in -->
 			<h2 id="welcomeText" class="font brownFont centerText">Welcome, <%= user.name %>!</h2>
 			<a href="/dashboard">
-				<div class="centralise font"><button type="button" class="btn btn-lg dashboardGeneralFontSize">To the Dashboard</button></div>
+				<div class="centralise font">
+					<button type="button" class="btn btn-lg indexGeneralFontSize">To the Dashboard</button>
+				</div>
 			</a>
 		<% } else{ %>
 			<h2 id="hiddenText">-</h2>
 			<a href="/login"> 
-				<div class="centralise font"><button type="button" class="btn btn-lg dashboardGeneralFontSize">Login</button></div>	
+				<div class="centralise font">
+					<button type="button" class="btn btn-lg indexGeneralFontSize">Login</button>
+				</div>	
 			</a>
 		<% } %>
     </div>

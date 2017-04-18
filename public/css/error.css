@@ -1,3 +1,5 @@
+/* General Element CSS
+   ------------------- */
 h1 {
 	font-size: 6em;
 	margin-top: 10%;
@@ -7,6 +9,8 @@ h2 {
 	font-size: 4em;
 }
 
+/* Button CSS
+   ---------- */
 .centralise {
 	text-align: center;
 	margin-top: 10%;
