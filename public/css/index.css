@@ -1,3 +1,5 @@
+/* General Element CSS
+   ------------------- */
 h2 {
 	font-size: 3em;
 	margin-top: 1%;
@@ -18,7 +20,12 @@ h2 {
 	overflow: hidden;
 }
 
-/* For Buttons */
+indexGeneralFontSize {
+	font-size: 1.7em;
+}
+
+/* Button CSS
+   ---------- */
 .centralise {
 	text-align: center;
 	margin-top: 2%;
