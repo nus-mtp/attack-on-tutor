@@ -1,20 +1,8 @@
-angular.module("dashboardApp", []);
-
-angular.module("dashboardApp").controller ('userCtrl', function ($scope, $http) {
-
-    $http({
-        method: 'POST',
-        url: '/api/dashboard/getUserInfo'
-    }).then(function successCallback(response) {
-        var userInfo = response.data.data;
-        userInfo.name = toTitleCase(userInfo.name)
-        $scope.userInfo = userInfo;
-    }, function errorCallback(response) {
-        console.log(response);
-    });
-
-});
-
+/**
+ * Controller for tutorial and leaderboard display in dashboard screen.
+ *
+ * @module javascripts/dashboard/dashbaord-module-controller
+ */
 angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http, $q, $window) {
 
     var tuts = [];
@@ -67,27 +55,3 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     }
 
 });
-
-
-/**
- * Capitalization function
- * @param  {String}
- * @return {String}
- */
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-
-/*
-var logoutConfirmation = "Would You Like to Log Out?";
-	
-$("#logout").on
-(
-	"click",
-	function(event)
-	{
-		Cookies.remove('token');
-		location.reload();
-	}
-);
-*/
