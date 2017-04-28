@@ -70,8 +70,8 @@ documentation/jsdoc/
 seeders/
 
 # Ignore config
-config/
-config.json
+# config/
+# config.json
 
 # Ignore heroku procfile
 Procfile

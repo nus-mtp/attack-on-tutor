@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./app",
-    "test": "mocha ./source/test/*.js"
+    "test": "istanbul cover _mocha ./source/test/*.js"
   },
   "dependencies": {
     "bignumber.js": "^4.0.1",
@@ -16,6 +16,7 @@
     "express": "~4.13.1",
     "jsonwebtoken": "^7.3.0",
     "mocha": "^2.5.3",
+    "istanbul": "^0.4.5",
     "mysql": "^2.13.0",
     "readable-stream": "^2.2.6",
     "rest": "^2.0.0",

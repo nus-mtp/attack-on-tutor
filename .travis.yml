@@ -1,0 +1,24 @@
+dist: trusty
+language: node_js
+services: mysql
+node_js:
+  - "6"
+script: 
+  - npm test
+env:
+  - NODE_ENV=travis CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;' -u root &&
+    mysql -e "CREATE USER 'tester'@'%' IDENTIFIED BY 'password';" -u root &&
+    mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'tester'@'%' WITH GRANT OPTION;" -u root
+before_script:
+  - npm install sequelize-cli && node_modules/.bin/sequelize db:migrate
+after_script:
+  - npm install -g codeclimate-test-reporter
+  - codeclimate-test-reporter < coverage/lcov.info

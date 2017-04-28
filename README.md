@@ -1,3 +1,10 @@
+[![Build
+Status](https://travis-ci.org/nus-mtp/attack-on-tutor.svg?branch=master)](https://travis-ci.org/nus-mtp/attack-on-tutor)
+[![Test
+Coverage](https://codeclimate.com/github/nus-mtp/attack-on-tutor/badges/coverage.svg)](https://codeclimate.com/github/nus-mtp/attack-on-tutor/coverage)
+[![Code
+Climate](https://codeclimate.com/github/nus-mtp/attack-on-tutor/badges/gpa.svg)](https://codeclimate.com/github/nus-mtp/attack-on-tutor)
+
 # Setup
 
 NOTE: Developer mode does not exist at this stage of the project, so multiple student accounts are required to fully test features in the lobby.

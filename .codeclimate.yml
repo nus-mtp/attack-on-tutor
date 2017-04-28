@@ -1,0 +1,27 @@
+---
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+      - python
+      - php
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
+exclude_paths:
+- docs/
+- public/images/
+- public/libs/
+- source/ui-testing/

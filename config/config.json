@@ -1,0 +1,17 @@
+{
+	"development": {
+		"database" : "sample_database_name",
+		"username" : "sample_username",
+		"password" : "sample_password",
+		"db-host": "127.0.0.1",
+		"db-dialect": "mysql",
+		"db-name": "sample_database_name",
+		"db-username": "sample_username",
+		"db-password": "sample_password"
+	},
+	"travis": {
+		"database" : "test",
+		"username" : "tester",
+		"password" : "password"
+	}
+}
