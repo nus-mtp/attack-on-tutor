@@ -9,10 +9,13 @@ engines:
       - php
   eslint:
     enabled: true
+  csslint:
+    enabled: true
   fixme:
     enabled: true
 ratings:
   paths:
+  - "**.css"
   - "**.ejs"
   - "**.inc"
   - "**.js"
