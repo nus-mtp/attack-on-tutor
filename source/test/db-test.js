@@ -3,8 +3,13 @@ var chai = require ('chai');
 var models = require('../../models');
 var db = require ('../controller/db');
 var chaiAsPromised = require ('chai-as-promised');
+var async = require('async')
 
 chai.use (chaiAsPromised);
+var User = models.User
+var Tutorial = models.Tutorial
+var testModules = require('../testing/database/test_modules.json')
+var testStudents = require('../testing/database/test_students.json')
 
 var should = chai.should ();
 var expect = chai.expect;
@@ -22,6 +27,30 @@ var testTut = {
 	}
 
 describe ("Database Test", function () {
+    before(function (done) {
+        Tutorial.bulkCreate(testModules.modules, {ignoreDuplicates: true})
+        .then(function (data) {
+        User.bulkCreate(testStudents.students, {ignoreDuplicates: true})
+        .then(function (students) {
+        async.each(students,
+            function (student, callback) {
+                student.addAvatar('avatar-01').then(function () {
+                student.addTutorial('general-chat', {role: 'tutor', exp: 0})
+            }).then(function () {
+                if (student.id === 'b0123456') {
+                    student.addTutorial('test1', {role: 'tutor', exp: 0}) 
+                } else {
+                    student.addTutorial('test1', {role: 'student', exp: 0})
+                }
+                callback();
+            })
+            },
+            function (err) {
+                console.log("Unable to add avatar/tutorial to student" + student.id)
+            })
+        })
+        })
+    })
 
 	it ('Should return the tutor id of a tutorial', function () {
 		var findTutor = db.findTutorialTutorID('test1');
@@ -29,6 +58,12 @@ describe ("Database Test", function () {
 			(result.dataValues.userId).should.equal('b0123456');
 		});
 	});
+    it('Should return the tutor id of a tutorial', function (done) {
+        db.findTutorialTutorID('test1').then(function (data) {
+            data.dataValues.userId.should.equal('b0123456')
+            done()
+        })
+    })
 
 	it ('Should return the tutorial info of a tutorial', function () {
 		var findTutorial = db.findTutorialInfo('test1');
@@ -85,13 +120,17 @@ describe ("Database Test", function () {
 		});
 	})
 
-	after(function () {
-		// clean up
-		db.changeExp('c0123456', 'test1', -100);
-		db.increaseLevelsSpent('c0123456', -1);
-		models.userAvatar.findOne({ where: { userId: 'b0123456', avatarId: 'avatar-06'}}).then(function (instance) {
-			instance.destroy();
-		});
-	})
 
-});
+});    after(function (done) {
+        var modules = testModules.modules
+        var ids = []
+        for (i in modules) { ids.push(modules[i].id) }
+        Tutorial.destroy({where: {'id': ids}}).then(function () {
+            var students = testStudents.students
+            var ids = []
+            for (i in students) { ids.push(students[i].id) }
+            User.destroy({where: {'id': ids}}).then(function () {
+                done()
+            })
+        })
+    })
