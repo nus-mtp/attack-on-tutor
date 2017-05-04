@@ -35,18 +35,18 @@ describe ("Database Test", function () {
         async.each(students,
             function (student, callback) {
                 student.addAvatar('avatar-01').then(function () {
-                student.addTutorial('general-chat', {role: 'tutor', exp: 0})
+                student.addTutorial('general-chat', {role: 'tutor', exp: 0});
             }).then(function () {
                 if (student.id === 'b0123456') {
-                    student.addTutorial('test1', {role: 'tutor', exp: 0}) 
+                    student.addTutorial('test1', {role: 'tutor', exp: 0});
                 } else {
-                    student.addTutorial('test1', {role: 'student', exp: 0})
+                    student.addTutorial('test1', {role: 'student', exp: 0});
                 }
                 callback();
             })
             },
             function (err) {
-                console.log("Unable to add avatar/tutorial to student" + student.id)
+                done();
             })
         })
         })
