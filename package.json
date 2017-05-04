@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./app",
-    "test": "istanbul cover _mocha ./source/test/*.js"
+    "test": "NODE_ENV=travis istanbul cover _mocha ./source/test/db-test.js"
   },
   "dependencies": {
     "async": "^2.4.0",
@@ -15,9 +15,9 @@
     "cookie-parser": "^1.4.3",
     "ejs": "~2.3.3",
     "express": "~4.13.1",
+    "istanbul": "^0.4.5",
     "jsonwebtoken": "^7.3.0",
     "mocha": "^2.5.3",
-    "istanbul": "^0.4.5",
     "mysql": "^2.13.0",
     "readable-stream": "^2.2.6",
     "rest": "^2.0.0",

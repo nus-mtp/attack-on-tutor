@@ -12,6 +12,7 @@
 	"travis": {
 		"database" : "test",
 		"username" : "tester",
-		"password" : "password"
+		"password" : "password",
+		"logging"  : false
 	}
 }
