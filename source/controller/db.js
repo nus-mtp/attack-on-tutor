@@ -73,9 +73,9 @@ var getUserInfo = function (uid) {
 
 /**
  * Gets tutorial by coursecode and name
- * @param  {String} coursecode 
- * @param  {String} name    
- * @return Promise   
+ * @param  {String} coursecode
+ * @param  {String} name
+ * @return Promise
  */
 var getTutorialByCoursecodeAndName = function (coursecode, name) {
 	return Tutorial.findOne({
@@ -153,19 +153,19 @@ var getAllAvatars = function () {
  */
 var setUserAvatar = function(uid, aid) {
 	return User.findOne({ where: {id: uid} }).then(function (user) {
-		user.update({ avatarId: aid })
+		return user.update({ avatarId: aid })
 	});
 }
 
 /**
  * Increase user's levels spent
- * @param  uid   
- * @param  amount 
+ * @param  uid
+ * @param  amount
  * @return  {Promise}
  */
 var increaseLevelsSpent = function (uid, amount) {
 	return User.findOne({ where: { id: uid }}).then(function (user) {
-		user.increment(['levelsSpent'], { by: amount });
+		return user.increment(['levelsSpent'], { by: amount });
 	});
 }
 
@@ -177,7 +177,7 @@ var increaseLevelsSpent = function (uid, amount) {
  */
 var addAvatarToUser = function (uid, avatarId) {
 	return User.findOne({ where: { id: uid} }).then(function (user) {
-		user.addAvatar(avatarId);
+		return user.addAvatar(avatarId);
 	});
 
 }
