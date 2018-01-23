@@ -20,7 +20,7 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
     var promises = [];
     var tuts = [];
 
-    promises.push($http({
+    /*promises.push($http({
 
         method: 'POST',
         url: '/api/dashboard/forceSyncIVLE'
@@ -29,7 +29,7 @@ angular.module("dashboardApp").controller ('moduleCtrl', function ($scope, $http
 
     }, function errorCallback(response) {
         console.log('Error: ' + response.message);
-    }));
+    }));*/
 
     promises.push(
         $http({

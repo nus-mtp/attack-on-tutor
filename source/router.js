@@ -17,8 +17,11 @@ router.get ('/lobby/:moduleId/:tutorialId', auth.ensureAuth, lobby.enterLobby, l
 router.post ('/lobby/:moduleId/:tutorialId', auth.ensureAuth, lobby.enterLobby, lobby.get);
 
 router.get ('/', auth.ensureAuth, index.get);
-router.get ('/login', auth.ensureAuth, login.get);
-router.get ('/login/callback', login.callback);
+//IVLE login.
+router.get ('/ivlelogin', auth.ensureAuth, login.ivleGet);
+router.get ('/ivlelogin/callback', login.ivleCallback);
+//Non-IVLE logins.
+router.get ('/login/:userId/:hash', auth.ensureAuth, login.get);
 
 router.get ('/dashboard', auth.ensureAuth, dashboard.get);
 

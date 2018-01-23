@@ -15,16 +15,76 @@ if (!usehttps) {
 
 var get = function (req, res, next) {
 	var auth = req.body.auth;
+	var userId = req.params.userId;
+	var passwordHash = req.params.hash;
 	console.log(1);
 	console.log(auth);
 	if (auth.success) {
 		res.redirect('/')
 	}
-	res.redirect('https://ivle.nus.edu.sg/api/login/?apikey=' + app.get('api-key') + '&url=' + protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/login/callback');
+	//res.redirect(protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/login/callback/' + userId + '/' + passwordHash);
+	
+	User.findOne({
+		where:{
+			id: result.UserID
+		}
+	}).then(function(user){
+		if (!user){
+			User.create({
+				id: result.UserID,
+				name: result.Name,
+				email: result.Email,
+				gender: result.Gender,
+				token: result.Token,
+				avatarId: 'avatar-01',
+				levelsSpent: 0
+			}).then(function(user){
+				var authToken = auth.setAuth (result.UserID, result.Name);
+				//logger.info(result.UserID + ' created user');
+				res.cookie('token', authToken);
+				return res.redirect('/');
+			}).catch(function(err){
+				//logger.error(result.UserID + ' create user failed');
+				return res.json({success:false, at:'Create user', message:err});
+			});
+		} else {
+			console.log('updating user');
+			User.update({
+				token: result.Token
+			},{
+				where:{
+					id:result.UserID
+				}
+			}).then(function(user){
+				var authToken = auth.setAuth (result.UserID, result.Name);
+				//logger.info(result.UserID + ' updated user information');
+				res.cookie('token', authToken);
+				return res.redirect('/dashboard');
+
+			}).catch(function(err){
+				//logger.error(result.UserID + ' update user information failed');
+				console.log(err.stack);
+				return res.json({success:false, at:'Update user information', message:err});
+			});
+		}	
+	});
+}
+
+var ivleGet = function (req, res, next) {
+	var auth = req.body.auth;
+	console.log(1);
+	console.log(auth);
+	if (auth.success) {
+		res.redirect('/')
+	}
+	res.redirect('https://ivle.nus.edu.sg/api/login/?apikey=' + app.get('api-key') + '&url=' + protocol + '://' + app.get ('server-ip') + ':' + app.get('server-port') + '/ivlelogin/callback');
 }
 
 // Callback function fter IVLE login
-var callback = function (req, res, next) {
+var ivleCallback = function (req, res, next) {
+	//THIS WAS USED FOR DIRECT IVLE LOG-IN.
+	//Move this to a function that allows users to sync their IVLE details on demand, to decouple platform from IVLE.
+	
 	var ivleToken = req.query.token;
 	var apikey = app.get ('api-key');
 
@@ -93,4 +153,6 @@ var callback = function (req, res, next) {
 };
 
 module.exports.get = get;
-module.exports.callback = callback;
+
+module.exports.ivleGet = ivleGet;
+module.exports.ivleCallback = ivleCallback;
